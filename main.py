@@ -9,6 +9,7 @@ import sys
 from datetime import date
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QTreeWidget, QTreeWidgetItem, QTextBrowser, QLineEdit, QLabel,
@@ -102,7 +103,9 @@ class ExplorerTab(QWidget):
 
         # === 1. CODE OF CIVIL PROCEDURE, 1908 ===
         cpc_root = QTreeWidgetItem(["📖 Code of Civil Procedure, 1908"])
-        cpc_root.setStyleSheet("font-weight: bold;")
+        bold_font = QFont()
+        bold_font.setBold(True)
+        cpc_root.setFont(0, bold_font)
         self.tree.addTopLevelItem(cpc_root)
 
         sec_root = QTreeWidgetItem(["Sections (1–158)"])
@@ -136,7 +139,7 @@ class ExplorerTab(QWidget):
 
         # === 2. THE LIMITATION ACT, 1963 ===
         lim_root = QTreeWidgetItem(["⚖️ The Limitation Act, 1963"])
-        lim_root.setStyleSheet("font-weight: bold;")
+        lim_root.setFont(0, bold_font)
         self.tree.addTopLevelItem(lim_root)
 
         # Limitation Sections 1-32
