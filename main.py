@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
 
 from db import ActDatabase
 from xref import extract_refs, resolve_refs
+from state_amend import KNOWN_STATES, states_present, text_for_state
 import deadlines as dl
 
 
@@ -52,6 +53,16 @@ class ExplorerTab(QWidget):
         self.title_label = QLabel("Select a provision")
         self.title_label.setStyleSheet("font-weight: 600; font-size: 14pt;")
         rlayout.addWidget(self.title_label)
+
+        state_row = QHBoxLayout()
+        state_row.addWidget(QLabel("View:"))
+        self.state_combo = QComboBox()
+        self.state_combo.addItem("Central Act (default)", None)
+        for st in KNOWN_STATES:
+            self.state_combo.addItem(st, st)
+        self.state_combo.currentIndexChanged.connect(self._render_text)
+        state_row.addWidget(self.state_combo, stretch=1)
+        rlayout.addLayout(state_row)
 
         self.bookmark_btn = QPushButton("☆ Bookmark")
         self.bookmark_btn.clicked.connect(self._toggle_bookmark)
@@ -129,27 +140,34 @@ class ExplorerTab(QWidget):
             row = self.db.get_section(ref_id)
             title = f"Section {row['section_no']} — {row['title']}"
             body = row["text"]
-            if row["state_amendments"]:
-                body += "\n\n--- STATE AMENDMENTS ---\n" + row["state_amendments"]
+            state_blob = row["state_amendments"] or ""
         elif kind == "rule":
             row = self.db.get_rule(ref_id)
             order = self.db.get_order(row["order_id"])
             title = f"Order {order['order_no']} Rule {row['rule_no']} — {row['title']}"
             body = row["text"]
-            if row["state_amendments"]:
-                body += "\n\n--- STATE AMENDMENTS ---\n" + row["state_amendments"]
+            state_blob = row["state_amendments"] or ""
         elif kind == "appendix":
             row = self.db.get_appendix(ref_id)
             title = f"Appendix {row['letter']}"
             body = row["text"]
+            state_blob = ""
         else:
             return
-        self._show(kind, ref_id, title, body)
+        self._show(kind, ref_id, title, body, state_blob)
 
-    def _show(self, kind, ref_id, title, body):
+    def _show(self, kind, ref_id, title, body, state_blob=""):
         self.current = (kind, ref_id)
+        self._current_body = body
+        self._current_state_blob = state_blob
         self.title_label.setText(title)
-        self.text_view.setHtml(f"<pre style='white-space:pre-wrap; font-family:inherit;'>{html_escape(body)}</pre>")
+
+        # reset the state selector to Central without re-triggering a
+        # cross-provision render before xrefs/bookmark/notes are set up
+        self.state_combo.blockSignals(True)
+        self.state_combo.setCurrentIndex(0)
+        self.state_combo.blockSignals(False)
+        self._render_text()
 
         # cross-references (deterministic regex, resolved locally)
         self.xref_list.clear()
@@ -162,7 +180,7 @@ class ExplorerTab(QWidget):
             refs = extract_refs(body, self_kind=self_kind, self_ref=self_ref)
             resolved = resolve_refs(self.db, refs)
             if not resolved:
-                self.xref_list.addItem("(no cross-references detected in this text)")
+                self.xref_list.addItem("(no textual cross-references detected in this provision)")
             for r in resolved:
                 found = "✓" if r["target"] else "✗ not in local database"
                 li = QListWidgetItem(f"{r['label']}  [{found}]")
@@ -179,6 +197,33 @@ class ExplorerTab(QWidget):
         self._loading_notes = True
         self.notes_box.setPlainText(self.db.get_note(kind, ref_id))
         self._loading_notes = False
+
+    def _render_text(self):
+        """Render the Central Act text, optionally with the selected
+        state's amendment segment appended (Part 5 — State Amendment
+        Engine). Deterministic: pulled straight from the local DB,
+        split by the literal state headers in the source text."""
+        selected_state = self.state_combo.currentData()
+        html = f"<pre style='white-space:pre-wrap; font-family:inherit;'>{html_escape(self._current_body)}</pre>"
+
+        if selected_state:
+            available = states_present(self._current_state_blob)
+            if selected_state in available:
+                state_text = text_for_state(self._current_state_blob, selected_state)
+                html += (
+                    f"<hr><h3 style='color:#a33;'>State Amendment — {html_escape(selected_state)}</h3>"
+                    f"<pre style='white-space:pre-wrap; font-family:inherit;'>{html_escape(state_text)}</pre>"
+                )
+            elif available:
+                others = ", ".join(available)
+                html += (
+                    f"<hr><p style='color:#888;'><i>No {html_escape(selected_state)} amendment recorded "
+                    f"for this provision. State amendments on file here: {html_escape(others)}.</i></p>"
+                )
+            else:
+                html += "<hr><p style='color:#888;'><i>No state amendments recorded for this provision.</i></p>"
+
+        self.text_view.setHtml(html)
 
     def _on_xref_activated(self, item):
         r = item.data(Qt.UserRole)

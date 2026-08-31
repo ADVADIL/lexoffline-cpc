@@ -28,6 +28,17 @@ python3 main.py
 - **Search** — full-text search (SQLite FTS5) across sections, rules,
   and appendices.
 - **Bookmarks** and **Notes** — per-provision, stored locally.
+- **State Amendment toggle** — a "View" selector on every Section/Rule
+  (Central Act / one of 11 states). The source data stores state
+  amendments as one flat blob per provision, often mixing several
+  states together (e.g. Section 60 mixes Kerala, Himachal Pradesh,
+  Tamil Nadu, Rajasthan and Uttar Pradesh notes back to back);
+  `state_amend.py` deterministically splits that blob on the literal
+  state-name headers as they appear in the source (no rewriting, no
+  correction — a known source typo, "Orrisa" for Orissa, is recognised
+  for grouping but the stored text is left exactly as written).
+  Selecting a state with no recorded amendment for that provision
+  shows a plain note saying so, rather than nothing.
 - **Deadline Tracker** — the fixed CPC timelines from the spec (Written
   Statement, caveat validity, injunction disposal, judgment
   pronouncement, decree preparation, etc.) as pure date arithmetic off
@@ -56,10 +67,7 @@ The uploaded spec ("CPC Practice Engine") is far larger than this
 build — it also calls for: per-section Practical Tool tabs (one
 bespoke deterministic tool per section), Draft Links / a fillable
 Appendix A–I form library, a Case Diary, the full Order XXI Execution
-Workflow Engine, the State Amendment comparator/toggle (amendments are
-currently stored inline per-section/rule but not surfaced as a
-distinct toggle UI), a Court Fee Calculator, and a Limitation
-Calculator.
+Workflow Engine, a Court Fee Calculator, and a Limitation Calculator.
 
 Court Fee and Limitation calculators in particular need real,
 verified rate/period tables (which vary by state and by Act) before
@@ -75,8 +83,11 @@ shipped with invented numbers.
 - `xref.py` — deterministic cross-reference extraction (whitelisted
   Roman-numeral Order matching, footnote-line filtering to avoid
   amendment-history false positives).
+- `state_amend.py` — deterministic state-amendment blob splitter.
 - `deadlines.py` — fixed CPC deadline rules + date arithmetic.
 - `main.py` — PySide6 UI (Explorer / Search / Bookmarks / Deadline
   Tracker tabs).
 - `build_cpc_db.py` — one-time ingestion script, bare-act markdown →
   `cpc_1908.db`.
+- `tests/` — pytest regression suite for `xref.py`, `deadlines.py`, and
+  `state_amend.py` (16 tests, run with `pytest tests/`).
