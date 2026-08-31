@@ -72,20 +72,32 @@ Open `http://localhost:5000` in your browser.
   - Category-filtered calculator for CPC procedural deadlines and ~30 curated, commonly-cited statutory Limitation periods, each with its full Order/Rule/Section cross-reference spelled out.
   - Plus a general calculator covering **all 137 Schedule Articles** to the Limitation Act — not just the curated ones — so no Article is browsable-only. Handles Articles with alternative periods (e.g. Article 61's three sub-clauses) by showing every option rather than guessing which applies.
   - **Section 12 Exclusion Support**: Deduct/exclude time taken for obtaining certified copies of decrees and judgments.
+- **Courtroom Practice Checklists**:
+  - 7 essential statutory compliance checklists for core courtroom proceedings:
+    - **Order VII Rule 11**: Rejection of Plaint (7 statutory clauses, *Dahiben* / *Saleem Bhai* threshold tests, no-partial-rejection rule).
+    - **Order XXXIX Rules 1 & 2**: Temporary Injunctions (3-prong test, Rule 3 Proviso same-day delivery mandate, Rule 3A 30-day disposal endeavour).
+    - **Section 80**: Notice to Government (2 full months requirement, essential ingredients, Section 80(2) urgency waiver application).
+    - **Order XXII**: Death of Parties & LR Substitution (90-day limitation under Art. 120, automatic abatement, 60-day set aside under Art. 121, Sec. 5 condonation, Rule 10A pleader duty).
+    - **Section 148A**: Caveat Practice (service obligations, 90-day expiry rule).
+    - **Section 100**: Second Appeal (Substantial Question of Law test, *Sir Chunilal Mehta* formulation rules, Sections 100A/102 bars).
+    - **Section 115**: Civil Revision (3 jurisdictional error tests, 1999 Proviso final-disposition bar, Art. 131 90-day limitation).
+  - Features interactive checkboxes with local browser persistence on web, clickable provision links jumping straight into the Act Explorer, and common pitfall warnings.
 - **Web Companion (`web/`)**:
   - Lightweight, server-rendered Flask web app sharing the exact same underlying SQLite database and deterministic logic.
-  - Ideal for quick lookups from mobile, chambers, or home when online, without sacrificing the courtroom-guaranteed offline desktop app.
+  - Accessible from chambers, mobile, or home for quick statutory lookups and checklist verification.
 
 ## Architecture
 
 - `db.py` — SQLite access layer (`ActDatabase`) querying `cpc_1908.db`.
 - `limitation_data.py` — Structured statutory dataset for The Limitation Act, 1963 (Sections 1–32 + Schedule Articles 1–137).
+- `checklists_data.py` — Structured courtroom practice checklists, statutory grounds, and landmark precedents.
 - `deadlines.py` — Fixed CPC deadline rules, Limitation Act schedule rules, and Section 12 exclusion arithmetic.
 - `xref.py` — Deterministic in-text cross-reference extraction and database resolution.
 - `state_amend.py` — Deterministic state-amendment blob splitter.
-- `main.py` — PySide6 desktop interface (Explorer, Search, Bookmarks, Deadline & Limitation Tracker).
+- `main.py` — PySide6 desktop interface (Explorer, Practice Checklists, Search, Bookmarks, Deadline & Limitation Tracker).
 - `web/` — Flask web companion application (`app.py`, templates, responsive CSS, and tests).
 - `build_cpc_db.py` — Ingestion and database compilation script.
-- `tests/` — Regression test suite covering `test_limitation.py`, `test_deadlines.py`, `test_state_amend.py`, and `test_xref.py` (28 tests).
-- `web/tests/` — Web test suite covering all 18 web routes and calculator endpoints.
+- `tests/` — Desktop regression test suite covering `test_checklists.py`, `test_limitation.py`, `test_deadlines.py`, `test_state_amend.py`, and `test_xref.py` (33 tests).
+- `web/tests/` — Web test suite covering all 25 web routes, checklists, and calculator endpoints.
+
 

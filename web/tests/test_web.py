@@ -133,9 +133,45 @@ def test_404_missing_section():
     assert resp.status_code == 404
 
 
+def test_checklists_index():
+    resp = _client().get('/checklists')
+    assert resp.status_code == 200
+    assert b'Courtroom Practice Checklists' in resp.data
+    assert b'Order VII Rule 11' in resp.data
+
+
+def test_checklists_category_filter():
+    resp = _client().get('/checklists?category=Interim+Relief')
+    assert resp.status_code == 200
+    assert b'Temporary Injunction' in resp.data
+
+
+def test_checklist_detail_o7_r11():
+    resp = _client().get('/checklist/o7_r11')
+    assert resp.status_code == 200
+    assert b'Rejection of Plaint' in resp.data
+    assert b'Dahiben' in resp.data
+    assert b'Saleem Bhai' in resp.data
+    assert b'/cpc/section/' in resp.data
+
+
+def test_checklist_detail_o39():
+    resp = _client().get('/checklist/o39_r1_2')
+    assert resp.status_code == 200
+    assert b'Temporary Injunction' in resp.data
+    assert b'Dalpat Kumar' in resp.data
+    assert b'Rule 3 Proviso' in resp.data
+
+
+def test_checklist_404_invalid():
+    resp = _client().get('/checklist/non_existent_checklist')
+    assert resp.status_code == 404
+
+
 if __name__ == '__main__':
     tests = [v for k, v in globals().items() if k.startswith('test_')]
     for t in tests:
         t()
         print(f'  OK  {t.__name__}')
     print(f'\n>>> ALL {len(tests)} WEB TESTS PASSED! <<<')
+

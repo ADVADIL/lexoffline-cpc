@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}{{ checklist.title }} - LexOffline Checklist{% endblock %}
+
+{% block content %}
+<div class="provision-header" style="margin-bottom: 1.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;">
+        <span class="badge" style="background: #ebf8ff; color: #2b6cb0; font-size: 0.85rem; font-weight: bold; padding: 4px 10px; border-radius: 4px;">
+            {{ checklist.category }}
+        </span>
+        <a href="/checklists" style="color: #4a5568; font-size: 0.9rem; text-decoration: none;">&larr; Back to all checklists</a>
+    </div>
+    <h1 style="margin-top: 0.5rem; margin-bottom: 0.25rem;">{{ checklist.title }}</h1>
+    <p style="color: #718096; font-size: 1.05rem; font-weight: 500;">
+        <strong>Statutory Provision:</strong> {{ checklist.provision }}
+    </p>
+    <div class="panel" style="background: #f7fafc; border-left: 4px solid #3182ce; padding: 1rem; margin-top: 1rem;">
+        <p style="margin: 0; line-height: 1.5; color: #2d3748;">{{ checklist.summary }}</p>
+    </div>
+</div>
+
+<!-- Statutory Grounds -->
+<div class="section-block" style="margin-bottom: 2rem;">
+    <h2>📋 Statutory Grounds &amp; Threshold Tests</h2>
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        {% for g in checklist.statutory_grounds %}
+        <div class="panel" style="border: 1px solid #e2e8f0; border-radius: 6px; padding: 1rem; background: #fff;">
+            <div style="font-weight: bold; color: #1a365d; margin-bottom: 0.35rem;">
+                <span style="background: #edf2f7; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; margin-right: 0.5rem;">{{ g.clause }}</span>
+                {{ g.ground }}
+            </div>
+            <div style="color: #4a5568; font-size: 0.95rem; line-height: 1.45;">{{ g.detail }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Settled Judicial Principles -->
+<div class="section-block" style="margin-bottom: 2rem;">
+    <h2>⚖️ Settled Judicial Principles (Landmark Precedents)</h2>
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        {% for p in checklist.judicial_principles %}
+        <div class="panel" style="border: 1px solid #e2e8f0; border-left: 4px solid #48bb78; border-radius: 6px; padding: 1rem; background: #fff;">
+            <div style="font-weight: bold; font-size: 1.05rem; color: #22543d; margin-bottom: 0.25rem;">{{ p.principle }}</div>
+            <div style="color: #2b6cb0; font-size: 0.9rem; font-style: italic; margin-bottom: 0.5rem;">{{ p.citation }}</div>
+            <div style="color: #4a5568; font-size: 0.95rem; line-height: 1.45;">{{ p.detail }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Interactive Checklist -->
+<div class="section-block" style="margin-bottom: 2rem;">
+    <h2>☑️ Actionable Courtroom Checklist</h2>
+    <p style="color: #718096; font-size: 0.9rem; margin-bottom: 1rem;">Check off items while drafting or preparing for hearing. Progress is automatically saved in your browser.</p>
+    
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        {% for s in checklist.steps %}
+        <label class="checklist-item-card" style="display: flex; align-items: flex-start; gap: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1rem; background: #fff; cursor: pointer; transition: background 0.15s;">
+            <input type="checkbox" id="{{ s.id }}" class="checklist-box" style="margin-top: 0.3rem; width: 18px; height: 18px; cursor: pointer;">
+            <div style="flex-grow: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap;">
+                    <strong style="color: #2d3748; font-size: 1rem;">{{ s.label }}</strong>
+                    {% if s.statutory_ref %}
+                    <span style="font-size: 0.8rem; color: #718096; background: #edf2f7; padding: 1px 6px; border-radius: 3px;">{{ s.statutory_ref }}</span>
+                    {% endif %}
+                </div>
+                <div style="color: #4a5568; font-size: 0.9rem; line-height: 1.45; margin-top: 0.35rem;">
+                    {{ s.description }}
+                </div>
+            </div>
+        </label>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Common Pitfalls -->
+<div class="section-block" style="margin-bottom: 2rem;">
+    <h2 style="color: #9b2c2c;">⚠️ Common Pitfalls &amp; Fatal Traps</h2>
+    <div class="panel" style="background: #fff5f5; border: 1px solid #feb2b2; border-left: 4px solid #e53e3e; border-radius: 6px; padding: 1rem;">
+        <ul style="margin: 0; padding-left: 1.25rem; color: #9b2c2c; line-height: 1.6;">
+            {% for pit in checklist.common_pitfalls %}
+            <li style="margin-bottom: 0.5rem;">{{ pit }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Connected Provisions -->
+<div class="section-block" style="margin-bottom: 2rem;">
+    <h2>🔗 Connected Provisions (Click to View Text)</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem;">
+        {% for cp in connected_links %}
+        {% if cp.url %}
+        <a href="{{ cp.url }}" class="btn" style="padding: 6px 14px; background: #edf2f7; color: #2b6cb0; border: 1px solid #cbd5e0; text-decoration: none; border-radius: 4px; font-size: 0.9rem; font-weight: 500;">
+            {{ cp.ref }}{% if cp.title %} &mdash; {{ cp.title }}{% endif %}
+        </a>
+        {% else %}
+        <span style="padding: 6px 14px; background: #edf2f7; color: #718096; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.9rem;">
+            {{ cp.ref }}{% if cp.title %} &mdash; {{ cp.title }}{% endif %}
+        </span>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    // LocalStorage persistence for checkboxes
+    const checklistId = "{{ checklist.id }}";
+    document.querySelectorAll('.checklist-box').forEach(box => {
+        const key = checklistId + '_' + box.id;
+        if (localStorage.getItem(key) === 'true') {
+            box.checked = true;
+            box.closest('.checklist-item-card').style.background = '#f0fff4';
+        }
+        box.addEventListener('change', () => {
+            localStorage.setItem(key, box.checked);
+            box.closest('.checklist-item-card').style.background = box.checked ? '#f0fff4' : '#fff';
+        });
+    });
+</script>
+{% endblock %}

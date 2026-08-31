@@ -6,6 +6,7 @@ reads from the local database or does plain date/text arithmetic.
 Nothing here is generated or inferred by a model.
 """
 import sys
+import os
 from datetime import date
 
 from PySide6.QtCore import Qt
@@ -15,7 +16,7 @@ from PySide6.QtWidgets import (
     QTreeWidget, QTreeWidgetItem, QTextBrowser, QLineEdit, QLabel,
     QSplitter, QTabWidget, QListWidget, QListWidgetItem, QPushButton,
     QDateEdit, QComboBox, QFormLayout, QPlainTextEdit, QMessageBox,
-    QSpinBox, QGroupBox,
+    QSpinBox, QGroupBox, QScrollArea, QCheckBox, QFrame,
 )
 
 from db import ActDatabase
@@ -23,6 +24,7 @@ from xref import extract_refs, resolve_refs
 from state_amend import KNOWN_STATES, states_present, text_for_state
 import deadlines as dl
 import limitation_data as ld
+import checklists_data as cd
 
 
 def html_escape(s):
@@ -434,7 +436,10 @@ class DeadlineTrackerTab(QWidget):
         self.cat_combo.addItem("All Categories", None)
         for cat in dl.list_categories():
             self.cat_combo.addItem(cat, cat)
-        self.cat_combo.addItem("All 137 Limitation Act Articles (Schedule)", "__ALL_LIMITATION_ARTICLES__")
+        self.cat_combo.addItem(
+            "All 137 Limitation Act Articles (comprehensive)",
+            "__ALL_LIMITATION_ARTICLES__",
+        )
         self.cat_combo.currentIndexChanged.connect(self._on_category_changed)
         form.addRow("Category filter:", self.cat_combo)
 
@@ -490,11 +495,6 @@ class DeadlineTrackerTab(QWidget):
         self.rule_combo.clear()
         selected_cat = self.cat_combo.currentData()
         if selected_cat == "__ALL_LIMITATION_ARTICLES__":
-            # The 30 named rules above cover the commonly-cited provisions
-            # with their full Order/Rule cross-references spelled out; this
-            # covers the remaining ~107 Schedule Articles too, so no
-            # Article is a dead end just because it didn't get a curated
-            # entry — every one of the 137 is computable, not just browsable.
             for a in ld.LIMITATION_ARTICLES:
                 desc = a["description"].split("\n")[0][:70]
                 label = f"Art. {a['article_no']} — {desc} ({a['period'].splitlines()[0]}{'...' if len(a['period'].splitlines()) > 1 else ''})"
@@ -560,6 +560,171 @@ class DeadlineTrackerTab(QWidget):
         )
 
 
+class ChecklistsTab(QWidget):
+    """Interactive courtroom practice checklists & statutory compliance tests."""
+
+    def __init__(self, db: ActDatabase, on_jump):
+        super().__init__()
+        self.db = db
+        self.on_jump = on_jump
+
+        layout = QHBoxLayout(self)
+        splitter = QSplitter(Qt.Horizontal)
+        layout.addWidget(splitter)
+
+        # Left panel: category filter + list
+        left = QWidget()
+        left_layout = QVBoxLayout(left)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.cat_combo = QComboBox()
+        self.cat_combo.addItem("All Categories", None)
+        for cat in cd.list_checklist_categories():
+            self.cat_combo.addItem(cat, cat)
+        self.cat_combo.currentIndexChanged.connect(self._populate_list)
+        left_layout.addWidget(self.cat_combo)
+
+        self.list_widget = QListWidget()
+        self.list_widget.itemClicked.connect(self._on_item_clicked)
+        left_layout.addWidget(self.list_widget, stretch=1)
+        splitter.addWidget(left)
+
+        # Right panel: checklist viewer
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.viewer = QWidget()
+        self.vlayout = QVBoxLayout(self.viewer)
+        self.vlayout.setAlignment(Qt.AlignTop)
+        self.scroll.setWidget(self.viewer)
+        splitter.addWidget(self.scroll)
+
+        splitter.setSizes([320, 680])
+        self._populate_list()
+
+        if self.list_widget.count() > 0:
+            self.list_widget.setCurrentRow(0)
+            self._on_item_clicked(self.list_widget.item(0))
+
+    def _populate_list(self):
+        self.list_widget.clear()
+        selected_cat = self.cat_combo.currentData()
+        items = cd.list_checklists(category=selected_cat)
+        for c in items:
+            it = QListWidgetItem(f"{c.title}\n[{c.provision}]")
+            it.setData(Qt.UserRole, c.id)
+            self.list_widget.addItem(it)
+
+    def _on_item_clicked(self, item):
+        cid = item.data(Qt.UserRole)
+        c = cd.get_checklist(cid)
+        if not c:
+            return
+
+        # Clear layout
+        while self.vlayout.count():
+            child = self.vlayout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        # Title block
+        header = QLabel(f"<h2>{c.title}</h2><p style='color:#4a5568;'><b>Provision:</b> {c.provision} &nbsp;|&nbsp; <b>Category:</b> {c.category}</p><p style='font-size:10pt; line-height:1.4;'>{c.summary}</p>")
+        header.setWordWrap(True)
+        self.vlayout.addWidget(header)
+
+        # Separator
+        line = QFrame()
+        line.setFrameShape(QFrame.HLine)
+        line.setFrameShadow(QFrame.Sunken)
+        self.vlayout.addWidget(line)
+
+        # Statutory Grounds Section
+        sg_box = QGroupBox("📋 Statutory Grounds & Threshold Tests")
+        sg_layout = QVBoxLayout(sg_box)
+        for g in c.statutory_grounds:
+            g_label = QLabel(f"<b>{g['clause']}: {g['ground']}</b><br><span style='color:#4a5568;'>{g['detail']}</span>")
+            g_label.setWordWrap(True)
+            sg_layout.addWidget(g_label)
+        self.vlayout.addWidget(sg_box)
+
+        # Settled Judicial Principles
+        jp_box = QGroupBox("⚖️ Settled Judicial Principles (Landmark Precedents)")
+        jp_layout = QVBoxLayout(jp_box)
+        for p in c.judicial_principles:
+            p_label = QLabel(f"<b>{p['principle']}</b><br><i style='color:#2b6cb0;'>{p['citation']}</i><br><span style='color:#4a5568;'>{p['detail']}</span>")
+            p_label.setWordWrap(True)
+            jp_layout.addWidget(p_label)
+        self.vlayout.addWidget(jp_box)
+
+        # Actionable Checklist
+        steps_box = QGroupBox("☑️ Actionable Courtroom Checklist (Check off while preparing)")
+        steps_layout = QVBoxLayout(steps_box)
+        for s in c.steps:
+            cb = QCheckBox(f"<b>{s.label}</b> [{s.statutory_ref}]")
+            desc = QLabel(f"<span style='color:#4a5568; margin-left:22px;'>{s.description}</span>")
+            desc.setWordWrap(True)
+            steps_layout.addWidget(cb)
+            steps_layout.addWidget(desc)
+        self.vlayout.addWidget(steps_box)
+
+        # Common Pitfalls Warning
+        pit_box = QGroupBox("⚠️ Common Pitfalls & Fatal Traps")
+        pit_box.setStyleSheet("QGroupBox { font-weight: bold; color: #c53030; }")
+        pit_layout = QVBoxLayout(pit_box)
+        for pit in c.common_pitfalls:
+            pit_label = QLabel(f"• {pit}")
+            pit_label.setWordWrap(True)
+            pit_label.setStyleSheet("color: #9b2c2c;")
+            pit_layout.addWidget(pit_label)
+        self.vlayout.addWidget(pit_box)
+
+        # Connected Provisions
+        conn_box = QGroupBox("🔗 Connected Provisions (Click to Jump)")
+        conn_layout = QHBoxLayout(conn_box)
+        for cp in c.connected_provisions:
+            btn = QPushButton(f"{cp['ref']}")
+            btn.setToolTip(cp.get("title", ""))
+            btn.clicked.connect(lambda checked=False, target=cp: self._jump_to_provision(target))
+            conn_layout.addWidget(btn)
+        conn_layout.addStretch(1)
+        self.vlayout.addWidget(conn_box)
+
+    def _jump_to_provision(self, cp):
+        ref_text = cp["ref"]
+        # Try to resolve to kind and id
+        if "Section" in ref_text:
+            s_no = ref_text.replace("Section", "").strip().split()[0]
+            if cp.get("kind") == "limitation_section":
+                row = self.db.get_limitation_section_by_no(s_no)
+                if row:
+                    self.on_jump("limitation_section", row["id"])
+                    return
+            else:
+                row = self.db.get_section_by_no(s_no)
+                if row:
+                    self.on_jump("section", row["id"])
+                    return
+        elif "Article" in ref_text:
+            a_no = ref_text.replace("Article", "").strip().split("(")[0].strip()
+            row = self.db.find_article_by_no(a_no)
+            if row:
+                self.on_jump("limitation_article", row["id"])
+                return
+        elif "Order" in ref_text and "Rule" in ref_text:
+            parts = ref_text.replace("Order", "").split("Rule")
+            o_no = parts[0].strip()
+            r_no = parts[1].strip().split("(")[0].strip()
+            row = self.db.find_rule_in_order(o_no, r_no)
+            if row:
+                self.on_jump("rule", row["id"])
+                return
+        elif "Order" in ref_text:
+            o_no = ref_text.replace("Order", "").strip()
+            row = self.db.find_order_by_no(o_no)
+            if row:
+                self.on_jump("order", row["id"])
+                return
+
+
 class BookmarksTab(QWidget):
     def __init__(self, db: ActDatabase, on_jump):
         super().__init__()
@@ -623,6 +788,9 @@ class MainWindow(QMainWindow):
 
         self.explorer = ExplorerTab(self.db)
         tabs.addTab(self.explorer, "Act Explorer (CPC & Limitation)")
+
+        self.checklists_tab = ChecklistsTab(self.db, self._jump)
+        tabs.addTab(self.checklists_tab, "Practice Checklists")
 
         self.search_tab = SearchTab(self.db, self._jump)
         tabs.addTab(self.search_tab, "Search")

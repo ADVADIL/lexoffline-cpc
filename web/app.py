@@ -253,6 +253,70 @@ def search():
     return render_template('search_results.html', query=q, results=results)
 
 
+import checklists_data as cd
+
+# --- Practice Checklists ---
+
+@app.route('/checklists')
+def checklists():
+    selected_cat = request.args.get('category', '')
+    categories = cd.list_checklist_categories()
+    items = cd.list_checklists(category=selected_cat if selected_cat else None)
+    return render_template('checklists_index.html',
+                           categories=categories,
+                           selected_category=selected_cat,
+                           checklists=items)
+
+
+@app.route('/checklist/<checklist_id>')
+def checklist_detail(checklist_id):
+    c = cd.get_checklist(checklist_id)
+    if not c:
+        abort(404)
+    db = get_db()
+
+    # Resolve connected provisions to web URLs
+    resolved_links = []
+    for cp in c.connected_provisions:
+        ref_text = cp["ref"]
+        url = None
+        if "Section" in ref_text:
+            s_no = ref_text.replace("Section", "").strip().split()[0]
+            if cp.get("kind") == "limitation_section":
+                row = db.get_limitation_section_by_no(s_no)
+                if row:
+                    url = f"/limitation/section/{row['id']}"
+            else:
+                row = db.get_section_by_no(s_no)
+                if row:
+                    url = f"/cpc/section/{row['id']}"
+        elif "Article" in ref_text:
+            a_no = ref_text.replace("Article", "").strip().split("(")[0].strip()
+            row = db.find_article_by_no(a_no)
+            if row:
+                url = f"/limitation/article/{row['id']}"
+        elif "Order" in ref_text and "Rule" in ref_text:
+            parts = ref_text.replace("Order", "").split("Rule")
+            o_no = parts[0].strip()
+            r_no = parts[1].strip().split("(")[0].strip()
+            row = db.find_rule_in_order(o_no, r_no)
+            if row:
+                url = f"/cpc/rule/{row['id']}"
+        elif "Order" in ref_text:
+            url = "/cpc/orders"
+
+        resolved_links.append({
+            "ref": cp["ref"],
+            "title": cp.get("title", ""),
+            "url": url
+        })
+
+    return render_template('checklist_detail.html',
+                           checklist=c,
+                           connected_links=resolved_links)
+
+
+
 import limitation_data as ld
 
 # --- Deadline Calculator ---
