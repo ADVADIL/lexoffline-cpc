@@ -21,8 +21,8 @@ jobs:
             artifact_name: LexOfflineCPC.exe
             asset_name: LexOfflineCPC_Windows.exe
           - os: macos-latest
-            artifact_name: LexOfflineCPC
-            asset_name: LexOfflineCPC_Mac
+            artifact_name: LexOfflineCPC.app
+            asset_name: LexOfflineCPC_Mac.zip
           - os: ubuntu-latest
             artifact_name: LexOfflineCPC
             asset_name: LexOfflineCPC_Linux
@@ -61,8 +61,19 @@ jobs:
         run: mv dist/LexOfflineCPC.exe dist/${{ matrix.asset_name }}
         shell: bash
 
-      - name: Rename output (macOS/Linux)
-        if: matrix.os != 'windows-latest'
+      - name: Zip .app bundle (macOS)
+        # The spec produces LexOfflineCPC.app, a directory bundle — zip it
+        # into one file so it's a single, clean GitHub Release asset users
+        # can download, unzip, and drag to Applications like normal Mac
+        # software, rather than a bare Unix executable needing Terminal.
+        if: matrix.os == 'macos-latest'
+        run: |
+          cd dist
+          zip -r ${{ matrix.asset_name }} LexOfflineCPC.app
+        shell: bash
+
+      - name: Rename output (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: mv dist/LexOfflineCPC dist/${{ matrix.asset_name }}
 
       - name: Upload to release

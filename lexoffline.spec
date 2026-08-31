@@ -56,3 +56,16 @@ exe = EXE(
     entitlements_file=None,
     # icon="assets/icon.ico",  # uncomment once an app icon exists
 )
+
+# On macOS, a onefile EXE alone is a bare Unix executable — not something a
+# non-technical user can double-click in Finder without first using
+# Terminal (chmod +x, then run it there). Wrapping it in a proper .app
+# bundle makes it launchable the normal macOS way, matching what Windows
+# users get with a plain .exe.
+if sys.platform == "darwin":
+    app = BUNDLE(
+        exe,
+        name="LexOfflineCPC.app",
+        icon=None,  # add a .icns path here once an app icon exists
+        bundle_identifier="com.advadil.lexofflinecpc",
+    )
