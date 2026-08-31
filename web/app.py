@@ -1,0 +1,303 @@
+"""
+LexOffline — Web companion to the desktop app.
+Flask application serving CPC 1908 & Limitation Act 1963 as read-only
+server-rendered HTML. Reuses the same db.py / xref.py / state_amend.py /
+deadlines.py modules as the desktop app — no code duplication.
+"""
+import sys
+import os
+from datetime import date, datetime
+
+from flask import Flask, render_template, request, g, abort
+
+# Add project root to path so we can import shared modules
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+from db import ActDatabase
+from xref import extract_refs, resolve_refs
+from state_amend import KNOWN_STATES, states_present, text_for_state
+import deadlines as dl
+
+app = Flask(__name__)
+
+DATABASE = os.path.join(os.path.dirname(__file__), '..', 'cpc_1908.db')
+
+
+# ---------- DB lifecycle ----------
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = ActDatabase(DATABASE)
+    return db
+
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+
+
+def row_to_dict(row):
+    """Convert a sqlite3.Row to a plain dict (Jinja2 can't index Row objects)."""
+    return dict(row) if row else None
+
+
+def rows_to_dicts(rows):
+    return [dict(r) for r in rows] if rows else []
+
+
+# ---------- Routes ----------
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+
+# --- CPC 1908 ---
+
+@app.route('/cpc/sections')
+def cpc_sections():
+    db = get_db()
+    parts_raw = db.sections_by_part()
+    parts = {part: rows_to_dicts(sections) for part, sections in parts_raw.items()}
+    return render_template('cpc_sections.html', parts=parts)
+
+
+@app.route('/cpc/section/<int:id>')
+def cpc_section(id):
+    db = get_db()
+    row = db.get_section(id)
+    if not row:
+        abort(404)
+
+    section = row_to_dict(row)
+    text = section['text']
+
+    # Cross-references
+    refs = extract_refs(text, self_kind='section', self_ref=section['section_no'])
+    xrefs = resolve_refs(db, refs)
+
+    # Linked Limitation articles
+    limitation_links = rows_to_dicts(
+        db.find_articles_for_cpc(f"Section {section['section_no']}")
+    )
+
+    # State amendments
+    sa_blob = section.get('state_amendments') or ''
+    available_states = states_present(sa_blob)
+    selected_state = request.args.get('state')
+    state_text = text_for_state(sa_blob, selected_state) if selected_state else ''
+
+    title = f"CPC 1908 — Section {section['section_no']}: {section['title']}"
+
+    return render_template('provision.html',
+                           title=title,
+                           body=text,
+                           kind='section',
+                           ref_id=id,
+                           available_states=available_states,
+                           selected_state=selected_state,
+                           state_text=state_text,
+                           xrefs=xrefs,
+                           limitation_links=limitation_links)
+
+
+@app.route('/cpc/orders')
+def cpc_orders():
+    db = get_db()
+    orders = []
+    for o in db.all_orders():
+        od = row_to_dict(o)
+        od['rules'] = rows_to_dicts(db.rules_for_order(od['id']))
+        orders.append(od)
+    return render_template('cpc_orders.html', orders=orders)
+
+
+@app.route('/cpc/rule/<int:id>')
+def cpc_rule(id):
+    db = get_db()
+    row = db.get_rule(id)
+    if not row:
+        abort(404)
+
+    rule = row_to_dict(row)
+    order = row_to_dict(db.get_order(rule['order_id']))
+    text = rule['text']
+
+    refs = extract_refs(text)
+    xrefs = resolve_refs(db, refs)
+
+    # Try both "Order XXI" and "Order XXI, Rule 54" patterns
+    limitation_links = rows_to_dicts(
+        db.find_articles_for_cpc(f"Order {order['order_no']}")
+    )
+
+    sa_blob = rule.get('state_amendments') or ''
+    available_states = states_present(sa_blob)
+    selected_state = request.args.get('state')
+    state_text = text_for_state(sa_blob, selected_state) if selected_state else ''
+
+    title = f"CPC 1908 — Order {order['order_no']} Rule {rule['rule_no']}: {rule['title']}"
+
+    return render_template('provision.html',
+                           title=title,
+                           body=text,
+                           kind='rule',
+                           ref_id=id,
+                           available_states=available_states,
+                           selected_state=selected_state,
+                           state_text=state_text,
+                           xrefs=xrefs,
+                           limitation_links=limitation_links)
+
+
+@app.route('/cpc/appendix/<int:id>')
+def cpc_appendix(id):
+    db = get_db()
+    row = db.get_appendix(id)
+    if not row:
+        abort(404)
+
+    appendix = row_to_dict(row)
+    title = f"CPC 1908 — Appendix {appendix['letter']}"
+
+    return render_template('provision.html',
+                           title=title,
+                           body=appendix['text'],
+                           kind='appendix',
+                           ref_id=id,
+                           available_states=[],
+                           selected_state=None,
+                           state_text='',
+                           xrefs=[],
+                           limitation_links=[])
+
+
+# --- Limitation Act 1963 ---
+
+@app.route('/limitation/sections')
+def limitation_sections():
+    db = get_db()
+    parts_raw = db.limitation_sections_by_part()
+    parts = {part: rows_to_dicts(rows) for part, rows in parts_raw.items()}
+    return render_template('limitation_sections.html', parts=parts)
+
+
+@app.route('/limitation/section/<int:id>')
+def limitation_section(id):
+    db = get_db()
+    row = db.get_limitation_section(id)
+    if not row:
+        abort(404)
+
+    section = row_to_dict(row)
+    title = f"Limitation Act 1963 — Section {section['section_no']}: {section['title']}"
+
+    return render_template('limitation_detail.html',
+                           title=title,
+                           kind='limitation_section',
+                           body=section['text'],
+                           article_data=None)
+
+
+@app.route('/limitation/articles')
+def limitation_articles():
+    db = get_db()
+    divs_raw = db.limitation_articles_by_division()
+    # divs_raw is {division: {part: [Row, ...]}} — convert all Rows to dicts
+    divisions = {}
+    for div_name, part_map in divs_raw.items():
+        divisions[div_name] = {}
+        for part_name, articles in part_map.items():
+            divisions[div_name][part_name] = rows_to_dicts(articles)
+    return render_template('limitation_articles.html', divisions=divisions)
+
+
+@app.route('/limitation/article/<int:id>')
+def limitation_article(id):
+    db = get_db()
+    row = db.get_limitation_article(id)
+    if not row:
+        abort(404)
+
+    article = row_to_dict(row)
+    title = f"Limitation Act 1963 — Article {article['article_no']} ({article['period']})"
+
+    article_data = {
+        'division': article['division'],
+        'part': article['part'],
+        'description': article['description'],
+        'period': article['period'],
+        'time_begins': article['time_begins'],
+        'cpc_ref': article.get('cpc_ref') or '',
+    }
+
+    return render_template('limitation_detail.html',
+                           title=title,
+                           kind='limitation_article',
+                           body=None,
+                           article_data=article_data)
+
+
+# --- Search ---
+
+@app.route('/search')
+def search():
+    q = request.args.get('q', '').strip()
+    results = []
+    if q:
+        db = get_db()
+        results = rows_to_dicts(db.search(q))
+    return render_template('search_results.html', query=q, results=results)
+
+
+# --- Deadline Calculator ---
+
+@app.route('/deadline')
+def deadline():
+    categories = dl.list_categories()
+    all_rules = dl.list_rules()
+    # Convert DeadlineRule dataclass instances to dicts for Jinja / JS
+    rules_data = [
+        {'key': r.key, 'label': r.label, 'provision': r.provision,
+         'category': r.category, 'note': r.note or ''}
+        for r in all_rules
+    ]
+
+    result = None
+    selected_rule = request.args.get('rule_key', '')
+    trigger_date_str = request.args.get('trigger_date', '')
+    excluded_days_str = request.args.get('excluded_days', '0')
+    selected_category = request.args.get('category', '')
+
+    if selected_rule and trigger_date_str:
+        try:
+            trigger = datetime.strptime(trigger_date_str, '%Y-%m-%d').date()
+            excluded = int(excluded_days_str) if excluded_days_str else 0
+            raw = dl.compute(trigger, selected_rule, excluded_days=excluded)
+            result = {
+                'due_date': raw['due_date'].strftime('%d %B %Y'),
+                'trigger_date': raw['trigger_date'].strftime('%d %B %Y'),
+                'period_str': raw['period_str'],
+                'excluded_days': raw['excluded_days'],
+                'provision': raw['rule'].provision,
+                'note': raw['rule'].note or '',
+                'days': raw['days'],
+            }
+        except (ValueError, KeyError):
+            result = None
+
+    return render_template('deadline.html',
+                           categories=categories,
+                           rules=rules_data,
+                           result=result,
+                           selected_category=selected_category,
+                           selected_rule=selected_rule,
+                           trigger_date=trigger_date_str,
+                           excluded_days=excluded_days_str)
+
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)

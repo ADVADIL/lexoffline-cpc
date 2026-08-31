@@ -41,10 +41,18 @@ be missing `libxcb-cursor0` — install it with your package manager
 
 ## Run from source instead
 
+### Desktop App
 ```
 pip install -r requirements.txt
 python3 main.py
 ```
+
+### Web Companion (Online Access)
+```
+pip install -r web/requirements.txt
+python3 web/app.py
+```
+Open `http://localhost:5000` in your browser.
 
 ## What's in this build
 
@@ -64,6 +72,9 @@ python3 main.py
   - Category-filtered calculator for CPC procedural deadlines and ~30 curated, commonly-cited statutory Limitation periods, each with its full Order/Rule/Section cross-reference spelled out.
   - Plus a general calculator covering **all 137 Schedule Articles** to the Limitation Act — not just the curated ones — so no Article is browsable-only. Handles Articles with alternative periods (e.g. Article 61's three sub-clauses) by showing every option rather than guessing which applies.
   - **Section 12 Exclusion Support**: Deduct/exclude time taken for obtaining certified copies of decrees and judgments.
+- **Web Companion (`web/`)**:
+  - Lightweight, server-rendered Flask web app sharing the exact same underlying SQLite database and deterministic logic.
+  - Ideal for quick lookups from mobile, chambers, or home when online, without sacrificing the courtroom-guaranteed offline desktop app.
 
 ## Architecture
 
@@ -73,5 +84,8 @@ python3 main.py
 - `xref.py` — Deterministic in-text cross-reference extraction and database resolution.
 - `state_amend.py` — Deterministic state-amendment blob splitter.
 - `main.py` — PySide6 desktop interface (Explorer, Search, Bookmarks, Deadline & Limitation Tracker).
+- `web/` — Flask web companion application (`app.py`, templates, responsive CSS, and tests).
 - `build_cpc_db.py` — Ingestion and database compilation script.
 - `tests/` — Regression test suite covering `test_limitation.py`, `test_deadlines.py`, `test_state_amend.py`, and `test_xref.py` (28 tests).
+- `web/tests/` — Web test suite covering all 18 web routes and calculator endpoints.
+

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - LexOffline{% endblock %}
+
+{% block content %}
+<div class="provision-header">
+    <h1>{{ title }}</h1>
+    
+    {% if available_states %}
+    <div class="state-amendment-selector">
+        <label for="state-select">State Amendment:</label>
+        <select id="state-select" onchange="window.location.href=this.value">
+            <option value="?state=">None (Central Act)</option>
+            {% for state in available_states %}
+            <option value="?state={{ state | urlencode }}" {% if selected_state == state %}selected{% endif %}>{{ state }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% endif %}
+</div>
+
+<div class="provision-body panel">
+    <pre>{{ body }}</pre>
+</div>
+
+{% if state_text %}
+<div class="state-amendment panel highlight-panel">
+    <h3>State Amendment ({{ selected_state }})</h3>
+    <pre>{{ state_text }}</pre>
+</div>
+{% endif %}
+
+{% if xrefs %}
+<div class="cross-references section-block">
+    <h3>Cross-References</h3>
+    <ul class="xref-list">
+        {% for xref in xrefs %}
+        <li>
+            {% if xref.target and xref.target_kind == 'section' %}
+                <a href="/cpc/section/{{ xref.target.id }}">{{ xref.label }}</a>
+            {% elif xref.target and xref.target_kind == 'rule' %}
+                <a href="/cpc/rule/{{ xref.target.id }}">{{ xref.label }}</a>
+            {% elif xref.target and xref.target_kind == 'order' %}
+                <a href="/cpc/orders">{{ xref.label }}</a>
+            {% else %}
+                <span class="xref-unresolved">{{ xref.label }} (not in local database)</span>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if limitation_links %}
+<div class="limitation-links section-block">
+    <h3>⚖️ Limitation Links</h3>
+    <ul class="limitation-list">
+        {% for link in limitation_links %}
+        <li>
+            <a href="/limitation/article/{{ link.id }}">
+                <strong>Article {{ link.article_no }}</strong> ({{ link.period }}): {{ link.description }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% endblock %}

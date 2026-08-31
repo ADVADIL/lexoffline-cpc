@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Limitation Act 1963 Sections - LexOffline{% endblock %}
+
+{% block content %}
+<h1>Limitation Act, 1963 - Sections</h1>
+
+<div class="provision-list">
+    {% for part_name, sections in parts.items() %}
+    <details class="part-group">
+        <summary>
+            <h2>Part {{ part_name }}</h2>
+        </summary>
+        <ul class="item-list">
+            {% for section in sections %}
+            <li>
+                <a href="/limitation/section/{{ section.id }}">
+                    <span class="item-no">Section {{ section.section_no }}.</span>
+                    <span class="item-title">{{ section.title }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </details>
+    {% endfor %}
+</div>
+{% endblock %}

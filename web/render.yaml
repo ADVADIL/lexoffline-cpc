@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: lexoffline-web
+    env: python
+    buildCommand: "pip install -r web/requirements.txt"
+    startCommand: "cd web && gunicorn app:app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0

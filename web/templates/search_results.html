@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results - LexOffline{% endblock %}
+
+{% block content %}
+<div class="search-header">
+    <h1>Search</h1>
+    <form action="/search" method="get" class="search-form">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search CPC or Limitation Act..." class="search-input">
+        <button type="submit" class="btn">Search</button>
+    </form>
+</div>
+
+{% if query %}
+    <h2>Results for "{{ query }}"</h2>
+    
+    {% if results %}
+        <div class="search-results">
+            {% for result in results %}
+                <div class="result-card">
+                    <a href="
+                        {% if result.kind == 'section' %}/cpc/section/{{ result.ref_id }}
+                        {% elif result.kind == 'rule' %}/cpc/rule/{{ result.ref_id }}
+                        {% elif result.kind == 'appendix' %}/cpc/appendix/{{ result.ref_id }}
+                        {% elif result.kind == 'limitation_section' %}/limitation/section/{{ result.ref_id }}
+                        {% elif result.kind == 'limitation_article' %}/limitation/article/{{ result.ref_id }}
+                        {% endif %}
+                    ">
+                        <h3>{{ result.label }}</h3>
+                        <p class="snippet">...{{ result.snip|safe }}...</p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Deadline Calculator - LexOffline{% endblock %}
+
+{% block content %}
+<h1>Deadline &amp; Limitation Calculator</h1>
+
+<div class="calculator-panel panel">
+    <form action="/deadline" method="get" id="deadline-form">
+        <div class="form-group">
+            <label for="category-select">Category:</label>
+            <select id="category-select" name="category">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="rule-select">Rule / Limitation Article:</label>
+            <select id="rule-select" name="rule_key" required>
+                <option value="">Select a rule...</option>
+                {% for r in rules %}
+                <option value="{{ r.key }}" data-category="{{ r.category }}" {% if selected_rule == r.key %}selected{% endif %}>
+                    {{ r.label }} [{{ r.provision }}]
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="trigger-date">Trigger Date (e.g. date of decree / death / notice):</label>
+            <input type="date" id="trigger-date" name="trigger_date" value="{{ trigger_date }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="excluded-days">Section 12 Copy Exclusion (optional):</label>
+            <input type="number" id="excluded-days" name="excluded_days" value="{{ excluded_days }}" min="0">
+            <small>Days taken to obtain certified copy of decree/order/award (Section 12, Limitation Act 1963)</small>
+        </div>
+
+        <button type="submit" class="btn">Calculate Statutory Deadline</button>
+    </form>
+</div>
+
+{% if result %}
+<div class="result-panel panel highlight-panel-success">
+    <h2>Computation Result</h2>
+    <div class="result-details">
+        <p><strong>Provision:</strong> {{ result.provision }}</p>
+        <p><strong>Period:</strong> {{ result.period_str }} from {{ result.trigger_date }}</p>
+        {% if result.note %}
+        <p><strong>Starting Event:</strong> {{ result.note }}</p>
+        {% endif %}
+        {% if result.excluded_days|int > 0 %}
+        <p><strong>Section 12 Exclusion:</strong> +{{ result.excluded_days }} days for certified copy</p>
+        {% endif %}
+        <h3 class="due-date">Statutory Due Date: {{ result.due_date }}</h3>
+    </div>
+</div>
+{% endif %}
+
+<div class="panel" style="margin-top: 1rem; border-color: #c53030;">
+    <p style="color: #c53030; font-size: 0.9em;"><strong>Note:</strong> These computations apply Central Act timelines and Limitation Act 1963 Articles.
+    Under Section 4, if the due date falls on a court holiday, filing on the re-opening day is permitted.
+    Under Section 5, condonation of delay applies to appeals and applications (except Order XXI execution petitions).</p>
+</div>
+
+<script type="application/json" id="rules-data">
+    {{ rules | tojson }}
+</script>
+<script src="{{ url_for('static', filename='deadline.js') }}"></script>
+{% endblock %}
+

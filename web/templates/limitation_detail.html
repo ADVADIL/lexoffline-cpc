@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - LexOffline{% endblock %}
+
+{% block content %}
+<div class="provision-header">
+    <h1>{{ title }}</h1>
+</div>
+
+{% if kind == 'limitation_section' %}
+<div class="provision-body panel">
+    <pre>{{ body }}</pre>
+</div>
+{% elif kind == 'limitation_article' %}
+<div class="article-details panel">
+    <div class="detail-row">
+        <strong>Division:</strong> {{ article_data.division }}
+    </div>
+    <div class="detail-row">
+        <strong>Part:</strong> {{ article_data.part }}
+    </div>
+    <div class="detail-row">
+        <strong>Description of suit, appeal or application:</strong>
+        <p>{{ article_data.description }}</p>
+    </div>
+    <div class="detail-row">
+        <strong>Period of Limitation:</strong>
+        <p>{{ article_data.period }}</p>
+    </div>
+    <div class="detail-row">
+        <strong>Time from which period begins to run:</strong>
+        <p>{{ article_data.time_begins }}</p>
+    </div>
+    {% if article_data.cpc_ref %}
+    <div class="detail-row">
+        <strong>Connected CPC Provisions:</strong>
+        <p>{{ article_data.cpc_ref }}</p>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

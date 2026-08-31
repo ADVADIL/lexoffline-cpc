@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LexOffline{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">LexOffline</a>
+            <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.nav-links').classList.toggle('active')">
+                &#9776;
+            </button>
+            <nav class="nav-links">
+                <a href="/">Home</a>
+                <a href="/cpc/sections">CPC Sections</a>
+                <a href="/cpc/orders">CPC Orders</a>
+                <a href="/limitation/sections">Limitation Sections</a>
+                <a href="/limitation/articles">Limitation Schedule</a>
+                <a href="/search">Search</a>
+                <a href="/deadline">Deadline Calculator</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>LexOffline &mdash; Offline-first statutory reference for Indian civil litigation. <a href="https://github.com/ADVADIL/lexoffline-cpc/releases" target="_blank" rel="noopener noreferrer">Download the desktop app</a> for guaranteed offline access.</p>
+        </div>
+    </footer>
+</body>
+</html>

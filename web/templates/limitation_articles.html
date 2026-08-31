@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Limitation Act Schedule - LexOffline{% endblock %}
+
+{% block content %}
+<h1>Limitation Act, 1963 - Schedule (Articles)</h1>
+
+<div class="provision-list">
+    {% for division, parts in divisions.items() %}
+    <div class="division-group">
+        <h2>{{ division }}</h2>
+        {% for part_name, articles in parts.items() %}
+        <details class="part-group">
+            <summary>
+                <h3>Part {{ part_name }}</h3>
+            </summary>
+            <ul class="item-list article-list">
+                {% for article in articles %}
+                <li>
+                    <a href="/limitation/article/{{ article.id }}">
+                        <div class="article-meta">
+                            <span class="item-no">Article {{ article.article_no }}</span>
+                            <span class="item-period">{{ article.period }}</span>
+                        </div>
+                        <span class="item-title">{{ article.description | truncate(100) }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </details>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}CPC 1908 Orders - LexOffline{% endblock %}
+
+{% block content %}
+<h1>Code of Civil Procedure, 1908 - Orders</h1>
+
+<div class="provision-list">
+    {% for order in orders %}
+    <details class="order-group">
+        <summary>
+            <h2>Order {{ order.order_no }}: {{ order.title }}</h2>
+        </summary>
+        <ul class="item-list">
+            {% for rule in order.rules %}
+            <li>
+                <a href="/cpc/rule/{{ rule.id }}">
+                    <span class="item-no">Rule {{ rule.rule_no }}.</span>
+                    <span class="item-title">{{ rule.title }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </details>
+    {% endfor %}
+</div>
+{% endblock %}
