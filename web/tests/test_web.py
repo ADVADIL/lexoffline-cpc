@@ -217,6 +217,34 @@ def test_template_detail_specific_performance():
     assert b'Article 54' in resp.data
 
 
+def test_template_detail_impleadment():
+    resp = _client().get('/template/impleadment_o1_r10')
+    assert resp.status_code == 200
+    assert b'Order I Rule 10' in resp.data
+    assert b'Impleadment' in resp.data
+
+
+def test_template_detail_chief_affidavit():
+    resp = _client().get('/template/chief_affidavit_o18_r4')
+    assert resp.status_code == 200
+    assert b'Order XVIII Rule 4' in resp.data
+    assert b'Evidence' in resp.data
+
+
+def test_template_detail_commercial_suit():
+    resp = _client().get('/template/plaint_commercial_suit')
+    assert resp.status_code == 200
+    assert b'Commercial Courts Act' in resp.data
+    assert b'STATEMENT OF TRUTH' in resp.data
+
+
+def test_template_detail_rsa():
+    resp = _client().get('/template/regular_second_appeal_sec100')
+    assert resp.status_code == 200
+    assert b'Section 100' in resp.data
+    assert b'SUBSTANTIAL QUESTIONS OF LAW' in resp.data
+
+
 def test_template_404_invalid():
     resp = _client().get('/template/non_existent_template')
     assert resp.status_code == 404

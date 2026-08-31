@@ -1,5 +1,5 @@
 """
-Test suite for expanded courtroom drafting templates module (28 templates).
+Test suite for comprehensive courtroom drafting templates module (54 templates).
 """
 import sys
 from pathlib import Path
@@ -15,8 +15,8 @@ from templates_data import (
 )
 
 
-def test_all_28_templates_present():
-    assert len(TEMPLATES) == 28
+def test_all_54_templates_present():
+    assert len(TEMPLATES) == 54
     expected_ids = {
         "caveat_sec_148a",
         "injunction_o39_r1_2",
@@ -45,7 +45,33 @@ def test_all_28_templates_present():
         "plaint_specific_performance",
         "plaint_partition",
         "plaint_declaration_possession",
-        "cert_sec_65b_evidence"
+        "cert_sec_65b_evidence",
+        "impleadment_o1_r10",
+        "representative_suit_o1_r8",
+        "guardian_ad_litem_o32_r3",
+        "strike_out_party_o1_r10",
+        "chief_affidavit_o18_r4",
+        "witness_summons_o16_r1_2",
+        "interrogatories_o11_r1_8",
+        "notice_admit_documents_o12_r2",
+        "return_documents_o13_r9",
+        "handwriting_expert_sec45",
+        "commission_witness_o26_r1_4",
+        "plaint_cancellation_deed",
+        "plaint_ejectment_tenant",
+        "plaint_easement_injunction",
+        "plaint_commercial_suit",
+        "suit_indigent_person_o33",
+        "compromise_petition_o23_r3",
+        "withdrawal_suit_o23_r1",
+        "restoration_suit_o9_r9",
+        "restoration_suit_o9_r4",
+        "preliminary_issue_o14_r2",
+        "correction_decree_sec152",
+        "restitution_sec144",
+        "regular_second_appeal_sec100",
+        "civil_revision_sec115",
+        "writ_art227_supervisory"
     }
     found_ids = {t.id for t in TEMPLATES}
     assert found_ids == expected_ids
@@ -71,18 +97,24 @@ def test_get_template_by_id():
     assert "Order XXI" in t.provision
     assert "COLUMN NO." in t.template_text
 
-    t_amend = get_template("amendment_o6_r17")
-    assert t_amend is not None
-    assert "Order VI Rule 17" in t_amend.provision
-    assert "due diligence" in t_amend.template_text.lower()
+    t_impl = get_template("impleadment_o1_r10")
+    assert t_impl is not None
+    assert "Order I Rule 10" in t_impl.provision
+    assert "necessary and proper party" in t_impl.template_text.lower()
 
-    t_comm = get_template("commissioner_o26_r9")
+    t_comm = get_template("plaint_commercial_suit")
     assert t_comm is not None
-    assert "Order XXVI Rule 9" in t_comm.provision
+    assert "statement of truth" in t_comm.template_text.lower()
+    assert "15A" in t_comm.provision
 
-    t_rfa = get_template("regular_first_appeal_sec96")
-    assert t_rfa is not None
-    assert "Section 96" in t_rfa.provision
+    t_rsa = get_template("regular_second_appeal_sec100")
+    assert t_rsa is not None
+    assert "Section 100" in t_rsa.provision
+    assert "substantial questions of law" in t_rsa.template_text.lower()
+
+    t_writ = get_template("writ_art227_supervisory")
+    assert t_writ is not None
+    assert "227" in t_writ.provision
 
     missing = get_template("non_existent_template")
     assert missing is None
@@ -90,34 +122,36 @@ def test_get_template_by_id():
 
 def test_list_templates_by_category():
     categories = list_template_categories()
-    assert len(categories) >= 6
+    assert len(categories) >= 7
     assert "Interlocutory Applications" in categories
     assert "Execution Proceedings" in categories
     assert "Appeals & Revisions" in categories
     assert "Core Pleadings" in categories
+    assert "Parties & Capacity" in categories
+    assert "Evidence & Trial Proceedings" in categories
+    assert "Settlement & Compromise" in categories
 
-    ia_templates = list_templates(category="Interlocutory Applications")
-    assert len(ia_templates) >= 6
-    for t in ia_templates:
-        assert t.category == "Interlocutory Applications"
+    evidence_templates = list_templates(category="Evidence & Trial Proceedings")
+    assert len(evidence_templates) >= 6
+    for t in evidence_templates:
+        assert t.category == "Evidence & Trial Proceedings"
 
 
-def test_substantive_plaint_templates():
-    t_sp = get_template("plaint_specific_performance")
-    assert t_sp is not None
-    assert "ready and willing" in t_sp.template_text.lower()
-    assert "16(c)" in t_sp.template_text
+def test_compromise_and_restoration_templates():
+    t_comp = get_template("compromise_petition_o23_r3")
+    assert t_comp is not None
+    assert "refund" in t_comp.template_text.lower()
 
-    t_part = get_template("plaint_partition")
-    assert t_part is not None
-    assert "GENEALOGY" in t_part.template_text
-    assert "metes and bounds" in t_part.template_text.lower()
+    t_rest = get_template("restoration_suit_o9_r9")
+    assert t_rest is not None
+    assert "Order IX Rule 9" in t_rest.provision
+    assert "Article 122" in t_rest.template_text
 
 
 if __name__ == "__main__":
-    test_all_28_templates_present()
+    test_all_54_templates_present()
     test_template_structure_and_placeholders()
     test_get_template_by_id()
     test_list_templates_by_category()
-    test_substantive_plaint_templates()
-    print(">>> ALL 28 TEMPLATE TESTS PASSED! <<<")
+    test_compromise_and_restoration_templates()
+    print(">>> ALL 54 TEMPLATE TESTS PASSED! <<<")

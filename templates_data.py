@@ -1,7 +1,7 @@
 """
 Authoritative Court-Ready Legal Drafting Templates & Form Library
 for Code of Civil Procedure, 1908 & The Limitation Act, 1963.
-Contains 28 full, court-tested petition drafts, interlocutory applications,
+Contains 54 full, court-tested petition drafts, interlocutory applications,
 statutory notices, plaints, execution petitions, and appellate memoranda.
 All templates feature bracketed placeholders e.g. [PLAINTIFF NAME], [DATE],
 statutory authorities, practice notes, and connected provision references.
@@ -42,17 +42,13 @@ CAVEAT PETITION NO. _______ OF 202[ ]
 
 IN THE MATTER OF:
 [CAVEATOR FULL NAME],
-Aged about [ ] years,
-S/o or D/o [PARENT NAME],
+Aged about [ ] years, S/o or D/o [PARENT NAME],
 Residing at [FULL RESIDENTIAL ADDRESS],
-Contact: [PHONE / EMAIL]
-                                                                        ... CAVEATOR
+Contact: [PHONE / EMAIL]                                                ... CAVEATOR
 VERSUS
 [EXPECTED APPLICANT / OPPOSITE PARTY NAME],
-Aged about [ ] years,
-S/o or D/o [PARENT NAME],
-Residing at [FULL RESIDENTIAL ADDRESS]
-                                                                        ... EXPECTED APPLICANT
+Aged about [ ] years, S/o or D/o [PARENT NAME],
+Residing at [FULL RESIDENTIAL ADDRESS]                                  ... EXPECTED APPLICANT
 
 CAVEAT PETITION UNDER SECTION 148A OF THE CODE OF CIVIL PROCEDURE, 1908
 
@@ -195,7 +191,6 @@ That summons was served, but the Applicant was prevented by sufficient cause fro
 
 4. DATE OF KNOWLEDGE & LIMITATION (ARTICLE 123):
 That the Applicant first gained knowledge of the passing of the ex-parte decree only on [DATE OF KNOWLEDGE], when [EXPLAIN: e.g. Court Bailiff arrived with execution warrant / JD checked revenue records]. The present Application is filed within 30 days of the date of knowledge as prescribed under Article 123 of the Limitation Act, 1963.
-(If filed beyond 30 days: A separate Application under Section 5 of the Limitation Act for condonation of delay of [ ] days is filed herewith and may kindly be read as part hereof).
 
 5. SUBSTANTIAL DEFENSE ON MERITS:
 That the Applicant has a meritorious and complete defense to the Suit. The Plaintiff's claim is false, frivolous, and barred by limitation. If the ex-parte decree is not set aside, the Applicant will be condemned unheard, causing irreparable miscarriage of justice.
@@ -294,7 +289,7 @@ Verified at [CITY] on this [DAY] day of [MONTH], 202[ ]
         id="lr_substitution_o22_r3_4",
         title="Application for Substitution of Legal Representatives (LRs)",
         provision="Order XXII Rule 3 / Rule 4 CPC",
-        category="Parties & Succession",
+        category="Parties & Capacity",
         summary="Application to bring legal heirs / representatives of a deceased plaintiff (Rule 3) or deceased defendant (Rule 4) on record.",
         practice_notes="Limitation under Article 120 of Limitation Act is 90 days from the date of death. If not filed within 90 days, the suit abates automatically against the deceased party. If filed after 90 days, composite application to set aside abatement (Order XXII Rule 9, Article 121: 60 days) and condone delay under Section 5 must be filed.",
         connected_provisions=[
@@ -1585,6 +1580,1292 @@ Place: [CITY]
 Date: [DATE]
                                                         DEPONENT / SIGNATORY
                                                         [NAME, DESIGNATION & CONTACT]
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 29. IMPLEADMENT APPLICATION (ORDER I RULE 10(2))
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="impleadment_o1_r10",
+        title="Application for Impleadment of Necessary / Proper Party",
+        provision="Order I Rule 10(2) CPC",
+        category="Parties & Capacity",
+        summary="Application by plaintiff or proposed third-party intervener praying to be added as a party defendant/plaintiff to prevent multiplicity of suits.",
+        practice_notes="Kasturi v. Iyyamperumal (2005) 6 SCC 733: A necessary party is one without whom no effective decree can be passed at all; a proper party is one whose presence enables the court to completely, effectively, and adequately adjudicate all matters in dispute.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order I Rule 10", "title": "Suit in name of wrong plaintiff. Court may strike out or add parties"}
+        ],
+        template_text="""IN THE COURT OF THE [CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+I.A. NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF / PROPOSED APPLICANT NAME]                              ... APPLICANT
+VERSUS
+1. [PLAINTIFF NAME]                                                ... RESPONDENT 1
+2. [DEFENDANT NAME]                                                ... RESPONDENT 2
+
+APPLICATION UNDER ORDER I RULE 10(2) READ WITH SECTION 151 CPC FOR IMPLEADMENT
+
+The Applicant respectfully submits as under:
+
+1. That the Plaintiff has instituted the above Suit against the Defendant for [PARTITION / INJUNCTION / DECLARATION OF TITLE].
+
+2. INTEREST & NECESSITY OF PROPOSED PARTY:
+That the Applicant is a direct title-holder / co-owner / subsequent purchaser pendente lite / mortgagee having substantial and subsisting legal interest in the Suit Schedule Property:
+[EXPLAIN SUBSTANTIVE INTEREST: e.g. The Applicant purchased Item No. 2 of the Suit Property vide Registered Sale Deed dated DATE, prior to the filing of the suit, and is in continuous physical possession.]
+
+3. That the Plaintiff has deliberately and mischievously omitted to array the Applicant as a party to the suit with the oblique motive of obtaining a collusive decree behind the back of the Applicant.
+
+4. That the Applicant is both a necessary and proper party. If any decree is passed in the present suit without the Applicant on record, it will prejudice the Applicant's valuable property rights and lead to multiple rounds of litigation.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+(a) Implead the Applicant as Defendant No. [ ] in O.S. No. [ ] of 202[ ];
+(b) Permit the Applicant to file Written Statement and participate in the proceedings; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 30. REPRESENTATIVE SUIT (ORDER I RULE 8)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="representative_suit_o1_r8",
+        title="Application for Leave to Sue in Representative Capacity & Notice",
+        provision="Order I Rule 8 CPC",
+        category="Parties & Capacity",
+        summary="Application for permission of the court to institute or defend a suit in a representative capacity on behalf of numerous persons having the same interest.",
+        practice_notes="Order I Rule 8(2): Court MUST give notice of the institution of the suit to all persons so interested, either by personal service or by public advertisement at plaintiff's expense. No compromise or abandonment can be made without leave of the court and prior notice under Rule 8(4).",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order I Rule 8", "title": "One person may sue or defend on behalf of all in same interest"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+I.A. NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF REPRESENTATIVES NAMES]                                  ... APPLICANTS / PLAINTIFFS
+VERSUS
+[DEFENDANT NAMES]                                                  ... RESPONDENTS / DEFENDANTS
+
+APPLICATION UNDER ORDER I RULE 8 READ WITH SECTION 151 CPC
+
+The Applicants / Plaintiffs respectfully submit as under:
+
+1. That the Plaintiffs have instituted the accompanying Suit for [DECLARATION OF PUBLIC CHARITABLE TRUST / COMMON PATHWAY EASEMENT / RESIDENTS WELFARE].
+
+2. COMMONALITY OF INTEREST:
+That there are numerous persons (more than [NUMBER] residents/beneficiaries) who have the same common interest in the subject matter of the Suit. It is practically impossible to join all such persons individually as co-plaintiffs.
+
+3. That the Plaintiffs are members / office bearers of the [NAME OF ASSOCIATION / COMMUNITY] and represent the common grievances of all persons interested.
+
+4. That the Plaintiffs undertake to bear all expenses for publishing public notice of the institution of the suit in two leading newspapers (one English and one vernacular) as directed by this Court.
+
+PRAYER:
+Wherefore, the Applicants pray that this Hon'ble Court may be pleased to:
+(a) Grant leave to the Plaintiffs to sue in a representative capacity on behalf of all [RESIDENTS / BENEFICIARIES] under Order I Rule 8 CPC;
+(b) Approve the draft public advertisement notice and direct publication in daily newspapers; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANTS
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 31. GUARDIAN AD LITEM (ORDER XXXII RULES 3 & 15)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="guardian_ad_litem_o32_r3",
+        title="Application for Appointment of Guardian ad Litem for Minor",
+        provision="Order XXXII Rules 3 & 15 CPC",
+        category="Parties & Capacity",
+        summary="Application for appointment of a fit and proper person as guardian ad litem to represent a minor or person of unsound mind in civil litigation.",
+        practice_notes="Order XXXII Rule 3(3): Application must be supported by an affidavit stating that the proposed guardian has no interest in the matters in controversy adverse to that of the minor. A decree passed against a minor without appointing a guardian ad litem is null and void (Ram Chandra v. Man Singh).",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XXXII Rule 3", "title": "Guardian for the suit to be appointed by Court for minor defendant"},
+            {"kind": "rule", "ref": "Order XXXII Rule 15", "title": "Rules 1 to 14 (except rule 2A) to apply to persons of unsound mind"}
+        ],
+        template_text="""IN THE COURT OF THE [CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+I.A. NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF NAME]                                                   ... APPLICANT / PLAINTIFF
+VERSUS
+[DEFENDANT 1 NAME] (MINOR),
+Represented by natural guardian / proposed guardian [NAME]         ... RESPONDENT / DEFENDANT
+
+APPLICATION UNDER ORDER XXXII RULE 3 READ WITH SECTION 151 CPC
+
+The Applicant / Plaintiff respectfully submits as under:
+
+1. That the Plaintiff has instituted the above Suit for [PARTITION / DECLARATION OF TITLE].
+
+2. That Defendant No. [ ] is a minor aged about [ ] years, having been born on [DATE OF BIRTH], and is incapable of defending the suit on his own behalf.
+
+3. That [PROPOSED GUARDIAN FULL NAME], aged about [ ] years, residing at [ADDRESS], is the natural mother / uncle / brother of the minor defendant.
+
+4. That the proposed guardian is a fit and proper person to act as guardian ad litem, is in custody of the minor, and has NO interest whatsoever adverse to that of the minor in the subject matter of the Suit.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+Appoint [PROPOSED GUARDIAN NAME] as the Guardian ad Litem to represent the minor Defendant No. [ ] in the present Suit; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 32. STRIKE OUT IMPROPER PARTY (ORDER I RULE 10(1))
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="strike_out_party_o1_r10",
+        title="Application for Striking Out Improperly Joined Defendant",
+        provision="Order I Rule 10(1) & (2) CPC",
+        category="Parties & Capacity",
+        summary="Application by a misjoined defendant praying to be deleted and struck off from the array of parties on grounds of no relief claimed and misjoinder.",
+        practice_notes="Where a defendant is neither a necessary nor proper party and no relief or cause of action is disclosed against him, the court will strike out his name under Order I Rule 10(2) to save him from unnecessary litigation costs and harassment.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order I Rule 10", "title": "Court may strike out or add parties"}
+        ],
+        template_text="""IN THE COURT OF THE [CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+I.A. NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[DEFENDANT NO. ___ FULL NAME]                                      ... APPLICANT / DEFENDANT
+VERSUS
+[PLAINTIFF FULL NAME]                                              ... RESPONDENT / PLAINTIFF
+
+APPLICATION UNDER ORDER I RULE 10(2) READ WITH SECTION 151 CPC FOR DELETION OF PARTY
+
+The Applicant / Defendant respectfully submits as under:
+
+1. That the Plaintiff has arrayed the Applicant as Defendant No. [ ] in the above Suit.
+
+2. MISJOINDER & LACK OF PRIVITY:
+That a bare reading of the Plaint discloses that the Applicant has no privity of contract, no interest in the suit property, and no cause of action has been alleged against the Applicant. No substantive relief has been prayed against the Applicant.
+
+3. That the Applicant was merely an attesting witness / broker / proforma officer having no personal or legal claim.
+
+4. That the retention of the Applicant on record causes severe prejudice, embarrassment, and unwarranted legal expenses.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+Strike out and delete the name of the Applicant (Defendant No. [ ]) from the array of parties in O.S. No. [ ] of 202[ ]; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 33. EVIDENCE-IN-CHIEF AFFIDAVIT (ORDER XVIII RULE 4)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="chief_affidavit_o18_r4",
+        title="Evidence-in-Chief Affidavit of Witness (PW-1 / DW-1)",
+        provision="Order XVIII Rule 4 CPC",
+        category="Evidence & Trial Proceedings",
+        summary="Standard sworn evidence-in-chief affidavit of witness under Order XVIII Rule 4 CPC, with document marking clauses and formal verification.",
+        practice_notes="Order XVIII Rule 4(1): The examination-in-chief of a witness shall be on affidavit. The deponent must enter the witness box to formally tender the affidavit on oath and identify original documents for marking exhibits. Cross-examination follows immediately thereafter.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XVIII Rule 4", "title": "Recording of evidence"},
+            {"kind": "rule", "ref": "Order XVIII Rule 5", "title": "How evidence shall be taken in appealable cases"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF NAME]                                                   ... PLAINTIFF
+VERSUS
+[DEFENDANT NAME]                                                   ... DEFENDANT
+
+EVIDENCE AFFIDAVIT OF [PW-1 / DW-1] UNDER ORDER XVIII RULE 4 OF THE CODE OF CIVIL PROCEDURE, 1908
+
+I, [WITNESS FULL NAME], aged about [ ] years, S/o or D/o [PARENT NAME], residing at [ADDRESS], do hereby solemnly affirm and state on oath as follows:
+
+1. I am the Plaintiff / Defendant in the above suit and am fully acquainted with the facts of the case. I am competent to depose to this affidavit.
+
+2. I reiterate all the averments and contentions set out in the [Plaint / Written Statement] as part and parcel of this evidence affidavit to avoid prolixity.
+
+3. [CHRONOLOGICAL FACTUAL DEPOSITION]:
+That I acquired ownership of the Suit Schedule Property vide registered Sale Deed dated [DATE]. Since the date of purchase, I have been in lawful, peaceful, and uninterrupted physical possession. The electricity bills, tax receipts, and municipal khata extracts stand in my name.
+
+4. That on [DATE], the Defendant along with his agents illegally attempted to trespass into the Suit Property...
+
+5. TENDER & MARKING OF DOCUMENTS:
+In support of my claim, I produce and tender the following original documents which may kindly be marked as Exhibits:
+(a) Original Registered Sale Deed dated [DATE] marked as EXHIBIT P-1.
+(b) Certified Khata Certificate dated [DATE] marked as EXHIBIT P-2.
+(c) Property Tax Paid Receipts (5 Nos.) marked as EXHIBITS P-3 to P-7.
+(d) Office copy of Statutory Legal Notice dated [DATE] marked as EXHIBIT P-8.
+(e) Postal Acknowledgement card signed by Defendant marked as EXHIBIT P-9.
+
+6. I state that the Plaintiff's claim is genuine, bona fide, and lawful, and the suit deserves to be decreed as prayed for.
+
+                                                        DEPONENT
+
+VERIFICATION
+I, [WITNESS NAME], the deponent above named, do hereby verify that the contents of Paragraphs 1 to 6 are true and correct to my personal knowledge. Nothing material has been concealed therefrom.
+Verified at [CITY] on this [DAY] day of [MONTH], 202[ ]
+                                                        DEPONENT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 34. WITNESS SUMMONS APPLICATION (ORDER XVI RULES 1 & 2)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="witness_summons_o16_r1_2",
+        title="Application for Issuance of Witness Summons & Batta Memo",
+        provision="Order XVI Rules 1 & 2 CPC",
+        category="Evidence & Trial Proceedings",
+        summary="Application praying for issuance of witness summons to official witnesses (Sub-Registrar, Bank Manager, Surveyor) to produce records and give evidence.",
+        practice_notes="Order XVI Rule 2: The party applying for summons shall, before summons is granted, pay into court such sum of money as appears to the court reasonable to defray the expenses of the witness in travelling to and from court (diet money and travelling allowance).",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XVI Rule 1", "title": "List of witnesses and summons to witnesses"},
+            {"kind": "rule", "ref": "Order XVI Rule 2", "title": "Expenses of witness to be paid into Court on applying for summons"}
+        ],
+        template_text="""IN THE COURT OF THE [CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+I.A. NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF / DEFENDANT NAME]                                       ... APPLICANT
+VERSUS
+[OPPOSITE PARTY NAME]                                              ... RESPONDENT
+
+APPLICATION UNDER ORDER XVI RULES 1 & 2 READ WITH SECTION 151 CPC
+
+The Applicant respectfully submits as under:
+
+1. That the above Suit is posted for [PLAINTIFF / DEFENDANT] Evidence.
+
+2. That in order to prove [FACT TO BE PROVED: e.g. genuine execution of Sale Deed / disbursement of loan / certified village map], the evidence and production of official records by the following witness is absolutely essential and crucial:
+
+   WITNESS DETAILS:
+   THE SENIOR SUB-REGISTRAR,
+   Office of the Sub-Registrar, [LOCATION/CITY].
+   RECORDS TO BE PRODUCED: Original Volume Register Book 1 containing Document No. [ ] of [YEAR] registered on [DATE].
+
+3. That the said witness is an official public custodian who cannot attend court without official summons issued by this Hon'ble Court.
+
+4. That the Applicant has deposited the prescribed witness batta and conveyance charges into court vide Batta Memo annexed herewith.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+Issue official Witness Summons to the witness named above directing him to appear before this Court on [DATE] with the specified original records to give evidence; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 35. INTERROGATORIES & ANSWERS (ORDER XI RULES 1 & 8)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="interrogatories_o11_r1_8",
+        title="Interrogatories for Examination of Opposite Party & Answer Affidavit",
+        provision="Order XI Rules 1 & 8 CPC",
+        category="Evidence & Trial Proceedings",
+        summary="Written interrogatories delivered by one party for examination of the adversary, with the statutory form of affidavit in answer.",
+        practice_notes="Order XI Rule 1 enables delivery of interrogatories relating to matters in question in the suit. Interrogatories that do not relate to any matters in question are irrelevant. Answer must be by affidavit filed within 10 days under Rule 8.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XI Rule 1", "title": "Discovery by interrogatories"},
+            {"kind": "rule", "ref": "Order XI Rule 8", "title": "Affidavit in answer, filing"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF NAME]                                                   ... PLAINTIFF
+VERSUS
+[DEFENDANT NAME]                                                   ... DEFENDANT
+
+INTERROGATORIES DELIVERED BY THE PLAINTIFF FOR EXAMINATION OF THE DEFENDANT UNDER ORDER XI RULE 1 CPC
+
+The Plaintiff requires the Defendant, [DEFENDANT FULL NAME], to answer on oath the following interrogatories within 10 days:
+
+1. Did you or did you not sign the Agreement to Sell dated [DATE] in the presence of witnesses [NAMES]?
+2. Did you receive a sum of Rs. [AMOUNT] on [DATE] through RTGS Transaction Ref No. [ ] from the Plaintiff's bank account?
+3. State whether on the date of execution of the said Agreement, you had mortgaged the suit property with [BANK NAME].
+4. State the name and branch of the Bank where your savings account was maintained on [DATE].
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR PLAINTIFF
+
+
+AFFIDAVIT IN ANSWER TO INTERROGATORIES (ORDER XI RULE 8 CPC)
+I, [DEFENDANT FULL NAME], aged [ ] years, residing at [ADDRESS], do hereby state on oath:
+In answer to the interrogatories delivered by the Plaintiff, I state as follows:
+To Interrogatory No. 1: I answer that [INSERT SPECIFIC ANSWER].
+To Interrogatory No. 2: I answer that [INSERT SPECIFIC ANSWER].
+Solemnly affirmed at [CITY] on this [DAY] day of [MONTH], 202[ ]
+                                                        DEPONENT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 36. NOTICE TO ADMIT DOCUMENTS / FACTS (ORDER XII RULES 2 & 4)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="notice_admit_documents_o12_r2",
+        title="Notice to Admit Documents and Facts (Order XII Rules 2 & 4 CPC)",
+        provision="Order XII Rules 2 & 4 CPC",
+        category="Evidence & Trial Proceedings",
+        summary="Formal notice calling upon the opposite party to admit the authenticity/execution of specific documents within 7 days, shifting the costs of proof.",
+        practice_notes="Order XII Rule 2: Either party may call upon the other to admit any document. In case of refusal or neglect to admit after notice, the costs of proving such document shall be paid by the party so neglecting or refusing, whatever the result of the suit may be.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XII Rule 2", "title": "Notice to admit documents"},
+            {"kind": "rule", "ref": "Order XII Rule 4", "title": "Notice to admit facts"}
+        ],
+        template_text="""IN THE COURT OF THE [CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF NAME]                                                   ... PLAINTIFF
+VERSUS
+[DEFENDANT NAME]                                                   ... DEFENDANT
+
+NOTICE TO ADMIT DOCUMENTS UNDER ORDER XII RULE 2 OF THE CODE OF CIVIL PROCEDURE, 1908
+
+TO:
+[DEFENDANT / PLAINTIFF FULL NAME],
+Through his Counsel, [ADVOCATE NAME], Advocate, [CITY].
+
+TAKE NOTICE that the Plaintiff [or Defendant] in this Suit proposes to adduce in evidence the several documents specified in the Schedule below, and that the same may be inspected by the Defendant [or Plaintiff], his pleader or agent, at [OFFICE/COURT LOCATION] on [DATE] between [TIME] AM and [TIME] PM.
+
+YOU ARE HEREBY REQUIRED within seven (7) days from the service of this notice to admit that such of the said documents as are specified to be originals were respectively written, signed, or executed as they purport respectively to have been; that such as are specified as copies are true copies; and such documents as are stated to have been served, sent, or delivered were so served, sent, or delivered respectively.
+
+SCHEDULE OF DOCUMENTS
+1. Agreement of Sale dated [DATE] executed between [PARTY A] and [PARTY B].
+2. Legal Notice dated [DATE] dispatched by RPAD.
+3. Postal Acknowledgement Card dated [DATE] bearing signature of [DEFENDANT].
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR PLAINTIFF
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 37. RETURN OF ORIGINAL DOCUMENTS (ORDER XIII RULE 9)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="return_documents_o13_r9",
+        title="Application for Return of Original Documents / Exhibits",
+        provision="Order XIII Rule 9 CPC",
+        category="Evidence & Trial Proceedings",
+        summary="Application by party praying for return of marked original exhibits (title deeds, cheques, accounts) upon substituting certified/authenticated copies.",
+        practice_notes="Order XIII Rule 9: Any person desirous of receiving back any document produced by him in the suit may receive the same upon substituting a certified copy, provided that no document shall be returned which has, by force of the decree, become wholly void or useless.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XIII Rule 9", "title": "Return of admitted documents"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+I.A. NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF / DEFENDANT NAME]                                       ... APPLICANT
+VERSUS
+[OPPOSITE PARTY NAME]                                              ... RESPONDENT
+
+APPLICATION UNDER ORDER XIII RULE 9 READ WITH SECTION 151 CPC FOR RETURN OF DOCUMENTS
+
+The Applicant respectfully submits as under:
+
+1. That the above Suit was disposed of on [DATE] / is currently pending trial.
+
+2. That the Applicant has marked and produced the following original valuable documents in evidence as exhibits:
+   (a) Exhibit P-1: Original Registered Sale Deed dated [DATE] (Document No. [ ] of [YEAR]).
+   (b) Exhibit P-2: Original Approved Building Plan / Sanction Order.
+
+3. That the Applicant urgently requires the said original documents for producing before [BANK NAME for loan processing / MUNICIPAL CORPORATION for khata registration].
+
+4. That the Applicant undertakes to substitute verified true photocopies / certified copies of the said documents to remain on the court record, and further undertakes to produce the originals whenever directed by this Hon'ble Court.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+(a) Permit the Applicant to substitute certified copies of Exhibits P-1 and P-2 on record;
+(b) Return the original documents Exhibits P-1 and P-2 to the Applicant or his counsel; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 38. FORENSIC / HANDWRITING EXPERT (SECTION 45 EVIDENCE ACT)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="handwriting_expert_sec45",
+        title="Application for Scientific / Forensic Handwriting Expert Opinion",
+        provision="Section 45 Indian Evidence Act r/w Order XXVI Rule 10A CPC",
+        category="Evidence & Trial Proceedings",
+        summary="Application praying to send disputed signatures or thumb impressions to the State Forensic Science Laboratory (FSL) for comparison with admitted signatures.",
+        practice_notes="Order XXVI Rule 10A authorizes the court to issue a commission for scientific investigation. The disputed signature must be compared with contemporaneous admitted signatures (signatures made around the same period, not signatures created decades later).",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XXVI Rule 10A", "title": "Commission for scientific investigation"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+I.A. NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[DEFENDANT / PLAINTIFF FULL NAME]                                  ... APPLICANT
+VERSUS
+[OPPOSITE PARTY NAME]                                              ... RESPONDENT
+
+APPLICATION UNDER ORDER XXVI RULE 10A READ WITH SECTION 151 CPC AND SECTION 45 OF EVIDENCE ACT
+
+The Applicant respectfully submits as under:
+
+1. That the Plaintiff has based his claim on an alleged [PROMISSORY NOTE / WILL / AGREEMENT OF SALE] dated [DATE] marked as Exhibit [ ].
+
+2. That the Applicant has categorically and specifically denied the execution of the said document in his Written Statement, stating that the signature appearing thereon is a forged and fabricated signature.
+
+3. CONTEMPORANEOUS ADMITTED SIGNATURES:
+That the Applicant has produced contemporaneous admitted signatures appearing on:
+   (a) Registered Sale Deed dated [DATE] (Exhibit D-1).
+   (b) Bank Account Opening Form / Specimen Signature Card of [BANK NAME] (Exhibit D-2).
+
+4. That in order to arrive at a just conclusion on the issue of forgery, it is indispensable that the disputed signature on Exhibit [ ] and the admitted signatures on Exhibit [ ] be referred to the State Forensic Science Laboratory (FSL) / qualified Handwriting and Questioned Document Expert for scientific examination and report.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+(a) Refer the disputed document Exhibit [ ] and admitted documents Exhibit [ ] to the Director, Forensic Science Laboratory (FSL) for scientific comparison and opinion;
+(b) Direct the Expert to submit a detailed report on the genuineness of the signature; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 39. COMMISSION TO EXAMINE WITNESS (ORDER XXVI RULES 1 & 4)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="commission_witness_o26_r1_4",
+        title="Application for Examination of Witness on Commission & Affidavit",
+        provision="Order XXVI Rules 1 & 4 CPC",
+        category="Evidence & Trial Proceedings",
+        summary="Application for appointment of an Advocate Commissioner to record the deposition/evidence of an elderly, bedridden, or infirm witness at their residence.",
+        practice_notes="Order XXVI Rule 1: Any court may issue a commission for the examination on interrogatories or otherwise of any person resident within the local limits of its jurisdiction who is from sickness or infirmity unable to attend it. Medical certificate must be annexed.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XXVI Rule 1", "title": "Cases in which Court may issue commission to examine witness"},
+            {"kind": "rule", "ref": "Order XXVI Rule 4", "title": "Persons for whose examination commission may issue"}
+        ],
+        template_text="""IN THE COURT OF THE [CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+I.A. NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF / DEFENDANT NAME]                                       ... APPLICANT
+VERSUS
+[OPPOSITE PARTY NAME]                                              ... RESPONDENT
+
+APPLICATION UNDER ORDER XXVI RULES 1 & 4 READ WITH SECTION 151 CPC
+
+The Applicant respectfully submits as under:
+
+1. That the above Suit is posted for examination of [PW-2 / DW-2], namely [WITNESS NAME].
+
+2. That the said witness is aged about [ ] years and is suffering from [GRAVE INFIRMITY: e.g. advanced Parkinson's disease / paralytic stroke / acute cardiac ailment], and is completely bedridden and unable to move or travel to court.
+
+3. That the medical certificate issued by Dr. [NAME], [HOSPITAL/CLINIC] certifying the physical inability of the witness to attend court is annexed herewith as Annexure A.
+
+4. That the evidence of the said witness is vital, material, and indispensable to the Applicant's case.
+
+5. That it is just and necessary that an Advocate Commissioner be appointed to visit the residence of the witness at [ADDRESS] and record his evidence.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+(a) Appoint an Advocate Commissioner to record the examination-in-chief and cross-examination of the witness [NAME] at his residence;
+(b) Fix the date, time, and Commissioner's remuneration; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 40. SUIT FOR CANCELLATION OF SALE DEED (SECTION 31 SRA)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="plaint_cancellation_deed",
+        title="Plaint in Suit for Cancellation of Void / Voidable Sale Deed",
+        provision="Section 31 Specific Relief Act r/w Order VII CPC",
+        category="Core Pleadings",
+        summary="Plaint challenging a fraudulent registered sale deed executed by impersonation, fraud, or undue influence, with prayer to adjudge deed void and send copy to Sub-Registrar.",
+        practice_notes="Section 31 Specific Relief Act: Any person against whom a written instrument is void or voidable may sue to have it adjudged void; the court will order it delivered up and cancelled and send a copy of the decree to the registration officer. Limitation under Article 59: 3 years from when facts entitling plaintiff to have instrument cancelled become known.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order VII Rule 1", "title": "Particulars to be contained in plaint"},
+            {"kind": "limitation_article", "ref": "Article 59", "title": "To cancel or set aside an instrument or decree (3 years)"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF FULL NAME],
+Aged [ ] years, Residing at [ADDRESS]                              ... PLAINTIFF
+VERSUS
+1. [DEFENDANT 1 FULL NAME (PURCHASER)]                             ... DEFENDANT 1
+2. [DEFENDANT 2 FULL NAME (IMPERSONATOR / VENDOR)]                 ... DEFENDANT 2
+
+SUIT FOR CANCELLATION OF REGISTERED SALE DEED DATED [DATE] UNDER SECTION 31 OF THE SPECIFIC RELIEF ACT, 1963
+
+The Plaintiff above named respectfully submits as under:
+
+1. That the Plaintiff is the true, absolute, and lawful owner in possession of the Suit Schedule Property, having acquired the same vide [TITLE DEED] dated [DATE].
+
+2. FRAUD & IMPERSONATION:
+That on [DATE], the Plaintiff was shocked to discover from an Encumbrance Certificate that a registered Sale Deed dated [DATE] (Document No. [ ] of [YEAR] at SRO [ ]) had been fraudulently registered in favour of Defendant No. 1, purporting to have been executed by the Plaintiff.
+
+3. That the Plaintiff NEVER executed the said Sale Deed, never appeared before the Sub-Registrar, and never received any consideration. Defendant No. 2 impersonated the Plaintiff by affixing a forged photograph and forged signatures in active collusion with Defendant No. 1.
+
+4. That the impugned Sale Deed is void ab initio, fraudulent, non-est, and sham, casting a dark cloud over the Plaintiff's lawful title.
+
+5. LIMITATION (ARTICLE 59):
+The Plaintiff first discovered the existence of the fraudulent Sale Deed on [DATE OF KNOWLEDGE]. The suit is within the 3-year limitation period from the date of knowledge under Article 59 of the Limitation Act, 1963.
+
+PRAYER:
+Wherefore, the Plaintiff prays for a judgment and decree:
+(a) Adjudging and declaring that the registered Sale Deed dated [DATE] (Doc No. [ ]) is null, void, and fraudulent;
+(b) Ordering cancellation of the said Sale Deed and directing that a copy of the decree be sent to the Sub-Registrar, [SRO NAME] to cancel the registration entry under Section 31(2) SRA;
+(c) Permanent Injunction restraining Defendant No. 1 from alienating or interfering with the property;
+(d) Awarding costs of the suit.
+
+SCHEDULE OF PROPERTY
+[Insert full property particulars, survey no., boundaries]
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR PLAINTIFF
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 41. EJECTMENT / EVICTION OF TENANT (SECTION 106 TPA)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="plaint_ejectment_tenant",
+        title="Plaint in Suit for Ejectment of Tenant & Arrears of Rent",
+        provision="Section 106 Transfer of Property Act r/w Order VII CPC",
+        category="Core Pleadings",
+        summary="Civil suit for recovery of physical possession of commercial/residential premises from an overstaying tenant after statutory termination of lease, with mesne profits.",
+        practice_notes="Mandatory compliance with Section 106 TPA: 15 days notice expiring with the end of the tenancy month (or 6 months for agricultural/manufacturing leases). Proof of service of termination notice by RPAD/courier is a condition precedent to maintainability.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order VII Rule 1", "title": "Particulars to be contained in plaint"},
+            {"kind": "limitation_article", "ref": "Article 67", "title": "By a landlord to recover possession from a tenant (12 years from determination of tenancy)"}
+        ],
+        template_text="""IN THE COURT OF THE [CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[LANDLORD FULL NAME],
+Aged [ ] years, Residing at [ADDRESS]                              ... PLAINTIFF
+VERSUS
+[TENANT FULL NAME],
+Aged [ ] years, Residing at [SUIT PREMISES ADDRESS]                ... DEFENDANT
+
+SUIT FOR EJECTMENT / EVICTION, RECOVERY OF ARREARS OF RENT, AND DAMAGES FOR USE AND OCCUPATION
+
+The Plaintiff above named respectfully submits as under:
+
+1. That the Plaintiff is the absolute owner and landlord of the commercial / residential premises described in the Schedule hereunder.
+
+2. TENANCY TERMS:
+That the Defendant was inducted as a monthly tenant under an oral / written Lease Agreement dated [DATE] on a monthly rent of Rs. [RENT AMOUNT], payable on or before the [5th] of every English calendar month.
+
+3. ARREARS OF RENT:
+That the Defendant chronically defaulted in payment of rents and has failed to pay rent from [MONTH/YEAR] to [MONTH/YEAR], accumulating arrears of Rs. [TOTAL ARREARS].
+
+4. STATUTORY TERMINATION OF TENANCY (SECTION 106 TPA):
+That the Plaintiff caused a Statutory Notice dated [DATE] under Section 106 of the Transfer of Property Act, 1882 terminating the monthly tenancy with the expiry of 15 days from the date of receipt, and demanding delivery of vacant possession on or before [DATE]. The notice was duly served on the Defendant on [DATE] (Postal Acknowledgement annexed).
+
+5. STATUS AS UNAUTHORIZED OCCUPANT:
+With the expiration of the notice period on [DATE], the tenancy stood determined. The Defendant is occupying the premises as a trespasser / unauthorized occupant, and is liable to pay damages / mesne profits at the market rate of Rs. [AMOUNT] per month until delivery of vacant possession.
+
+PRAYER:
+Wherefore, the Plaintiff prays for a judgment and decree:
+(a) Directing the Defendant to quit, vacate, and deliver vacant physical possession of the Schedule Premises to the Plaintiff;
+(b) Directing payment of arrears of rent of Rs. [AMOUNT];
+(c) Directing an enquiry into mesne profits / damages from the date of suit till delivery of possession under Order XX Rule 12 CPC;
+(d) Awarding costs of the suit.
+
+SCHEDULE OF LEASED PREMISES
+[Insert shop/flat number, floor, boundaries, and measurements]
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR PLAINTIFF
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 42. EASEMENTARY INJUNCTION (SECTIONS 38 & 39 SRA)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="plaint_easement_injunction",
+        title="Plaint for Injunction Protecting Easementary Rights of Light & Air",
+        provision="Sections 38 & 39 Specific Relief Act r/w Indian Easements Act",
+        category="Core Pleadings",
+        summary="Civil suit for perpetual and mandatory injunction to restrain construction that obstructs ancient lights, air, and prescriptive right of way.",
+        practice_notes="Under Section 15 of the Indian Easements Act, 1882, the right to access of light and air must have been peaceably enjoyed without interruption for twenty years. Limitation under Article 25 Limitation Act: Suit must be brought within 2 years of the end of the 20-year period.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order VII Rule 1", "title": "Particulars to be contained in plaint"},
+            {"kind": "limitation_article", "ref": "Article 25", "title": "For compensation for obstructing an easement (3 years)"}
+        ],
+        template_text="""IN THE COURT OF THE [CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF FULL NAME],
+Residing at [ADDRESS]                                              ... PLAINTIFF
+VERSUS
+[DEFENDANT FULL NAME],
+Residing at [ADDRESS]                                              ... DEFENDANT
+
+SUIT FOR PERPETUAL AND MANDATORY INJUNCTION PROTECTING EASEMENTARY RIGHTS
+
+The Plaintiff above named respectfully submits as under:
+
+1. That the Plaintiff is the owner and occupier of the residential building described in Schedule 'A' hereunder, constructed in the year [YEAR].
+
+2. ACQUISITION OF PRESCRIPTIVE EASEMENT (SECTION 15 EASEMENTS ACT):
+That on the [EASTERN / SOUTHERN] wall of the Plaintiff's house, there are ancient windows and ventilators through which the Plaintiff and his family have enjoyed uninterrupted, open, and peaceful access of light and air for more than 30 continuous years, thereby acquiring an absolute and indefeasible prescriptive easementary right.
+
+3. DEFENDANT'S ILLEGAL CONSTRUCTION:
+That the Defendant, owner of the adjacent plot described in Schedule 'B', has recently commenced unauthorized construction of a high-rise structure without leaving statutory setbacks, deliberately erecting a concrete wall flush against the Plaintiff's windows, completely choking and extinguishing all light, ventilation, and air.
+
+4. That the obstruction renders the Plaintiff's residential premises uninhabitable, dark, and damp, causing severe physical discomfort.
+
+PRAYER:
+Wherefore, the Plaintiff prays for a judgment and decree:
+(a) Granting a Permanent Injunction restraining the Defendant from raising any construction in violation of statutory setback rules obstructing the Plaintiff's access to light and air;
+(b) Granting a Mandatory Injunction directing the Defendant to demolish the unauthorized concrete structure erected adjacent to the Plaintiff's windows;
+(c) Awarding costs of the suit.
+
+SCHEDULE 'A' (PLAINTIFF'S DOMINANT HERITAGE)
+SCHEDULE 'B' (DEFENDANT'S SERVIENT HERITAGE)
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR PLAINTIFF
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 43. COMMERCIAL SUIT PLAINT & STATEMENT OF TRUTH
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="plaint_commercial_suit",
+        title="Plaint in Commercial Suit with Mandatory Statement of Truth",
+        provision="Commercial Courts Act, 2015 r/w Order VI Rule 15A CPC",
+        category="Core Pleadings",
+        summary="Complete commercial suit plaint for unpaid commercial invoices with mandatory Statement of Truth (Order VI Rule 15A) and Section 12A Pre-Institution Mediation averments.",
+        practice_notes="Commercial Courts Act, 2015: Section 12A mandates Pre-Institution Mediation unless urgent interim relief is contemplated. Order VI Rule 15A: Statement of Truth is MANDATORY; if not filed, pleadings cannot be treated as evidence. Commercial suits require strict disclosure of all documents in plaintiff's custody under Order XI.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order VII Rule 1", "title": "Particulars to be contained in plaint"}
+        ],
+        template_text="""IN THE COURT OF THE PRINCIPAL DISTRICT & SESSIONS JUDGE (COMMERCIAL COURT) AT [CITY]
+COMMERCIAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF COMPANY / ENTERPRISE NAME],
+Through its Authorized Signatory, [NAME],
+Registered Office at [ADDRESS]                                     ... PLAINTIFF
+VERSUS
+[DEFENDANT FIRM / COMPANY NAME],
+Having Office at [ADDRESS]                                         ... DEFENDANT
+
+COMMERCIAL SUIT FOR RECOVERY OF RS. [AMOUNT] UNDER COMMERCIAL COURTS ACT, 2015
+
+The Plaintiff above named respectfully submits as under:
+
+1. COMMERCIAL DISPUTE & JURISDICTION:
+The dispute arises out of a commercial transaction for sale and purchase of goods between merchants, falling squarely within the definition of a 'Commercial Dispute' under Section 2(1)(c) of the Commercial Courts Act, 2015. The specified value is Rs. [AMOUNT], which exceeds the threshold limit of Rs. 3,00,000/-.
+
+2. SECTION 12A PRE-INSTITUTION MEDIATION COMPLIANCE:
+The Plaintiff initiated Pre-Institution Mediation before the District Legal Services Authority (DLSA) on [DATE]. The Defendant failed to appear, and a Non-Starter Report dated [DATE] was issued by the DLSA (Annexure A). / The Plaintiff seeks urgent interim relief under Section 12A(1) proviso.
+
+3. INVOICES & OUTSTANDING DEBT:
+The Plaintiff supplied [GOODS] vide Tax Invoices Nos. [ ] to [ ] dated [DATES]. The Defendant accepted delivery without protest, but failed to clear the principal invoice amount of Rs. [AMOUNT] despite statutory demand notice dated [DATE].
+
+PRAYER:
+Wherefore, the Plaintiff prays for a judgment and decree:
+(a) Directing the Defendant to pay a sum of Rs. [AMOUNT] along with commercial interest at 18% p.a. from due date till realization under Section 34 CPC;
+(b) Awarding actual commercial costs under Section 35 CPC.
+
+
+STATEMENT OF TRUTH UNDER ORDER VI RULE 15A CPC
+(MANDATORY UNDER COMMERCIAL COURTS ACT, 2015)
+I, [AUTHORIZED SIGNATORY NAME], aged [ ] years, residing at [ADDRESS], do hereby solemnly affirm and declare:
+1. I am the Authorized Signatory of the Plaintiff Company and am duly competent to depose.
+2. I say that the contents of the Plaint from Paragraphs 1 to [ ] are true to my knowledge and information.
+3. I say that all documents in the power, possession, control, or custody of the Plaintiff relating to any matter in question in the proceedings have been disclosed and copies produced with the plaint, and that the Plaintiff does not have any other documents with him.
+Solemnly affirmed at [CITY] on this [DAY] day of [MONTH], 202[ ]
+                                                        DEPONENT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 44. INDIGENT PERSON APPLICATION (ORDER XXXIII)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="suit_indigent_person_o33",
+        title="Application for Leave to Sue as an Indigent Person (In Forma Pauperis)",
+        provision="Order XXXIII Rule 1 CPC",
+        category="Pre-Emptive & Protective Proceedings",
+        summary="Application by an impoverished litigant praying for exemption from payment of ad-valorem court fees, with mandatory schedule of movable/immovable assets.",
+        practice_notes="Order XXXIII Rule 1 Explanation: An indigent person is one who is not possessed of sufficient means to pay the fee prescribed by law for the plaint. Order XXXIII Rule 2 requires a schedule of any movable or immovable property belonging to the applicant with the estimated value thereof.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XXXIII Rule 1", "title": "Suits may be instituted by indigent persons"},
+            {"kind": "rule", "ref": "Order XXXIII Rule 2", "title": "Contents of application"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+MISC. APPLICATION NO. _______ OF 202[ ] (INDIGENT OP)
+IN
+PROPOSED ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[APPLICANT FULL NAME],
+Aged [ ] years, S/o [PARENT NAME], Residing at [ADDRESS]            ... APPLICANT
+VERSUS
+1. [DEFENDANT FULL NAME]                                           ... RESPONDENT 1
+2. THE DISTRICT COLLECTOR, [DISTRICT NAME]                         ... RESPONDENT 2 (GOVT)
+
+APPLICATION UNDER ORDER XXXIII RULES 1 & 2 READ WITH SECTION 151 CPC
+
+The Applicant respectfully submits as under:
+
+1. That the Applicant has prepared the accompanying Plaint claiming damages / compensation of Rs. [AMOUNT] for [ROAD ACCIDENT / TORT / BREACH OF CONTRACT].
+
+2. That the ad-valorem court fee payable on the Plaint under the Court Fees Act is Rs. [AMOUNT].
+
+3. PAUPER STATUS / LACK OF MEANS:
+The Applicant is a daily-wage laborer / destitute widow living in extreme penury, with no regular income. The Applicant does not possess sufficient means to pay the heavy court fee of Rs. [AMOUNT] prescribed by law.
+
+4. That the Applicant has not entered into any agreement with reference to the subject matter of the proposed suit under which any other person has obtained an interest in such subject-matter.
+
+5. SCHEDULE OF ASSETS (ORDER XXXIII RULE 2):
+A full, true, and exhaustive schedule of all movable and immovable property belonging to the Applicant with their estimated value is set forth in the Schedule hereunder. The total value of all assets does not exceed Rs. [2,000/-], excluding necessary wearing apparel.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+(a) Hold an enquiry into the pauperism of the Applicant through the District Collector under Order XXXIII Rule 6 CPC;
+(b) Grant leave and permission to the Applicant to institute the Suit as an indigent person without paying court fees; in the interest of justice.
+
+SCHEDULE OF ASSETS BELONGING TO APPLICANT
+1. Wearing apparel and cooking utensils (exempted u/s 60 CPC) : Rs. Nil
+2. Utensils and bedding                                       : Rs. 800/-
+Total estimated value of all assets                           : Rs. 800/-
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 45. COMPROMISE PETITION (ORDER XXIII RULE 3)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="compromise_petition_o23_r3",
+        title="Joint Compromise Petition & Settlement Terms (Order XXIII Rule 3 CPC)",
+        provision="Order XXIII Rule 3 CPC",
+        category="Settlement & Compromise",
+        summary="Bilateral compromise petition signed by both parties and advocates recording lawful settlement terms, requesting decree in terms thereof and refund of court fees.",
+        practice_notes="Order XXIII Rule 3: Agreement must be in writing and signed by parties. It must be lawful (not contrary to public policy or prohibited by law). Under Section 16 of Court Fees Act / Section 89 CPC, parties are entitled to full refund of court fees on settlement.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XXIII Rule 3", "title": "Compromise of suit"},
+            {"kind": "section", "ref": "Section 89", "title": "Settlement of disputes outside the Court"}
+        ],
+        template_text="""IN THE COURT OF THE [CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF FULL NAME]                                              ... PLAINTIFF
+VERSUS
+[DEFENDANT FULL NAME]                                              ... DEFENDANT
+
+JOINT COMPROMISE PETITION UNDER ORDER XXIII RULE 3 READ WITH SECTION 151 CPC
+
+The Plaintiff and the Defendant above named respectfully submit as under:
+
+1. That with the intervention of elders, mutual friends, and well-wishers, the parties have amicably resolved and settled all their disputes and claims in the Suit on the following lawful terms:
+
+TERMS OF COMPROMISE:
+(a) The Defendant admits the Plaintiff's title and lawful ownership over the Suit Schedule Property.
+(b) The Defendant has this day voluntarily vacated and delivered vacant physical possession of the Suit Property to the Plaintiff, the receipt whereof the Plaintiff hereby acknowledges.
+(c) The Defendant has agreed to pay, and has this day paid, a sum of Rs. [AMOUNT] to the Plaintiff vide Demand Draft No. [ ] dated [DATE] drawn on [BANK NAME] in full and final satisfaction of all arrears and mesne profits.
+(d) The Plaintiff gives up all further claims against the Defendant in respect of damages and costs.
+(e) Neither party shall have any remaining claim against the other arising out of the subject matter of this Suit.
+
+2. That the compromise is entered into voluntarily, out of the parties' free will and consent, without any coercion, fraud, or undue influence, and is entirely lawful.
+
+PRAYER:
+Wherefore, the parties jointly pray that this Hon'ble Court may be pleased to:
+(a) Record this Joint Compromise Petition under Order XXIII Rule 3 CPC;
+(b) Pass a Decree in terms of the compromise;
+(c) Direct refund of the admissible institution Court Fee to the Plaintiff under Section 16 of the Court Fees Act; in the interest of justice.
+
+PLAINTIFF                                               DEFENDANT
+
+ADVOCATE FOR PLAINTIFF                                  ADVOCATE FOR DEFENDANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 46. WITHDRAWAL OF SUIT (ORDER XXIII RULE 1)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="withdrawal_suit_o23_r1",
+        title="Application for Withdrawal of Suit with Liberty to File Fresh Suit",
+        provision="Order XXIII Rule 1(3) CPC",
+        category="Settlement & Compromise",
+        summary="Application by plaintiff seeking permission to withdraw suit on account of a formal defect with express liberty to institute a fresh suit on the same cause of action.",
+        practice_notes="Order XXIII Rule 1(3): Court may grant permission to withdraw with liberty ONLY where: (a) suit must fail by reason of some formal defect; or (b) there are sufficient grounds for allowing the plaintiff to institute a fresh suit. If withdrawn without liberty, plaintiff is barred from suing afresh.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XXIII Rule 1", "title": "Withdrawal of suit or abandonment of part of claim"}
+        ],
+        template_text="""IN THE COURT OF THE [CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+I.A. NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF NAME]                                                   ... APPLICANT / PLAINTIFF
+VERSUS
+[DEFENDANT NAME]                                                   ... RESPONDENT / DEFENDANT
+
+APPLICATION UNDER ORDER XXIII RULE 1(3) READ WITH SECTION 151 CPC
+
+The Applicant / Plaintiff respectfully submits as under:
+
+1. That the Plaintiff has instituted the above Suit for [PERMANENT INJUNCTION / DECLARATION].
+
+2. FORMAL DEFECT:
+That due to an inadvertent error and miscommunication in instructions, the Plaint suffers from a fatal formal defect: [STATE FORMAL DEFECT: e.g. Failure to issue statutory notice under Section 80 CPC / incorrect survey number given in schedule / non-joinder of co-owner which cannot be cured by simple amendment].
+
+3. That on account of the said technical and formal defect, the Suit is likely to fail without any adjudication on the merits of the Plaintiff's valuable substantive rights.
+
+4. That no prejudice will be caused to the Defendant if the Plaintiff is permitted to withdraw the present suit with liberty to institute a fresh, comprehensive suit on the same cause of action curing the formal defect.
+
+PRAYER:
+Wherefore, the Applicant / Plaintiff prays that this Hon'ble Court may be pleased to:
+(a) Permit the Plaintiff to withdraw the Suit O.S. No. [ ] of 202[ ];
+(b) Grant express liberty to the Plaintiff under Order XXIII Rule 1(3) CPC to institute a fresh suit on the same cause of action; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 47. RESTORATION OF SUIT (ORDER IX RULE 9)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="restoration_suit_o9_r9",
+        title="Application for Restoration of Suit Dismissed for Default & Affidavit",
+        provision="Order IX Rule 9 CPC r/w Section 151",
+        category="Post-Decree & Restoration Remedies",
+        summary="Application by plaintiff to set aside dismissal of suit for default (when defendant appeared but plaintiff failed to appear under Rule 8) showing sufficient cause.",
+        practice_notes="Limitation under Article 122 Limitation Act: STRICT 30 DAYS from the date of dismissal. If filed after 30 days, Section 5 condonation application must accompany. Order IX Rule 9(1) bars any fresh suit on the same cause of action; restoration application is the sole remedy.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order IX Rule 8", "title": "Procedure where defendant only appears"},
+            {"kind": "rule", "ref": "Order IX Rule 9", "title": "Decree against plaintiff by default bars fresh suit"},
+            {"kind": "limitation_article", "ref": "Article 122", "title": "To restore a suit or appeal or application for review or revision (30 days)"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+MISC. APPLICATION NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF FULL NAME]                                              ... APPLICANT / PLAINTIFF
+VERSUS
+[DEFENDANT FULL NAME]                                              ... RESPONDENT / DEFENDANT
+
+APPLICATION UNDER ORDER IX RULE 9 READ WITH SECTION 151 CPC FOR RESTORATION OF SUIT
+
+The Applicant / Plaintiff respectfully submits as under:
+
+1. That the Plaintiff instituted the above Suit against the Defendant for [PARTITION / INJUNCTION / RECOVERY].
+
+2. That the Suit was posted on [DATE] for [HEARING / ISSUES / EVIDENCE].
+
+3. SUFFICIENT CAUSE FOR NON-APPEARANCE:
+That when the case was called on [DATE], the Plaintiff and his counsel could not appear before this Court because [STATE PRECISE FACTUAL GROUND: e.g. The counsel's vehicle broke down en route / counsel was held up arguing a part-heard matter before Court Hall No. 3 / Plaintiff was struck in unprecedented traffic jam / sudden severe medical emergency]. This Hon'ble Court was pleased to dismiss the Suit for default under Order IX Rule 8 CPC.
+
+4. That the absence of the Plaintiff and his counsel was completely unintentional, accidental, and due to bona fide circumstances beyond control.
+
+5. LIMITATION (ARTICLE 122):
+The suit was dismissed on [DATE], and the present application is filed on [DATE], which is strictly within the statutory limitation period of 30 days under Article 122 of the Limitation Act, 1963.
+
+6. That the Plaintiff has a strong prima facie case, and if the suit is not restored, the Plaintiff will suffer irreparable injury without hearing on merits.
+
+PRAYER:
+Wherefore, the Applicant / Plaintiff prays that this Hon'ble Court may be pleased to:
+(a) Set aside the order of dismissal for default dated [DATE];
+(b) Restore Original Suit No. [ ] of 202[ ] to its original file and stage; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 48. RESTORATION UNDER ORDER IX RULE 4
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="restoration_suit_o9_r4",
+        title="Application for Restoration of Suit Dismissed under Order IX Rule 2 or 3",
+        provision="Order IX Rule 4 CPC",
+        category="Post-Decree & Restoration Remedies",
+        summary="Application to restore a suit dismissed for failure to pay process fees/postal charges (Rule 2) or where neither party appeared when called (Rule 3).",
+        practice_notes="Under Order IX Rule 4, the plaintiff may either bring a fresh suit (subject to limitation) OR apply for an order to set the dismissal aside upon showing sufficient cause for not paying process fee or not appearing.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order IX Rule 2", "title": "Dismissal of suit where summons not served in consequence of plaintiff's failure to pay costs"},
+            {"kind": "rule", "ref": "Order IX Rule 3", "title": "Where neither party appears, suit to be dismissed"},
+            {"kind": "rule", "ref": "Order IX Rule 4", "title": "Plaintiff may bring fresh suit or Court may restore suit to file"}
+        ],
+        template_text="""IN THE COURT OF THE [CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+MISC. APPLICATION NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[PLAINTIFF FULL NAME]                                              ... APPLICANT / PLAINTIFF
+VERSUS
+[DEFENDANT FULL NAME]                                              ... RESPONDENT / DEFENDANT
+
+APPLICATION UNDER ORDER IX RULE 4 READ WITH SECTION 151 CPC
+
+The Applicant / Plaintiff respectfully submits as under:
+
+1. That the Plaintiff instituted the above Suit for [RELIEF].
+
+2. That the Suit was posted on [DATE] for [PAYMENT OF PROCESS FEE / APPEARANCE OF PARTIES].
+
+3. That when the matter was called, this Hon'ble Court was pleased to dismiss the Suit under Order IX Rule [2 / 3] CPC as [process fee was not paid / neither party appeared].
+
+4. SUFFICIENT CAUSE:
+That the process fee could not be paid within time / counsel could not appear because [EXPLAIN: e.g. clerk mistakenly noted the date as [WRONG DATE] in the court diary / court process fee stamps were unavailable].
+
+5. That the default was purely unintentional. The Plaintiff has now tendered the requisite process fee stamps along with summons forms.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+Set aside the dismissal order dated [DATE] and restore O.S. No. [ ] of 202[ ] to file; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 49. TRIAL OF PRELIMINARY ISSUE (ORDER XIV RULE 2(2))
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="preliminary_issue_o14_r2",
+        title="Application for Trial of Preliminary Issue on Law / Jurisdiction",
+        provision="Order XIV Rule 2(2) CPC",
+        category="Defense & Summary Proceedings",
+        summary="Application by defendant praying the court to try issues of law relating to jurisdiction, limitation, or statutory bar as preliminary issues before embarking on full trial.",
+        practice_notes="Order XIV Rule 2(2): Where issues both of law and of fact arise, and the court is of opinion that the case or any part thereof may be disposed of on an issue of law only relating to: (a) jurisdiction of the court; or (b) a statutory bar created by any law, the court may try that issue first.",
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XIV Rule 2", "title": "Court to pronounce judgment on all issues"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+I.A. NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[DEFENDANT FULL NAME]                                              ... APPLICANT / DEFENDANT
+VERSUS
+[PLAINTIFF FULL NAME]                                              ... RESPONDENT / PLAINTIFF
+
+APPLICATION UNDER ORDER XIV RULE 2(2) READ WITH SECTION 151 CPC
+
+The Applicant / Defendant respectfully submits as under:
+
+1. That this Hon'ble Court was pleased to frame issues in the above Suit on [DATE].
+
+2. That Issue No. [ ] framed by this Hon'ble Court reads as under:
+   "Whether the Suit is barred by limitation under Article 54 of the Limitation Act, 1963 / barred by Section 11 CPC (Res Judicata)?"
+
+3. That the said issue is a pure issue of law relating to a statutory bar created by law, which goes to the root of the jurisdiction of this Court to entertain the Suit.
+
+4. That if the said preliminary issue of law is heard and decided first, it will dispose of the entire suit and spare both parties and the Court the protracted ordeal and enormous expenditure of examining dozens of witnesses.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+Try and decide Issue No. [ ] as a Preliminary Issue under Order XIV Rule 2(2) CPC before recording evidence on other issues; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 50. CORRECTION OF DECREE (SECTION 152)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="correction_decree_sec152",
+        title="Application for Correction of Clerical / Arithmetical Errors in Decree",
+        provision="Section 152 CPC",
+        category="Post-Decree & Restoration Remedies",
+        summary="Application under the 'slip rule' to correct accidental omissions, typographical errors, wrong survey numbers, or calculation errors in judgment or decree.",
+        practice_notes="Section 152: Clerical or arithmetical mistakes in judgments, decrees or orders or errors arising therein from any accidental slip or omission may at any time be corrected by the Court either of its own motion or on the application of any of the parties. No limitation period applies.",
+        connected_provisions=[
+            {"kind": "section", "ref": "Section 152", "title": "Amendment of judgments, decrees or orders"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
+I.A. NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[DECREE HOLDER / PLAINTIFF NAME]                                   ... APPLICANT
+VERSUS
+[JUDGMENT DEBTOR / DEFENDANT NAME]                                 ... RESPONDENT
+
+APPLICATION UNDER SECTION 152 READ WITH SECTION 151 CPC FOR AMENDMENT OF DECREE
+
+The Applicant respectfully submits as under:
+
+1. That this Hon'ble Court was pleased to decree the above Suit on [DATE].
+
+2. ACCIDENTAL SLIP / CLERICAL ERROR:
+That due to an inadvertent typographical error, in the Schedule of the Judgment and Decree, the Survey Number of the property has been typed as 'Sy. No. 44/2' instead of the true survey number 'Sy. No. 44/2B', and the boundary on the East is typed as 'Property of X' instead of 'Property of Y'.
+
+3. That the correct survey number and boundaries are correctly reflected in the original registered title deed Exhibit P-1.
+
+4. That the mistake is purely a clerical error arising from an accidental slip, which can be corrected at any time under Section 152 CPC without altering the substance of the judgment.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+Correct the clerical and typographical errors in the Judgment and Decree dated [DATE] by substituting 'Sy. No. 44/2B' in place of 'Sy. No. 44/2'; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 51. RESTITUTION (SECTION 144)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="restitution_sec144",
+        title="Application for Restitution upon Reversal of Decree (Section 144 CPC)",
+        provision="Section 144 CPC",
+        category="Post-Decree & Restoration Remedies",
+        summary="Application by successful appellant to restore possession of immovable property or refund of money taken under trial court decree which was reversed in appeal.",
+        practice_notes="Section 144 embodies the cardinal maxim: 'Actus curiae neminem gravabit' (an act of the court shall prejudice no man). No separate suit lies for restitution (Section 144(2) express bar). Limitation under Article 136: 12 years.",
+        connected_provisions=[
+            {"kind": "section", "ref": "Section 144", "title": "Application for restitution"}
+        ],
+        template_text="""IN THE COURT OF THE [TRIAL COURT NAME] AT [CITY]
+MISC. APPLICATION NO. _______ OF 202[ ]
+IN
+ORIGINAL SUIT NO. _______ OF 202[ ]
+
+[SUCCESSFUL APPELLANT / DEFENDANT NAME]                            ... APPLICANT
+VERSUS
+[ORIGINAL PLAINTIFF NAME]                                          ... RESPONDENT
+
+APPLICATION UNDER SECTION 144 READ WITH SECTION 151 CPC FOR RESTITUTION
+
+The Applicant respectfully submits as under:
+
+1. That the Respondent instituted O.S. No. [ ] against the Applicant and obtained an ex-parte / trial court decree for possession / recovery of Rs. [AMOUNT] on [DATE].
+
+2. EXECUTION UNDER ERRONEOUS DECREE:
+That pending appeal, the Respondent executed the said decree in E.P. No. [ ] and forcibly took possession of the Schedule Property / attached and withdrew Rs. [AMOUNT] from the court on [DATE].
+
+3. REVERSAL BY APPELLATE COURT:
+That the Applicant preferred Regular First Appeal No. [ ] before the Hon'ble [APPELLATE COURT]. The Appellate Court vide Judgment and Decree dated [DATE] ALLOWED the appeal, set aside the trial court decree, and dismissed the suit with costs.
+
+4. That upon reversal of the decree, the Applicant is entitled under Section 144 CPC to be restored to the exact position he would have occupied had the erroneous decree not been executed, along with restitution of possession, mesne profits, and interest.
+
+PRAYER:
+Wherefore, the Applicant prays that this Hon'ble Court may be pleased to:
+(a) Direct the Respondent to forthwith restore vacant physical possession of the Schedule Property to the Applicant;
+(b) Direct refund of Rs. [AMOUNT] along with interest at 12% p.a. from the date of withdrawal till restitution; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 52. REGULAR SECOND APPEAL (SECTION 100)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="regular_second_appeal_sec100",
+        title="Memorandum of Regular Second Appeal (RSA) to High Court",
+        provision="Section 100 CPC",
+        category="Appeals & Revisions",
+        summary="Second Appeal before the High Court challenging First Appellate Court decree on formulated Substantial Questions of Law.",
+        practice_notes="Section 100(1): Second Appeal lies ONLY if the High Court is satisfied that the case involves a SUBSTANTIAL QUESTION OF LAW. Sir Chunilal Mehta v. Century Spg (Constitution Bench): Question must be debatable, not previously settled by Supreme Court, and materially affecting the rights of parties.",
+        connected_provisions=[
+            {"kind": "section", "ref": "Section 100", "title": "Second appeal"},
+            {"kind": "section", "ref": "Section 100A", "title": "No further appeal in certain cases"},
+            {"kind": "section", "ref": "Section 102", "title": "No second appeal in certain suits (under Rs. 25,000)"}
+        ],
+        template_text="""IN THE HIGH COURT OF JUDICATURE AT [HIGH COURT LOCATION]
+REGULAR SECOND APPEAL NO. _______ OF 202[ ]
+
+[APPELLANT FULL NAME],
+Residing at [ADDRESS]
+(Original Defendant / Appellant in R.A. No. [   ])                 ... APPELLANT
+VERSUS
+[RESPONDENT FULL NAME],
+Residing at [ADDRESS]
+(Original Plaintiff / Respondent in R.A. No. [   ])                ... RESPONDENT
+
+MEMORANDUM OF REGULAR SECOND APPEAL UNDER SECTION 100 OF THE CODE OF CIVIL PROCEDURE, 1908
+
+The Appellant above named respectfully submits as under:
+
+1. PARTICULARS OF DECREES:
+This Second Appeal is preferred against the Judgment and Decree dated [DATE] passed by the learned [FIRST APPELLATE COURT] in Regular Appeal No. [ ], confirming / reversing the decree dated [DATE] passed by [TRIAL COURT] in O.S. No. [ ].
+
+2. SUBSTANTIAL QUESTIONS OF LAW:
+The following substantial questions of law arise for consideration in this Second Appeal:
+
+   QUESTION NO. 1:
+   Whether the Lower Appellate Court was justified in decreeing the suit for specific performance in the complete absence of any plea or proof of continuous readiness and willingness under Section 16(c) of the Specific Relief Act, 1963?
+
+   QUESTION NO. 2:
+   Whether the Lower Appellate Court committed a grave error of law in reversing the well-considered judgment of the Trial Court on limitation, without meeting the specific findings recorded by the Trial Court on Article 54?
+
+   QUESTION NO. 3:
+   Whether unregistered Agreement to Sell Exhibit P-1 could be admitted in evidence to prove possession in the teeth of Section 17(1A) of the Registration Act, 1908 and Section 53A of the Transfer of Property Act?
+
+3. GROUNDS OF APPEAL:
+(a) The judgment of the Lower Appellate Court is perverse and contrary to binding precedents of the Hon'ble Supreme Court.
+(b) The Lower Appellate Court failed to exercise its jurisdiction as the final court of fact by ignoring the vital admissions of PW-1 in cross-examination.
+
+PRAYER:
+Wherefore, the Appellant prays that this Hon'ble Court may be pleased to:
+(a) Admit this Second Appeal on the Substantial Questions of Law formulated above;
+(b) Set aside the Judgment and Decree of the Lower Appellate Court;
+(c) Grant ad-interim stay of execution pending appeal; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPELLANT
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 53. CIVIL REVISION PETITION (SECTION 115)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="civil_revision_sec115",
+        title="Civil Revision Petition (CRP) under Section 115 CPC",
+        provision="Section 115 CPC",
+        category="Appeals & Revisions",
+        summary="Revision petition to High Court challenging jurisdictional errors of subordinate courts where no appeal lies, satisfying the 1999 Proviso.",
+        practice_notes="Section 115(1) Proviso: High Court shall not vary or reverse any order made in the course of a suit EXCEPT where the order, if it had been made in favour of the revision petitioner, would have FINALLY DISPOSED OF the suit or other proceedings. Limitation under Article 131: 90 DAYS.",
+        connected_provisions=[
+            {"kind": "section", "ref": "Section 115", "title": "Revision"},
+            {"kind": "limitation_article", "ref": "Article 131", "title": "To any court for the exercise of its powers of revision (90 days)"}
+        ],
+        template_text="""IN THE HIGH COURT OF JUDICATURE AT [HIGH COURT LOCATION]
+CIVIL REVISION PETITION NO. _______ OF 202[ ]
+
+[REVISION PETITIONER FULL NAME]                                    ... PETITIONER
+VERSUS
+[RESPONDENT FULL NAME]                                             ... RESPONDENT
+
+CIVIL REVISION PETITION UNDER SECTION 115 OF THE CODE OF CIVIL PROCEDURE, 1908
+
+The Petitioner above named respectfully submits as under:
+
+1. PARTICULARS OF IMPUGNED ORDER:
+This Civil Revision Petition is filed challenging the Order dated [DATE] passed by the learned [SUBORDINATE COURT] on I.A. No. [ ] in O.S. No. [ ], whereby the Trial Court illegally rejected the Petitioner's application under Order VII Rule 11 CPC.
+
+2. SATISFACTION OF SECTION 115(1) PROVISO:
+The present revision is strictly maintainable because if the application under Order VII Rule 11 had been allowed in favour of the Petitioner, the Suit would have been FINALLY DISPOSED OF and terminated.
+
+3. JURISDICTIONAL ERRORS (SECTION 115 TESTS):
+(a) EXERCISE OF JURISDICTION NOT VESTED: The Subordinate Court exercised jurisdiction not vested in it by entertaining a suit patently barred by limitation on the face of the plaint.
+(b) FAILURE TO EXERCISE JURISDICTION: The Court failed to exercise jurisdiction vested in it by law under Order VII Rule 11(d) CPC.
+(c) ILLEGALITY & MATERIAL IRREGULARITY: The Court acted in the exercise of its jurisdiction illegally and with material irregularity by considering defense pleas instead of restricting scrutiny to plaint averments.
+
+PRAYER:
+Wherefore, the Petitioner prays that this Hon'ble Court may be pleased to:
+(a) Call for the records and set aside the impugned Order dated [DATE] passed on I.A. No. [ ];
+(b) Reject the Plaint in O.S. No. [ ] under Order VII Rule 11 CPC;
+(c) Stay all further proceedings in the suit pending this revision; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR PETITIONER
+"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 54. ARTICLE 227 WRIT PETITION (SUPERVISORY JURISDICTION)
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="writ_art227_supervisory",
+        title="Writ Petition under Article 227 of the Constitution of India",
+        provision="Article 227 of the Constitution of India",
+        category="Appeals & Revisions",
+        summary="High Court petition invoking supervisory jurisdiction over subordinate civil courts to correct grave patent injustice and breach of fundamental procedural principles where no statutory appeal or revision lies.",
+        practice_notes="Radhey Shyam v. Chhabi Nath (2015) 5 SCC 423: Judicial orders of civil courts are NOT amenable to writ of certiorari under Article 226; remedy lies exclusively under Article 227. Jurisdiction is supervisory (not appellate), invoked to prevent manifest failure of justice or patent perversity.",
+        connected_provisions=[
+            {"kind": "section", "ref": "Section 115", "title": "Revision"}
+        ],
+        template_text="""IN THE HIGH COURT OF JUDICATURE AT [HIGH COURT LOCATION]
+WRIT PETITION (CIVIL) NO. _______ OF 202[ ]
+(UNDER ARTICLE 227 OF THE CONSTITUTION OF INDIA)
+
+IN THE MATTER OF:
+[PETITIONER FULL NAME],
+Residing at [ADDRESS]                                              ... PETITIONER
+VERSUS
+[RESPONDENT FULL NAME],
+Residing at [ADDRESS]                                              ... RESPONDENT
+
+WRIT PETITION UNDER ARTICLE 227 OF THE CONSTITUTION OF INDIA INVOKING SUPERVISORY JURISDICTION
+
+The Petitioner above named respectfully submits as under:
+
+1. PARTICULARS OF IMPUGNED ORDER:
+This Writ Petition under Article 227 is preferred challenging the Order dated [DATE] passed by the learned [TRIAL COURT] on I.A. No. [ ] in O.S. No. [ ], arbitrarily rejecting the Petitioner's application for amendment of pleadings under Order VI Rule 17 CPC.
+
+2. NON-AVAILABILITY OF ALTERNATIVE REMEDY:
+No appeal or civil revision lies against the impugned interlocutory order under Section 104/Order XLIII Rule 1 CPC, nor does it satisfy the final disposal test under Section 115(1) Proviso. The Petitioner has no other efficacious alternative remedy except invoking the supervisory jurisdiction of this Hon'ble High Court under Article 227.
+
+3. GROUNDS FOR SUPERVISORY INTERFERENCE:
+(a) The Trial Court acted in patent violation of fundamental principles of law, causing grave dereliction of duty.
+(b) The Trial Court completely misdirected itself by holding that pre-trial amendment requires proof of due diligence, overlooking that trial had not commenced.
+(c) The refusal to allow amendment to correct an obvious typographical error in the suit schedule has resulted in gross miscarriage of justice.
+
+PRAYER:
+Wherefore, the Petitioner prays that this Hon'ble Court may be pleased to:
+(a) Exercise its supervisory jurisdiction under Article 227 of the Constitution of India;
+(b) Quash and set aside the impugned Order dated [DATE] passed on I.A. No. [ ] in O.S. No. [ ];
+(c) Allow I.A. No. [ ] and permit the Petitioner to amend the pleadings;
+(d) Stay all further trial court proceedings pending disposal of this petition; in the interest of justice.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR PETITIONER
 """
     )
 ]
