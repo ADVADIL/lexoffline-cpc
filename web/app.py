@@ -8,7 +8,7 @@ import sys
 import os
 from datetime import date, datetime
 
-from flask import Flask, render_template, request, g, abort
+from flask import Flask, render_template, request, g, abort, redirect
 
 # Add project root to path so we can import shared modules
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
@@ -437,8 +437,96 @@ def execution_detail(workflow_id):
                            connected_links=resolved_links)
 
 
+import case_stages as cs
+
+# --- Case Diary & Hearing Timeline Tracker ---
+
+@app.route('/diary')
+def diary_index():
+    db = get_db()
+    selected_stage = request.args.get('stage', '')
+    cases_rows = db.all_cases(stage=selected_stage if selected_stage else None)
+    cases = [dict(r) for r in cases_rows]
+    upcoming_rows = db.upcoming_cases()
+    upcoming = [dict(r) for r in upcoming_rows]
+    return render_template('diary_index.html',
+                           cases=cases,
+                           upcoming=upcoming,
+                           stages=cs.CIVIL_STAGES,
+                           selected_stage=selected_stage)
+
+
+@app.route('/diary/new', methods=['GET', 'POST'])
+def diary_new():
+    if request.method == 'POST':
+        db = get_db()
+        case_no = request.form.get('case_no', '').strip()
+        court_name = request.form.get('court_name', '').strip()
+        client_name = request.form.get('client_name', '').strip()
+        client_role = request.form.get('client_role', 'Plaintiff').strip()
+        opposite_party = request.form.get('opposite_party', '').strip()
+        opposite_counsel = request.form.get('opposite_counsel', '').strip()
+        stage = request.form.get('stage', cs.CIVIL_STAGES[0]).strip()
+        next_date = request.form.get('next_date', '').strip()
+        notes = request.form.get('notes', '').strip()
+
+        if case_no and court_name and client_name:
+            cid = db.add_case(case_no, court_name, client_name, client_role,
+                              opposite_party, opposite_counsel, stage, next_date, notes)
+            return redirect(f'/diary/case/{cid}')
+
+    return render_template('diary_form.html', stages=cs.CIVIL_STAGES)
+
+
+@app.route('/diary/case/<int:case_id>')
+def diary_detail(case_id):
+    db = get_db()
+    c = db.get_case(case_id)
+    if not c:
+        abort(404)
+    case_dict = dict(c)
+    hearings_rows = db.hearings_for_case(case_id)
+    hearings = [dict(h) for h in hearings_rows]
+    advice = cs.suggest_statutory_deadline(case_dict['stage'])
+    return render_template('diary_detail.html',
+                           case=case_dict,
+                           hearings=hearings,
+                           advice=advice,
+                           stages=cs.CIVIL_STAGES)
+
+
+@app.route('/diary/case/<int:case_id>/hearing', methods=['POST'])
+def diary_add_hearing(case_id):
+    db = get_db()
+    c = db.get_case(case_id)
+    if not c:
+        abort(404)
+    hearing_date = request.form.get('hearing_date', '').strip()
+    business_done = request.form.get('business_done', '').strip()
+    next_date = request.form.get('next_date', '').strip()
+    next_purpose = request.form.get('next_purpose', '').strip()
+    new_stage = request.form.get('new_stage', '').strip()
+
+    if hearing_date:
+        db.add_hearing(case_id, hearing_date, business_done, next_date, next_purpose)
+        if new_stage:
+            db.update_case(case_id, c['case_no'], c['court_name'], c['client_name'],
+                           c['client_role'], c['opposite_party'], c['opposite_counsel'],
+                           new_stage, next_date or c['next_date'], c['notes'])
+
+    return redirect(f'/diary/case/{case_id}')
+
+
+@app.route('/diary/case/<int:case_id>/delete', methods=['POST'])
+def diary_delete_case(case_id):
+    db = get_db()
+    db.delete_case(case_id)
+    return redirect('/diary')
+
+
 
 import limitation_data as ld
+
 
 
 

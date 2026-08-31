@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Case - Chamber Diary{% endblock %}
+
+{% block content %}
+<div class="provision-header" style="margin-bottom: 1.5rem;">
+    <a href="/diary" style="color: #4a5568; font-size: 0.9rem; text-decoration: none;">&larr; Back to Case Diary</a>
+    <h1 style="margin-top: 0.5rem; margin-bottom: 0.25rem;">➕ Add New Case to Chamber Diary</h1>
+    <p class="subtitle">Enter the litigation details below to track hearings and automatically calculate statutory deadlines.</p>
+</div>
+
+<div class="panel" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; max-width: 700px;">
+    <form action="/diary/new" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div>
+            <label style="display: block; font-weight: bold; margin-bottom: 0.25rem; font-size: 0.9rem;">Case Number*:</label>
+            <input type="text" name="case_no" placeholder="e.g. O.S. No. 142 of 2025 or E.P. No. 18 of 2026" required style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+        </div>
+
+        <div>
+            <label style="display: block; font-weight: bold; margin-bottom: 0.25rem; font-size: 0.9rem;">Court Name*:</label>
+            <input type="text" name="court_name" placeholder="e.g. Court of Principal Senior Civil Judge, Bangalore" required style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+            <div>
+                <label style="display: block; font-weight: bold; margin-bottom: 0.25rem; font-size: 0.9rem;">Client Name*:</label>
+                <input type="text" name="client_name" placeholder="e.g. Ramesh Kumar" required style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="display: block; font-weight: bold; margin-bottom: 0.25rem; font-size: 0.9rem;">Client Role:</label>
+                <select name="client_role" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+                    <option value="Plaintiff">Plaintiff</option>
+                    <option value="Defendant">Defendant</option>
+                    <option value="Appellant">Appellant</option>
+                    <option value="Respondent">Respondent</option>
+                    <option value="Decree Holder">Decree Holder</option>
+                    <option value="Judgment Debtor">Judgment Debtor</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+                <label style="display: block; font-weight: bold; margin-bottom: 0.25rem; font-size: 0.9rem;">Opposite Party:</label>
+                <input type="text" name="opposite_party" placeholder="e.g. Suresh Patel" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="display: block; font-weight: bold; margin-bottom: 0.25rem; font-size: 0.9rem;">Opposite Counsel:</label>
+                <input type="text" name="opposite_counsel" placeholder="e.g. Adv. R.K. Sharma" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+            <div>
+                <label style="display: block; font-weight: bold; margin-bottom: 0.25rem; font-size: 0.9rem;">Current Procedural Stage:</label>
+                <select name="stage" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+                    {% for st in stages %}
+                    <option value="{{ st }}">{{ st }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label style="display: block; font-weight: bold; margin-bottom: 0.25rem; font-size: 0.9rem;">Next Hearing Date:</label>
+                <input type="date" name="next_date" style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <div>
+            <label style="display: block; font-weight: bold; margin-bottom: 0.25rem; font-size: 0.9rem;">Brief Notes / Synopsis:</label>
+            <textarea name="notes" rows="3" placeholder="Claim value, interim orders granted, key documents, etc." style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem;">
+            <button type="submit" class="btn" style="background: #2b6cb0; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer;">
+                💾 Save Case to Diary
+            </button>
+            <a href="/diary" style="color: #718096; text-decoration: none;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

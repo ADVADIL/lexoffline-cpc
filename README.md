@@ -97,15 +97,20 @@ Open `http://localhost:5000` in your browser.
     - **Delivery of Immovable Property (Possession)**: Actual physical possession (Rule 35(1)), symbolic delivery (Rule 36), police protection applications, Rule 97 resistance removal, Rule 99 dispossession, and Rule 101 full title trials.
     - **Injunction & Specific Performance Decrees**: Rule 34 court-executed conveyance, Rule 32 attachment/civil prison, and Rule 32(5) court-appointed commissioner.
     - **Garnishee Proceedings**: Rules 46A–46I third-party debt recovery and statutory discharge.
-    - **Arrest & Detention in Civil Prison**: Section 51 Proviso means test, Section 56 absolute protection for women, Section 58 duration tiers, Rule 37 show-cause notice, and Rule 39 subsistence allowance.
-  - Features sequential stage timeline, governing statutory rule badges, limitation indicators, advocate tactical insights, and one-click provision jumps.
+- **Advocate Case Diary & Hearing Timeline Tracker**:
+  - Offline chamber notebook stored directly in local SQLite (`case_diary` and `case_hearings` tables):
+    - Track active litigation: Case Number, Court Name, Client Name & Role, Opposite Party & Counsel, Current Procedural Stage, and Board Postings.
+    - **Automatic Statutory Deadline Suggester**: Computes governing CPC rules and limitation periods based on the active stage (e.g. 30/90-day WS deadline under Order VIII Rule 1, 90-day LR substitution under Article 120, 30/90-day appeal windows under Article 116, 90-day caveat validity under Section 148A).
+    - **Daily Orders & Hearings Log**: Records per-hearing court proceedings, business done, and next adjourned dates.
+    - Upcoming court board calendar view on desktop and web.
 - **Web Companion (`web/`)**:
   - Lightweight, server-rendered Flask web app sharing the exact same underlying SQLite database and deterministic logic.
-  - Accessible from chambers, mobile, or home for quick statutory lookups, checklists, templates, and execution workflows.
+  - Accessible from chambers, mobile, or home for quick statutory lookups, checklists, templates, execution workflows, and case diary.
 
 ## Architecture
 
-- `db.py` — SQLite access layer (`ActDatabase`) querying `cpc_1908.db`.
+- `db.py` — SQLite access layer (`ActDatabase`) querying `cpc_1908.db` with user storage for bookmarks, notes, case diary, and hearing logs.
+- `case_stages.py` — Deterministic litigation stage definitions and statutory deadline suggester.
 - `limitation_data.py` — Structured statutory dataset for The Limitation Act, 1963 (Sections 1–32 + Schedule Articles 1–137).
 - `checklists_data.py` — Structured courtroom practice checklists, statutory grounds, and landmark precedents.
 - `templates_data.py` — Structured court-ready petition templates, statutory notices, and execution formats.
@@ -113,11 +118,12 @@ Open `http://localhost:5000` in your browser.
 - `deadlines.py` — Fixed CPC deadline rules, Limitation Act schedule rules, and Section 12 exclusion arithmetic.
 - `xref.py` — Deterministic in-text cross-reference extraction and database resolution.
 - `state_amend.py` — Deterministic state-amendment blob splitter.
-- `main.py` — PySide6 desktop interface (Explorer, Practice Checklists, Drafting Templates, Execution Navigator, Search, Bookmarks, Deadline & Limitation Tracker).
+- `main.py` — PySide6 desktop interface (Explorer, Case Diary, Practice Checklists, Drafting Templates, Execution Navigator, Search, Bookmarks, Deadline & Limitation Tracker).
 - `web/` — Flask web companion application (`app.py`, templates, responsive CSS, and tests).
 - `build_cpc_db.py` — Ingestion and database compilation script.
-- `tests/` — Desktop regression test suite covering `test_execution.py`, `test_templates.py`, `test_checklists.py`, `test_limitation.py`, `test_deadlines.py`, `test_state_amend.py`, and `test_xref.py` (43 tests).
-- `web/tests/` — Web test suite covering all 34 web routes, execution roadmaps, templates, checklists, and calculator endpoints.
+- `tests/` — Desktop regression test suite covering `test_case_diary.py`, `test_execution.py`, `test_templates.py`, `test_checklists.py`, `test_limitation.py`, `test_deadlines.py`, `test_state_amend.py`, and `test_xref.py` (48 tests).
+- `web/tests/` — Web test suite covering all 38 web routes, case diary, execution roadmaps, templates, checklists, and calculator endpoints.
+
 
 
 

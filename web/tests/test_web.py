@@ -229,12 +229,72 @@ def test_execution_404_invalid():
     assert resp.status_code == 404
 
 
+def test_diary_index():
+    resp = _client().get('/diary')
+    assert resp.status_code == 200
+    assert b'Advocate Case Diary' in resp.data
+
+
+def test_diary_new_get():
+    resp = _client().get('/diary/new')
+    assert resp.status_code == 200
+    assert b'Add New Case to Chamber Diary' in resp.data
+
+
+def test_diary_full_lifecycle():
+    c = _client()
+    # 1. Create case via POST
+    post_resp = c.post('/diary/new', data={
+        'case_no': 'WEB/OS/555/2026',
+        'court_name': 'Civil Court, Alipore',
+        'client_name': 'Debashis Roy',
+        'client_role': 'Plaintiff',
+        'opposite_party': 'Subhash Bose',
+        'opposite_counsel': 'Adv. Mukherjee',
+        'stage': 'Service of Summons (Awaiting Written Statement)',
+        'next_date': '2026-07-15',
+        'notes': 'Partition suit'
+    }, follow_redirects=True)
+    assert post_resp.status_code == 200
+    assert b'WEB/OS/555/2026' in post_resp.data
+    assert b'Debashis Roy' in post_resp.data
+    assert b'Order VIII Rule 1' in post_resp.data
+
+    # Extract case ID from URL or page
+    import re
+    m = re.search(r'/diary/case/(\d+)/hearing', post_resp.data.decode('utf-8'))
+    assert m is not None
+    cid = m.group(1)
+
+    # 2. Add hearing via POST
+    h_resp = c.post(f'/diary/case/{cid}/hearing', data={
+        'hearing_date': '2026-06-15',
+        'business_done': 'Summons served on Defendant. WS awaited.',
+        'next_date': '2026-07-15',
+        'next_purpose': 'For filing of Written Statement',
+        'new_stage': 'Service of Summons (Awaiting Written Statement)'
+    }, follow_redirects=True)
+    assert h_resp.status_code == 200
+    assert b'Hearing on 2026-06-15' in h_resp.data
+
+    # 3. Delete case via POST
+    del_resp = c.post(f'/diary/case/{cid}/delete', follow_redirects=True)
+    assert del_resp.status_code == 200
+    assert b'WEB/OS/555/2026' not in del_resp.data
+
+
+def test_diary_case_404():
+    resp = _client().get('/diary/case/999999')
+    assert resp.status_code == 404
+
+
 if __name__ == '__main__':
     tests = [v for k, v in globals().items() if k.startswith('test_')]
     for t in tests:
         t()
         print(f'  OK  {t.__name__}')
     print(f'\n>>> ALL {len(tests)} WEB TESTS PASSED! <<<')
+
 
 
 

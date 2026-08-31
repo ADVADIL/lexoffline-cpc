@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}{{ case.case_no }} - Chamber Case Diary{% endblock %}
+
+{% block content %}
+<div class="provision-header" style="margin-bottom: 1.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;">
+        <span class="badge" style="background: #ebf8ff; color: #2b6cb0; font-size: 0.85rem; font-weight: bold; padding: 4px 10px; border-radius: 4px;">
+            {{ case.client_role }}
+        </span>
+        <a href="/diary" style="color: #4a5568; font-size: 0.9rem; text-decoration: none;">&larr; Back to Case Diary</a>
+    </div>
+    <h1 style="margin-top: 0.5rem; margin-bottom: 0.25rem;">{{ case.case_no }}</h1>
+    <p style="color: #4a5568; font-size: 1.1rem; margin: 0 0 0.5rem 0; font-weight: 500;">
+        {{ case.court_name }}
+    </p>
+    <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; color: #2d3748; font-size: 0.95rem; background: #f7fafc; padding: 0.75rem 1rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+        <div><strong>Client:</strong> {{ case.client_name }} ({{ case.client_role }})</div>
+        <div><strong>Opposite Party:</strong> {{ case.opposite_party or '—' }}</div>
+        <div><strong>Opposite Counsel:</strong> {{ case.opposite_counsel or '—' }}</div>
+        <div><strong>Current Stage:</strong> <span style="color: #2b6cb0; font-weight: 600;">{{ case.stage }}</span></div>
+        <div><strong>Next Hearing:</strong> <span style="color: {% if case.next_date %}#c53030{% else %}#718096{% endif %}; font-weight: bold;">{{ case.next_date or 'None fixed' }}</span></div>
+    </div>
+    {% if case.notes %}
+    <p style="margin-top: 0.75rem; color: #4a5568; font-size: 0.9rem; line-height: 1.4;">
+        <strong>Notes / Synopsis:</strong> {{ case.notes }}
+    </p>
+    {% endif %}
+</div>
+
+<!-- Statutory Deadline Advice Banner -->
+<div class="panel" style="background: #ebf8ff; border: 1px solid #bee3f8; border-left: 4px solid #3182ce; padding: 1.25rem; margin-bottom: 2rem; border-radius: 6px;">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+        <h3 style="margin: 0; color: #2c5282; font-size: 1.1rem;">
+            ⚖️ Statutory Next-Step &amp; Limitation Alert
+        </h3>
+        <span style="background: #bee3f8; color: #2b6cb0; font-size: 0.8rem; font-weight: bold; padding: 2px 8px; border-radius: 4px;">
+            {{ advice.statutory_rule }} &bull; {{ advice.period_str }}
+        </span>
+    </div>
+    <p style="margin: 0; color: #2d3748; line-height: 1.5; font-size: 0.95rem;">
+        {{ advice.advice }}
+    </p>
+    {% if advice.warning %}
+    <div style="margin-top: 0.75rem; background: #fff5f5; border: 1px solid #fed7d7; border-radius: 4px; padding: 0.5rem 0.75rem; color: #9b2c2c; font-size: 0.85rem;">
+        ⚠️ <strong>Statutory Warning:</strong> {{ advice.warning }}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Record New Hearing Form -->
+<div class="panel" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; margin-bottom: 2rem;">
+    <h3 style="margin-top: 0; color: #1a365d; font-size: 1.1rem;">➕ Record Court Proceedings / Daily Order</h3>
+    <form action="/diary/case/{{ case.id }}/hearing" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+                <label style="display: block; font-weight: 500; font-size: 0.85rem; margin-bottom: 0.25rem;">Hearing Date*:</label>
+                <input type="date" name="hearing_date" required style="width: 100%; padding: 7px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="display: block; font-weight: 500; font-size: 0.85rem; margin-bottom: 0.25rem;">Next Hearing Date (Adjourned to):</label>
+                <input type="date" name="next_date" style="width: 100%; padding: 7px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <div>
+            <label style="display: block; font-weight: 500; font-size: 0.85rem; margin-bottom: 0.25rem;">Proceedings / Business Done:</label>
+            <textarea name="business_done" rows="2" placeholder="e.g. Issues framed. PW-1 chief affidavit filed. Court directed list of witnesses to be filed within 15 days." style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;"></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+                <label style="display: block; font-weight: 500; font-size: 0.85rem; margin-bottom: 0.25rem;">Next Stage / Purpose:</label>
+                <input type="text" name="next_purpose" placeholder="e.g. For Cross-examination of PW-1" style="width: 100%; padding: 7px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+            </div>
+            <div>
+                <label style="display: block; font-weight: 500; font-size: 0.85rem; margin-bottom: 0.25rem;">Update Case Stage to:</label>
+                <select name="new_stage" style="width: 100%; padding: 7px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box;">
+                    <option value="">-- Keep Current Stage ({{ case.stage }}) --</option>
+                    {% for st in stages %}
+                    <option value="{{ st }}">{{ st }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <button type="submit" class="btn" style="background: #2b6cb0; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                💾 Save Daily Order &amp; Update Diary
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Hearings Timeline -->
+<div class="section-block" style="margin-bottom: 2rem;">
+    <h2>📜 Daily Orders &amp; Hearing History</h2>
+    {% if hearings %}
+    <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+        {% for h in hearings %}
+        <div style="background: #fdfdfd; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem;">
+                <span style="font-weight: bold; color: #1a365d; font-size: 1rem;">
+                    📅 Hearing on {{ h.hearing_date }}
+                </span>
+                {% if h.next_date %}
+                <span style="background: #feebc8; color: #7b341e; font-size: 0.8rem; font-weight: bold; padding: 2px 6px; border-radius: 4px;">
+                    Adjourned to: {{ h.next_date }}
+                </span>
+                {% endif %}
+            </div>
+            <p style="margin: 0 0 0.35rem 0; color: #2d3748; line-height: 1.45; font-size: 0.95rem;">
+                {{ h.business_done or '(No business details recorded)' }}
+            </p>
+            {% if h.next_purpose %}
+            <p style="margin: 0; color: #718096; font-size: 0.85rem;">
+                <strong>Purpose:</strong> {{ h.next_purpose }}
+            </p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="color: #718096; margin-top: 0.75rem;">No court hearings recorded for this matter yet.</p>
+    {% endif %}
+</div>
+
+<!-- Delete Case -->
+<div style="border-top: 1px solid #e2e8f0; padding-top: 1.5rem; margin-top: 2rem; display: flex; justify-content: flex-end;">
+    <form action="/diary/case/{{ case.id }}/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this case and its hearing history?');">
+        <button type="submit" class="btn" style="background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; padding: 6px 14px; border-radius: 4px; cursor: pointer;">
+            🗑️ Delete Case from Diary
+        </button>
+    </form>
+</div>
+{% endblock %}

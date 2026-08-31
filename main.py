@@ -16,7 +16,8 @@ from PySide6.QtWidgets import (
     QTreeWidget, QTreeWidgetItem, QTextBrowser, QLineEdit, QLabel,
     QSplitter, QTabWidget, QListWidget, QListWidgetItem, QPushButton,
     QDateEdit, QComboBox, QFormLayout, QPlainTextEdit, QMessageBox,
-    QSpinBox, QGroupBox, QScrollArea, QCheckBox, QFrame,
+    QSpinBox, QGroupBox, QScrollArea, QCheckBox, QFrame, QDialog,
+    QDialogButtonBox, QTableWidget, QTableWidgetItem, QHeaderView
 )
 
 from db import ActDatabase
@@ -27,6 +28,7 @@ import limitation_data as ld
 import checklists_data as cd
 import templates_data as tdata
 import execution_data as edata
+import case_stages as cs
 
 
 def html_escape(s):
@@ -242,7 +244,6 @@ class ExplorerTab(QWidget):
         self._is_limitation = is_limitation
         self.title_label.setText(title)
 
-        # Toggle state amendment dropdown visibility
         self.state_row_widget.setVisible(not is_limitation and bool(state_blob))
         if not is_limitation and state_blob:
             self.state_combo.blockSignals(True)
@@ -251,7 +252,6 @@ class ExplorerTab(QWidget):
 
         self._render_text()
 
-        # cross-references and limitation linkage
         self.xref_list.clear()
         if kind in ("section", "rule"):
             self_kind = "section" if kind == "section" else None
@@ -266,7 +266,6 @@ class ExplorerTab(QWidget):
                 order = self.db.get_order(row["order_id"])
                 search_key = f"Order {order['order_no']}"
 
-            # 1. In-text CPC xrefs
             refs = extract_refs(body, self_kind=self_kind, self_ref=self_ref)
             resolved = resolve_refs(self.db, refs)
             if resolved:
@@ -279,7 +278,6 @@ class ExplorerTab(QWidget):
                     li.setData(Qt.UserRole, r)
                     self.xref_list.addItem(li)
 
-            # 2. Linked Limitation Act Articles
             lim_matches = self.db.find_articles_for_cpc(search_key)
             if lim_matches:
                 header2 = QListWidgetItem("--- Linked Limitation Act 1963 Articles ---")
@@ -309,11 +307,9 @@ class ExplorerTab(QWidget):
         else:
             self.xref_list.addItem("(cross-references apply to Sections and Rules)")
 
-        # bookmark state
         bm = self.db.is_bookmarked(kind, ref_id)
         self.bookmark_btn.setText("★ Bookmarked" if bm else "☆ Bookmark")
 
-        # notes
         self._loading_notes = True
         self.notes_box.setPlainText(self.db.get_note(kind, ref_id))
         self._loading_notes = False
@@ -433,7 +429,6 @@ class DeadlineTrackerTab(QWidget):
 
         form = QFormLayout()
 
-        # Category filter
         self.cat_combo = QComboBox()
         self.cat_combo.addItem("All Categories", None)
         for cat in dl.list_categories():
@@ -445,17 +440,14 @@ class DeadlineTrackerTab(QWidget):
         self.cat_combo.currentIndexChanged.connect(self._on_category_changed)
         form.addRow("Category filter:", self.cat_combo)
 
-        # Deadline Rule
         self.rule_combo = QComboBox()
         self._populate_rules()
         form.addRow("Rule / Limitation Article:", self.rule_combo)
 
-        # Trigger date
         self.trigger_date = QDateEdit(calendarPopup=True)
         self.trigger_date.setDate(date.today())
         form.addRow("Trigger date (e.g. date of decree / death / notice):", self.trigger_date)
 
-        # Section 12 Certified Copy Exclusion
         self.exclusion_spin = QSpinBox()
         self.exclusion_spin.setRange(0, 3650)
         self.exclusion_spin.setValue(0)
@@ -574,7 +566,6 @@ class ChecklistsTab(QWidget):
         splitter = QSplitter(Qt.Horizontal)
         layout.addWidget(splitter)
 
-        # Left panel: category filter + list
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
@@ -591,7 +582,6 @@ class ChecklistsTab(QWidget):
         left_layout.addWidget(self.list_widget, stretch=1)
         splitter.addWidget(left)
 
-        # Right panel: checklist viewer
         self.scroll = QScrollArea()
         self.scroll.setWidgetResizable(True)
         self.viewer = QWidget()
@@ -872,7 +862,6 @@ class ExecutionNavigatorTab(QWidget):
         splitter = QSplitter(Qt.Horizontal)
         layout.addWidget(splitter)
 
-        # Left panel: list of workflows
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
@@ -883,7 +872,6 @@ class ExecutionNavigatorTab(QWidget):
         left_layout.addWidget(self.list_widget, stretch=1)
         splitter.addWidget(left)
 
-        # Right panel: multi-stage viewer
         self.scroll = QScrollArea()
         self.scroll.setWidgetResizable(True)
         self.viewer = QWidget()
@@ -926,7 +914,6 @@ class ExecutionNavigatorTab(QWidget):
         line.setFrameShadow(QFrame.Sunken)
         self.vlayout.addWidget(line)
 
-        # Stages
         for stage in w.stages:
             stage_box = QGroupBox(f"Stage {stage.stage_number}: {stage.title}")
             stage_box.setStyleSheet("QGroupBox { font-weight: bold; color: #1a365d; font-size: 10.5pt; }")
@@ -957,7 +944,6 @@ class ExecutionNavigatorTab(QWidget):
 
             self.vlayout.addWidget(stage_box)
 
-        # Connected Provisions
         conn_box = QGroupBox("🔗 Connected Order XXI Rules & Limitation Articles")
         conn_layout = QHBoxLayout(conn_box)
         for cp in w.connected_provisions:
@@ -1002,6 +988,313 @@ class ExecutionNavigatorTab(QWidget):
             if row:
                 self.on_jump("order", row["id"])
                 return
+
+
+class AddCaseDialog(QDialog):
+    """Dialog to add a new litigation matter into the Case Diary."""
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Add New Case to Chamber Diary")
+        self.resize(500, 480)
+
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+
+        self.case_no = QLineEdit()
+        self.case_no.setPlaceholderText("e.g. O.S. No. 124 of 2025")
+        form.addRow("Case Number*:", self.case_no)
+
+        self.court_name = QLineEdit()
+        self.court_name.setPlaceholderText("e.g. Court of Principal Senior Civil Judge, Bangalore")
+        form.addRow("Court Name*:", self.court_name)
+
+        self.client_name = QLineEdit()
+        self.client_name.setPlaceholderText("e.g. Ramesh Kumar")
+        form.addRow("Client Name*:", self.client_name)
+
+        self.client_role = QComboBox()
+        self.client_role.addItems(["Plaintiff", "Defendant", "Appellant", "Respondent", "Decree Holder", "Judgment Debtor"])
+        form.addRow("Client Role:", self.client_role)
+
+        self.opposite_party = QLineEdit()
+        self.opposite_party.setPlaceholderText("e.g. Suresh Patel")
+        form.addRow("Opposite Party:", self.opposite_party)
+
+        self.opposite_counsel = QLineEdit()
+        self.opposite_counsel.setPlaceholderText("e.g. Adv. R.K. Sharma")
+        form.addRow("Opposite Counsel:", self.opposite_counsel)
+
+        self.stage = QComboBox()
+        self.stage.addItems(cs.CIVIL_STAGES)
+        form.addRow("Current Stage:", self.stage)
+
+        self.next_date = QDateEdit(calendarPopup=True)
+        self.next_date.setDate(date.today())
+        form.addRow("Next Hearing Date:", self.next_date)
+
+        self.notes = QPlainTextEdit()
+        self.notes.setPlaceholderText("Brief facts, claim value, interlocutory applications, etc.")
+        self.notes.setMaximumHeight(80)
+        form.addRow("Brief Notes:", self.notes)
+
+        layout.addLayout(form)
+
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(self._validate_and_accept)
+        buttons.rejected.connect(self.reject)
+        layout.addWidget(buttons)
+
+    def _validate_and_accept(self):
+        if not self.case_no.text().strip() or not self.court_name.text().strip() or not self.client_name.text().strip():
+            QMessageBox.warning(self, "Required Fields", "Please enter Case Number, Court Name, and Client Name.")
+            return
+        self.accept()
+
+    def get_data(self):
+        qd = self.next_date.date()
+        return {
+            "case_no": self.case_no.text().strip(),
+            "court_name": self.court_name.text().strip(),
+            "client_name": self.client_name.text().strip(),
+            "client_role": self.client_role.currentText(),
+            "opposite_party": self.opposite_party.text().strip(),
+            "opposite_counsel": self.opposite_counsel.text().strip(),
+            "stage": self.stage.currentText(),
+            "next_date": f"{qd.year():04d}-{qd.month():02d}-{qd.day():02d}",
+            "notes": self.notes.toPlainText().strip()
+        }
+
+
+class AddHearingDialog(QDialog):
+    """Dialog to record court proceedings and set next hearing date."""
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Record Court Hearing / Daily Order")
+        self.resize(450, 320)
+
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+
+        self.hearing_date = QDateEdit(calendarPopup=True)
+        self.hearing_date.setDate(date.today())
+        form.addRow("Hearing Date:", self.hearing_date)
+
+        self.business_done = QPlainTextEdit()
+        self.business_done.setPlaceholderText("e.g. Issues framed. PW-1 affidavit filed. Adjourned for cross-examination.")
+        self.business_done.setMaximumHeight(80)
+        form.addRow("Daily Order / Business Done:", self.business_done)
+
+        self.next_date = QDateEdit(calendarPopup=True)
+        self.next_date.setDate(date.today())
+        form.addRow("Next Hearing Date:", self.next_date)
+
+        self.next_purpose = QLineEdit()
+        self.next_purpose.setPlaceholderText("e.g. For Cross-examination of PW-1")
+        form.addRow("Next Stage / Purpose:", self.next_purpose)
+
+        layout.addLayout(form)
+
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(self.accept)
+        buttons.rejected.connect(self.reject)
+        layout.addWidget(buttons)
+
+    def get_data(self):
+        hd = self.hearing_date.date()
+        nd = self.next_date.date()
+        return {
+            "hearing_date": f"{hd.year():04d}-{hd.month():02d}-{hd.day():02d}",
+            "business_done": self.business_done.toPlainText().strip(),
+            "next_date": f"{nd.year():04d}-{nd.month():02d}-{nd.day():02d}",
+            "next_purpose": self.next_purpose.text().strip()
+        }
+
+
+class CaseDiaryTab(QWidget):
+    """Advocate Case Diary & Hearing Timeline Tracker."""
+
+    def __init__(self, db: ActDatabase):
+        super().__init__()
+        self.db = db
+        self.current_case_id = None
+
+        layout = QHBoxLayout(self)
+        splitter = QSplitter(Qt.Horizontal)
+        layout.addWidget(splitter)
+
+        # Left panel: Add button, filter, case list
+        left = QWidget()
+        left_layout = QVBoxLayout(left)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+
+        add_btn = QPushButton("➕ Add New Case")
+        add_btn.setStyleSheet("font-weight: bold; background: #2b6cb0; color: white; padding: 6px;")
+        add_btn.clicked.connect(self._add_case)
+        left_layout.addWidget(add_btn)
+
+        self.stage_filter = QComboBox()
+        self.stage_filter.addItem("All Stages", None)
+        for st in cs.CIVIL_STAGES:
+            self.stage_filter.addItem(st, st)
+        self.stage_filter.currentIndexChanged.connect(self._refresh_list)
+        left_layout.addWidget(self.stage_filter)
+
+        self.search_box = QLineEdit()
+        self.search_box.setPlaceholderText("Search by Case No / Client Name...")
+        self.search_box.textChanged.connect(self._refresh_list)
+        left_layout.addWidget(self.search_box)
+
+        self.case_list = QListWidget()
+        self.case_list.itemClicked.connect(self._on_case_selected)
+        left_layout.addWidget(self.case_list, stretch=1)
+        splitter.addWidget(left)
+
+        # Right panel: Case details, deadline advice, hearing log
+        right = QWidget()
+        rlayout = QVBoxLayout(right)
+
+        # Case title bar
+        self.title_label = QLabel("Select a case from the list or click 'Add New Case'")
+        self.title_label.setStyleSheet("font-weight: 600; font-size: 13pt; color: #1a365d;")
+        self.title_label.setWordWrap(True)
+        rlayout.addWidget(self.title_label)
+
+        self.meta_label = QLabel("")
+        self.meta_label.setStyleSheet("color: #4a5568; font-size: 9.5pt;")
+        self.meta_label.setWordWrap(True)
+        rlayout.addWidget(self.meta_label)
+
+        # Statutory Deadline Advice Box
+        self.advice_box = QGroupBox("⚖️ Statutory Next-Step & Deadline Alert")
+        self.advice_box.setStyleSheet("QGroupBox { font-weight: bold; color: #2b6cb0; }")
+        adv_layout = QVBoxLayout(self.advice_box)
+        self.advice_label = QLabel("Automatic statutory deadline advice appears here based on the case stage.")
+        self.advice_label.setWordWrap(True)
+        self.advice_label.setStyleSheet("color: #2d3748; line-height: 1.4;")
+        adv_layout.addWidget(self.advice_label)
+        rlayout.addWidget(self.advice_box)
+
+        # Toolbar
+        tbar = QHBoxLayout()
+        self.record_hearing_btn = QPushButton("➕ Record Court Hearing")
+        self.record_hearing_btn.setStyleSheet("font-weight: bold; padding: 5px 10px;")
+        self.record_hearing_btn.clicked.connect(self._record_hearing)
+        tbar.addWidget(self.record_hearing_btn)
+
+        self.delete_btn = QPushButton("🗑️ Delete Case")
+        self.delete_btn.setStyleSheet("color: #c53030; padding: 5px 10px;")
+        self.delete_btn.clicked.connect(self._delete_case)
+        tbar.addWidget(self.delete_btn)
+        tbar.addStretch(1)
+        rlayout.addLayout(tbar)
+
+        # Hearings history table
+        h_label = QLabel("<b>Court Hearings & Daily Orders History:</b>")
+        rlayout.addWidget(h_label)
+
+        self.hearings_table = QTableWidget(0, 4)
+        self.hearings_table.setHorizontalHeaderLabels(["Hearing Date", "Proceedings / Business Done", "Next Date", "Next Purpose"])
+        self.hearings_table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        rlayout.addWidget(self.hearings_table, stretch=1)
+
+        splitter.addWidget(right)
+        splitter.setSizes([320, 680])
+
+        self._refresh_list()
+        if self.case_list.count() > 0:
+            self.case_list.setCurrentRow(0)
+            self._on_case_selected(self.case_list.item(0))
+
+    def _refresh_list(self):
+        self.case_list.clear()
+        stage = self.stage_filter.currentData()
+        q = self.search_box.text().strip().lower()
+        rows = self.db.all_cases(stage=stage)
+        for r in rows:
+            if q and q not in r["case_no"].lower() and q not in r["client_name"].lower() and q not in r["opposite_party"].lower():
+                continue
+            posting = f"Posting: {r['next_date']}" if r["next_date"] else "No date"
+            it = QListWidgetItem(f"{r['case_no']}  [{posting}]\n{r['client_name']} ({r['client_role']}) vs {r['opposite_party'] or 'Opposite'}\nStage: {r['stage']}")
+            it.setData(Qt.UserRole, r["id"])
+            self.case_list.addItem(it)
+
+    def _on_case_selected(self, item):
+        cid = item.data(Qt.UserRole)
+        self.current_case_id = cid
+        c = self.db.get_case(cid)
+        if not c:
+            return
+
+        self.title_label.setText(f"{c['case_no']} &mdash; {c['court_name']}")
+        self.meta_label.setText(
+            f"<b>Client:</b> {c['client_name']} (<b>{c['client_role']}</b>) &nbsp;|&nbsp; "
+            f"<b>Opposite Party:</b> {c['opposite_party'] or '—'} &nbsp;|&nbsp; "
+            f"<b>Opposite Counsel:</b> {c['opposite_counsel'] or '—'}<br>"
+            f"<b>Current Stage:</b> {c['stage']} &nbsp;|&nbsp; <b>Next Hearing:</b> {c['next_date'] or 'Not fixed'}"
+        )
+
+        # Statutory deadline computation
+        adv = cs.suggest_statutory_deadline(c["stage"])
+        warn_html = f"<br><span style='color:#c53030;'>⚠️ <b>Warning:</b> {adv.warning}</span>" if adv.warning else ""
+        self.advice_label.setText(
+            f"<b>Governing Rule:</b> {adv.statutory_rule} &nbsp; ({adv.period_str})<br>"
+            f"{adv.advice}{warn_html}"
+        )
+
+        # Load hearings
+        hearings = self.db.hearings_for_case(cid)
+        self.hearings_table.setRowCount(len(hearings))
+        for i, h in enumerate(hearings):
+            self.hearings_table.setItem(i, 0, QTableWidgetItem(h["hearing_date"]))
+            self.hearings_table.setItem(i, 1, QTableWidgetItem(h["business_done"]))
+            self.hearings_table.setItem(i, 2, QTableWidgetItem(h["next_date"]))
+            self.hearings_table.setItem(i, 3, QTableWidgetItem(h["next_purpose"]))
+
+    def _add_case(self):
+        dlg = AddCaseDialog(self)
+        if dlg.exec() == QDialog.Accepted:
+            data = dlg.get_data()
+            cid = self.db.add_case(**data)
+            self._refresh_list()
+            # Select new case
+            for i in range(self.case_list.count()):
+                if self.case_list.item(i).data(Qt.UserRole) == cid:
+                    self.case_list.setCurrentRow(i)
+                    self._on_case_selected(self.case_list.item(i))
+                    break
+
+    def _record_hearing(self):
+        if not self.current_case_id:
+            QMessageBox.information(self, "No Case Selected", "Please select a case to record a hearing.")
+            return
+        dlg = AddHearingDialog(self)
+        if dlg.exec() == QDialog.Accepted:
+            data = dlg.get_data()
+            self.db.add_hearing(self.current_case_id, **data)
+            self._refresh_list()
+            # Re-select current case
+            for i in range(self.case_list.count()):
+                if self.case_list.item(i).data(Qt.UserRole) == self.current_case_id:
+                    self.case_list.setCurrentRow(i)
+                    self._on_case_selected(self.case_list.item(i))
+                    break
+
+    def _delete_case(self):
+        if not self.current_case_id:
+            return
+        ret = QMessageBox.question(self, "Confirm Delete", "Are you sure you want to delete this case and its hearing history?")
+        if ret == QMessageBox.Yes:
+            self.db.delete_case(self.current_case_id)
+            self.current_case_id = None
+            self._refresh_list()
+            if self.case_list.count() > 0:
+                self.case_list.setCurrentRow(0)
+                self._on_case_selected(self.case_list.item(0))
+            else:
+                self.title_label.setText("No cases in diary.")
+                self.meta_label.setText("")
+                self.advice_label.setText("")
+                self.hearings_table.setRowCount(0)
 
 
 class BookmarksTab(QWidget):
@@ -1067,6 +1360,9 @@ class MainWindow(QMainWindow):
 
         self.explorer = ExplorerTab(self.db)
         tabs.addTab(self.explorer, "Act Explorer (CPC & Limitation)")
+
+        self.diary_tab = CaseDiaryTab(self.db)
+        tabs.addTab(self.diary_tab, "Case Diary")
 
         self.checklists_tab = ChecklistsTab(self.db, self._jump)
         tabs.addTab(self.checklists_tab, "Practice Checklists")

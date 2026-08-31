@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Chamber Case Diary - LexOffline{% endblock %}
+
+{% block content %}
+<div class="header-section" style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <h1>📅 Advocate Case Diary &amp; Hearing Board</h1>
+        <p class="subtitle">Chamber notebook for tracking active litigation, daily court orders, and automatic statutory deadlines.</p>
+    </div>
+    <a href="/diary/new" class="btn" style="background: #2b6cb0; color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; font-size: 0.95rem;">
+        ➕ Add New Case
+    </a>
+</div>
+
+<!-- Upcoming Hearings Board -->
+{% if upcoming %}
+<div class="panel" style="background: #fffaf0; border-left: 4px solid #dd6b20; padding: 1rem; margin-bottom: 2rem;">
+    <h3 style="margin-top: 0; margin-bottom: 0.75rem; color: #7b341e; font-size: 1.1rem;">
+        🔔 Upcoming Court Hearings Board (Next 20 Postings)
+    </h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.75rem;">
+        {% for u in upcoming %}
+        <div style="background: #fff; border: 1px solid #feebc8; border-radius: 6px; padding: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <span style="background: #feebc8; color: #7b341e; font-weight: bold; font-size: 0.8rem; padding: 2px 6px; border-radius: 4px;">
+                    {{ u.next_date }}
+                </span>
+                <span style="color: #718096; font-size: 0.8rem;">{{ u.client_role }}</span>
+            </div>
+            <h4 style="margin: 0.4rem 0 0.2rem 0; font-size: 0.95rem;">
+                <a href="/diary/case/{{ u.id }}" style="color: #1a365d; text-decoration: none;">{{ u.case_no }}</a>
+            </h4>
+            <p style="margin: 0; font-size: 0.85rem; color: #4a5568;">{{ u.court_name }}</p>
+            <p style="margin: 0.25rem 0 0 0; font-size: 0.8rem; color: #2b6cb0;">Stage: {{ u.stage }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Stage Filter -->
+<div class="category-filter panel" style="margin-bottom: 1.5rem;">
+    <label for="stage-select"><strong>Filter by Stage:</strong></label>
+    <select id="stage-select" onchange="window.location.href='/diary?stage=' + encodeURIComponent(this.value)">
+        <option value="">All Stages</option>
+        {% for st in stages %}
+        <option value="{{ st }}" {% if selected_stage == st %}selected{% endif %}>{{ st }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<!-- Cases Grid -->
+{% if cases %}
+<div class="cases-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;">
+    {% for c in cases %}
+    <div class="card" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+            <span class="badge" style="background: #ebf8ff; color: #2b6cb0; font-size: 0.8rem; font-weight: bold; padding: 3px 8px; border-radius: 4px;">
+                {{ c.client_role }}
+            </span>
+            <span style="font-size: 0.85rem; color: {% if c.next_date %}#c53030; font-weight: bold;{% else %}#a0aec0;{% endif %}">
+                {% if c.next_date %}📅 Next: {{ c.next_date }}{% else %}No date fixed{% endif %}
+            </span>
+        </div>
+        <h3 style="margin: 0 0 0.4rem 0; font-size: 1.15rem;">
+            <a href="/diary/case/{{ c.id }}" style="color: #1a365d; text-decoration: none;">{{ c.case_no }}</a>
+        </h3>
+        <p style="color: #718096; font-size: 0.85rem; margin: 0 0 0.5rem 0;">
+            {{ c.court_name }}
+        </p>
+        <p style="color: #2d3748; font-size: 0.9rem; margin: 0 0 0.5rem 0;">
+            <strong>{{ c.client_name }}</strong> vs <strong>{{ c.opposite_party or 'Opposite Party' }}</strong>
+        </p>
+        <p style="color: #4a5568; font-size: 0.85rem; line-height: 1.4; flex-grow: 1; margin: 0 0 1rem 0;">
+            <span style="color: #718096;">Stage:</span> {{ c.stage }}
+        </p>
+        <div style="border-top: 1px solid #edf2f7; padding-top: 0.75rem;">
+            <a href="/diary/case/{{ c.id }}" class="btn" style="display: inline-block; padding: 5px 12px; background: #edf2f7; color: #2b6cb0; border: 1px solid #cbd5e0; text-decoration: none; border-radius: 4px; font-size: 0.85rem;">
+                Open Case File &rarr;
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="panel" style="text-align: center; padding: 2.5rem 1rem;">
+    <p style="color: #718096; font-size: 1.05rem; margin-bottom: 1rem;">No litigation matters recorded in this category yet.</p>
+    <a href="/diary/new" class="btn" style="display: inline-block; background: #2b6cb0; color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 4px;">
+        ➕ Add Your First Case
+    </a>
+</div>
+{% endif %}
+{% endblock %}

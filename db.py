@@ -42,6 +42,29 @@ class ActDatabase:
                 updated_at TEXT DEFAULT (datetime('now')),
                 UNIQUE(kind, ref_id)
             );
+            CREATE TABLE IF NOT EXISTS case_diary (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                case_no TEXT NOT NULL,
+                court_name TEXT NOT NULL,
+                client_name TEXT NOT NULL,
+                client_role TEXT NOT NULL DEFAULT 'Plaintiff',
+                opposite_party TEXT NOT NULL DEFAULT '',
+                opposite_counsel TEXT NOT NULL DEFAULT '',
+                stage TEXT NOT NULL,
+                next_date TEXT NOT NULL DEFAULT '',
+                notes TEXT NOT NULL DEFAULT '',
+                created_at TEXT DEFAULT (datetime('now'))
+            );
+            CREATE TABLE IF NOT EXISTS case_hearings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                case_id INTEGER NOT NULL,
+                hearing_date TEXT NOT NULL,
+                business_done TEXT NOT NULL DEFAULT '',
+                next_date TEXT NOT NULL DEFAULT '',
+                next_purpose TEXT NOT NULL DEFAULT '',
+                created_at TEXT DEFAULT (datetime('now')),
+                FOREIGN KEY (case_id) REFERENCES case_diary(id) ON DELETE CASCADE
+            );
             """
         )
         self.conn.commit()
@@ -198,5 +221,74 @@ class ActDatabase:
             "SELECT * FROM limitation_articles WHERE cpc_ref LIKE ? ORDER BY id", (like,)
         ).fetchall()
 
+    # ---------- case diary ----------
+    def add_case(self, case_no, court_name, client_name, client_role="Plaintiff",
+                 opposite_party="", opposite_counsel="", stage="", next_date="", notes=""):
+        cur = self.conn.execute(
+            """
+            INSERT INTO case_diary (case_no, court_name, client_name, client_role,
+                                    opposite_party, opposite_counsel, stage, next_date, notes)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (case_no, court_name, client_name, client_role,
+             opposite_party, opposite_counsel, stage, next_date, notes)
+        )
+        self.conn.commit()
+        return cur.lastrowid
+
+    def update_case(self, case_id, case_no, court_name, client_name, client_role,
+                    opposite_party, opposite_counsel, stage, next_date, notes):
+        self.conn.execute(
+            """
+            UPDATE case_diary
+            SET case_no=?, court_name=?, client_name=?, client_role=?,
+                opposite_party=?, opposite_counsel=?, stage=?, next_date=?, notes=?
+            WHERE id=?
+            """,
+            (case_no, court_name, client_name, client_role,
+             opposite_party, opposite_counsel, stage, next_date, notes, case_id)
+        )
+        self.conn.commit()
+
+    def delete_case(self, case_id):
+        self.conn.execute("DELETE FROM case_hearings WHERE case_id=?", (case_id,))
+        self.conn.execute("DELETE FROM case_diary WHERE id=?", (case_id,))
+        self.conn.commit()
+
+    def get_case(self, case_id):
+        return self.conn.execute("SELECT * FROM case_diary WHERE id=?", (case_id,)).fetchone()
+
+    def all_cases(self, stage=None):
+        if stage:
+            return self.conn.execute(
+                "SELECT * FROM case_diary WHERE stage=? ORDER BY next_date ASC, id DESC", (stage,)
+            ).fetchall()
+        return self.conn.execute("SELECT * FROM case_diary ORDER BY next_date ASC, id DESC").fetchall()
+
+    def upcoming_cases(self, limit=20):
+        return self.conn.execute(
+            "SELECT * FROM case_diary WHERE next_date != '' AND next_date >= date('now') ORDER BY next_date ASC LIMIT ?",
+            (limit,)
+        ).fetchall()
+
+    def add_hearing(self, case_id, hearing_date, business_done="", next_date="", next_purpose=""):
+        cur = self.conn.execute(
+            """
+            INSERT INTO case_hearings (case_id, hearing_date, business_done, next_date, next_purpose)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (case_id, hearing_date, business_done, next_date, next_purpose)
+        )
+        if next_date:
+            self.conn.execute("UPDATE case_diary SET next_date=? WHERE id=?", (next_date, case_id))
+        self.conn.commit()
+        return cur.lastrowid
+
+    def hearings_for_case(self, case_id):
+        return self.conn.execute(
+            "SELECT * FROM case_hearings WHERE case_id=? ORDER BY hearing_date DESC, id DESC", (case_id,)
+        ).fetchall()
+
     def close(self):
         self.conn.close()
+
