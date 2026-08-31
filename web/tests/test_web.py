@@ -196,6 +196,27 @@ def test_template_detail_execution_tabular():
     assert b'Order XXI Rule 11' in resp.data
 
 
+def test_template_detail_amendment():
+    resp = _client().get('/template/amendment_o6_r17')
+    assert resp.status_code == 200
+    assert b'Order VI Rule 17' in resp.data
+    assert b'Amendment of Pleadings' in resp.data
+
+
+def test_template_detail_commissioner():
+    resp = _client().get('/template/commissioner_o26_r9')
+    assert resp.status_code == 200
+    assert b'Order XXVI Rule 9' in resp.data
+    assert b'Court Commissioner' in resp.data
+
+
+def test_template_detail_specific_performance():
+    resp = _client().get('/template/plaint_specific_performance')
+    assert resp.status_code == 200
+    assert b'Specific Performance' in resp.data
+    assert b'Article 54' in resp.data
+
+
 def test_template_404_invalid():
     resp = _client().get('/template/non_existent_template')
     assert resp.status_code == 404

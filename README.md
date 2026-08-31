@@ -81,17 +81,41 @@ Open `http://localhost:5000` in your browser.
     - **Section 148A**: Caveat Practice (service obligations, 90-day expiry rule).
     - **Section 100**: Second Appeal (Substantial Question of Law test, *Sir Chunilal Mehta* formulation rules, Sections 100A/102 bars).
     - **Section 115**: Civil Revision (3 jurisdictional error tests, 1999 Proviso final-disposition bar, Art. 131 90-day limitation).
-- **Court-Ready Drafting Templates**:
-  - 8 standard court-tested civil drafts with bracketed substitution placeholders:
-    - **Caveat Petition (Section 148A CPC)** + Verification Affidavit + RPAD Notice.
+- **Court-Ready Drafting Templates Library (28 Court-Tested Formats)**:
+  - **Core Interlocutory Applications (IAs)**:
     - **Temporary Injunction Application (Order XXXIX Rules 1 & 2 CPC)** + Supporting Affidavit + Rule 3 Urgency grounds.
-    - **Setting Aside Ex-Parte Decree (Order IX Rule 13 CPC)** + Section 5 Limitation Condonation Application & Affidavit.
+    - **Amendment of Pleadings (Order VI Rule 17 CPC)** + Affidavit (satisfying statutory *due diligence* proviso).
+    - **Appointment of Court Commissioner (Order XXVI Rule 9 CPC)** + Affidavit (local investigation, boundaries, encroachment).
+    - **Attachment Before Judgment (Order XXXVIII Rule 5 CPC)** + Affidavit (preventing fraudulent disposal of property).
+    - **Recall of Witness & Re-Opening Evidence (Order XVIII Rule 17 & Order XVI Rule 1(3) CPC)**.
+    - **Standalone Condonation of Delay Application (Section 5 Limitation Act, 1963)** + Affidavit.
+    - **Judgment on Admissions (Order XII Rule 6 CPC)** (summary decree on unequivocal admissions).
+    - **Formal Application for Adjournment (Order XVII Rule 1 CPC)** (compliant with 3-adjournment rule).
+  - **Pre-Emptive & Defense Pleadings**:
+    - **Caveat Petition (Section 148A CPC)** + Verification Affidavit + RPAD Notice.
+    - **Rejection of Plaint Application (Order VII Rule 11 CPC)** + Affidavit (*Dahiben* principles).
+    - **Application for Leave to Defend in Summary Suit (Order XXXVII Rule 3(5) CPC)** + Affidavit.
+    - **Setting Aside Ex-Parte Decree (Order IX Rule 13 CPC)** + Section 5 Condonation Application.
+  - **Execution Court Applications (Order XXI)**:
     - **Tabular Execution Petition (Order XXI Rule 11(2) CPC)** (mandatory 10-column civil execution format).
-    - **Substitution of Legal Representatives (Order XXII Rule 3/4 CPC)** + Surviving legal heirs schedule + Affidavit.
+    - **Police Aid Application in Execution (Section 151 CPC)** + Affidavit.
+    - **Application to Break Open Locks for Delivery of Possession (Order XXI Rule 35(3) CPC)**.
+    - **Third-Party Claim / Objection Petition (Order XXI Rule 58 CPC)** (independent title claim against attachment).
+    - **Application for Removal of Resistance / Obstruction to Possession (Order XXI Rule 97 CPC)**.
+  - **Appeals, Revisions & Review**:
+    - **Memorandum of Regular First Appeal (Section 96 & Order XLI Rule 1 CPC)** + Stay Petition (Order XLI Rule 5).
+    - **Civil Miscellaneous Appeal (CMA) against Injunction Order (Order XLIII Rule 1(r) CPC)**.
+    - **Review Petition (Section 114 & Order XLVII Rule 1 CPC)** (error apparent on face of record).
+  - **Core Pleadings & Substantive Plaints**:
+    - **Plaint for Specific Performance of Agreement to Sell** (mandatory Section 16(c) SRA readiness & willingness).
+    - **Plaint for Partition and Separate Possession** (genealogy, ancestral coparcenary schedule, metes & bounds).
+    - **Plaint for Declaration of Title, Recovery of Possession & Mesne Profits (Order XX Rule 12 CPC)**.
+    - **General Plaint Skeleton (Order VII CPC)** (facts, cause of action, valuation, court fees, jurisdiction, prayer).
+    - **General Written Statement Skeleton (Order VIII CPC)** (preliminary objections, specific denials).
+    - **Substitution of Legal Representatives (Order XXII Rule 3/4 CPC)** + Surviving legal heirs schedule.
     - **Statutory Notice to Government (Section 80 CPC)** (2-month mandatory pre-suit notice).
-    - **Plaint General Skeleton (Order VII CPC)** (chronological facts, cause of action, valuation, jurisdiction, prayer, verification).
-    - **Written Statement General Skeleton (Order VIII CPC)** (preliminary objections, specific para-wise denials, verification).
-- **Order XXI Execution Roadmap & Navigator**:
+    - **Section 65B Electronic Evidence Certificate** (WhatsApp chats, emails, CCTV, computer printouts).
+  - Features 1-click clipboard copy on desktop and web, in-app editor, and `.txt` file download.
   - 5 interactive execution pathways navigating the 106 rules of Order XXI:
     - **Money Decrees (Attachment & Sale)**: 9 sequential stages covering limitation audits, Rule 11 petitions, Rule 22 notices, Rule 41 asset disclosures, Rule 43/46/48/54 attachments, Section 60 statutory exemptions, Rule 58 claims, Rule 64–72 auctions, Rule 89/90 setting aside sale, and Rule 92/94 confirmation.
     - **Delivery of Immovable Property (Possession)**: Actual physical possession (Rule 35(1)), symbolic delivery (Rule 36), police protection applications, Rule 97 resistance removal, Rule 99 dispossession, and Rule 101 full title trials.
