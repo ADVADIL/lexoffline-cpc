@@ -30,6 +30,7 @@ import templates_data as tdata
 import execution_data as edata
 import case_stages as cs
 import sra_navigator as sn
+import composite_drafter as cdraft
 
 
 def html_escape(s):
@@ -1240,6 +1241,112 @@ class SRANavigatorTab(QWidget):
                 return
 
 
+class CompositeDrafterTab(QWidget):
+    """Multi-Statute Composite Draft Builder & Synthesizer."""
+
+    def __init__(self):
+        super().__init__()
+        self.current_pleading = None
+
+        layout = QHBoxLayout(self)
+        splitter = QSplitter(Qt.Horizontal)
+        layout.addWidget(splitter)
+
+        left = QWidget()
+        left_layout = QVBoxLayout(left)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+        left_layout.addWidget(QLabel("<b>Composite Pleadings:</b>"))
+
+        self.list_widget = QListWidget()
+        self.list_widget.itemClicked.connect(self._on_item_clicked)
+        left_layout.addWidget(self.list_widget, stretch=1)
+        splitter.addWidget(left)
+
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.viewer = QWidget()
+        self.vlayout = QVBoxLayout(self.viewer)
+        self.vlayout.setAlignment(Qt.AlignTop)
+        self.scroll.setWidget(self.viewer)
+        splitter.addWidget(self.scroll)
+
+        splitter.setSizes([320, 680])
+        self._populate_list()
+
+        if self.list_widget.count() > 0:
+            self.list_widget.setCurrentRow(0)
+            self._on_item_clicked(self.list_widget.item(0))
+
+    def _populate_list(self):
+        self.list_widget.clear()
+        for cp in cdraft.list_composite_pleadings():
+            it = QListWidgetItem(f"{cp.title}\n[{cp.remedy_type}]")
+            it.setData(Qt.UserRole, cp.id)
+            self.list_widget.addItem(it)
+
+    def _on_item_clicked(self, item):
+        pid = item.data(Qt.UserRole)
+        p = cdraft.get_composite_pleading(pid)
+        if not p:
+            return
+        self.current_pleading = p
+
+        while self.vlayout.count():
+            child = self.vlayout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        header = QLabel(
+            f"<h2>{p.title}</h2>"
+            f"<p style='background:#edf2f7; color:#2b6cb0; font-family:monospace; padding:6px 10px; border-radius:4px; font-weight:bold; font-size:9.5pt;'>"
+            f"{p.statutory_header}</p>"
+            f"<p style='color:#4a5568; font-size:10pt; line-height:1.4;'>{p.summary}</p>"
+        )
+        header.setWordWrap(True)
+        self.vlayout.addWidget(header)
+
+        # Statutory Matrix Box
+        sm_box = QGroupBox("🏛️ Statutory Harmonization Matrix")
+        sm_box.setStyleSheet("QGroupBox { font-weight: bold; color: #1a365d; }")
+        sm_layout = QVBoxLayout(sm_box)
+        for sm in p.statutes_merged:
+            lbl = QLabel(f"<b>{sm.act_name}:</b> <span style='color:#2b6cb0;'>{sm.provisions}</span><br><span style='color:#718096; font-size:9pt;'>{sm.role_in_draft}</span>")
+            lbl.setWordWrap(True)
+            sm_layout.addWidget(lbl)
+        self.vlayout.addWidget(sm_box)
+
+        # Mandatory Clauses Box
+        mc_box = QGroupBox("🚨 Mandatory Statutory Clauses Satisfied")
+        mc_box.setStyleSheet("QGroupBox { font-weight: bold; color: #9c4221; }")
+        mc_layout = QVBoxLayout(mc_box)
+        for mc in p.mandatory_clauses:
+            lbl = QLabel(f"<b style='color:#c05621;'>✔ {mc['clause']}:</b> <span style='color:#7b341e;'>{mc['requirement']}</span>")
+            lbl.setWordWrap(True)
+            mc_layout.addWidget(lbl)
+        self.vlayout.addWidget(mc_box)
+
+        # Action Buttons
+        btn_layout = QHBoxLayout()
+        copy_btn = QPushButton("📋 Copy Generated Draft")
+        copy_btn.setStyleSheet("font-weight: bold; padding: 6px 12px; background: #3182ce; color: white;")
+        copy_btn.clicked.connect(self._copy_draft)
+        btn_layout.addWidget(copy_btn)
+        btn_layout.addStretch(1)
+        self.vlayout.addLayout(btn_layout)
+
+        # Text editor / viewer
+        self.draft_editor = QTextBrowser()
+        self.draft_editor.setFont(QFont("Courier New", 10))
+        self.draft_editor.setPlainText(p.generate())
+        self.draft_editor.setMinimumHeight(450)
+        self.vlayout.addWidget(self.draft_editor)
+
+    def _copy_draft(self):
+        if hasattr(self, 'draft_editor'):
+            QGuiApplication.clipboard().setText(self.draft_editor.toPlainText())
+            QMessageBox.information(self, "Copied", "Complete multi-statute draft copied to clipboard!")
+
+
 class AddCaseDialog(QDialog):
     """Dialog to add a new litigation matter into the Case Diary."""
     def __init__(self, parent=None):
@@ -1622,6 +1729,9 @@ class MainWindow(QMainWindow):
 
         self.templates_tab = DraftingTemplatesTab(self.db, self._jump)
         tabs.addTab(self.templates_tab, "Drafting Templates")
+
+        self.composite_drafter_tab = CompositeDrafterTab()
+        tabs.addTab(self.composite_drafter_tab, "⚡ Composite Drafter")
 
         self.execution_tab = ExecutionNavigatorTab(self.db, self._jump)
         tabs.addTab(self.execution_tab, "Execution Navigator")

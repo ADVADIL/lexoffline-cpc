@@ -79,6 +79,13 @@ Open `http://localhost:5000` in your browser.
   - **Cancellation of Void / Voidable Instruments (Sections 31 & 33 SRA)**: Executant vs non-executant distinction (*Suhrid Singh v. Randhir Singh*), ad valorem court fee rules, reasonable apprehension of serious injury, and Section 31(2) mandatory Sub-Registrar notification.
   - **Summary Possessory Suits within 6 Months (Section 6 SRA vs Section 5)**: Prior peaceful juridical possession proof, absolute exclusion of title defense (*Lallu Yeshwant Singh*), strict 6-month limitation bar, bar on suing government, and finality of decree (no appeal/review).
   - **Perpetual & Mandatory Injunctions & Section 41 Statutory Bars**: 10-clause statutory prohibitions audit (restraining judicial proceedings, criminal matters, determinable contracts, equally efficacious remedies under 41(h), and infrastructure projects under 41(ha)).
+- **⚡ Multi-Statute Composite Draft Builder**:
+  - Dynamically synthesizes procedural (CPC), substantive (SRA, TPA, Registration Act), temporal (Limitation Act), and fiscal (State Court Fees Act) provisions into harmonized, court-ready composite legal drafts:
+    - **Specific Performance Composite Plaint**: CPC (Sec 26, O.7 R.1) + SRA (Sec 10, 16(c), 20, 22) + Limitation (Art. 54) + TPA (Sec 55(6)(b) buyer charge) + Ad Valorem Court Fees.
+    - **Declaration of Title, Possession & Mesne Profits Plaint**: CPC (O.7 R.1, O.20 R.12) + SRA (Sec 5, 34 Proviso, 38) + Limitation (Art. 58 & 65) + Court Fees.
+    - **Cancellation of Fraudulent Sale Deed Plaint**: CPC (O.7 R.1) + SRA (Sec 31, 32, 33) + Registration Act / Sec 31(2) decree transmission + Limitation (Art. 59 from discovery of fraud).
+    - **Temporary Injunction Composite Application**: CPC (O.39 R.1 & 2, Sec 151) + SRA (Sec 36, 37, 38, Sec 41 statutory bar audit, Sec 20A / 41(ha) infrastructure non-interference).
+  - Features real-time parameter customization (Court name, parties, property schedule, consideration, dates) with 1-click **Copy to Clipboard** and **Download .txt** export.
 - **Courtroom Practice Checklists (21 Authoritative Statutory Compliance Engines)**:
   - **Trial Court Practice & Pleadings**:
     - **Plaint Institution & Registry Scrutiny (Section 26 & Order VII Rules 1–18 CPC)**: Proper description, cause of action bundle, valuation slip, court fees calculation, boundaries, and Rule 14 document list.

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Multi-Statute Composite Drafter - LexOffline{% endblock %}
+
+{% block content %}
+<div class="header-section" style="margin-bottom: 2rem;">
+    <h1>⚡ Multi-Statute Composite Draft Builder</h1>
+    <p class="subtitle" style="font-size: 1.05rem; color: #4a5568; margin-top: 0.25rem;">
+        Synthesizes procedural (CPC), substantive (SRA / TPA), temporal (Limitation Act), and fiscal (Court Fees Act) provisions into court-ready pleadings.
+    </p>
+</div>
+
+<div class="card-grid" style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+    {% for cp in pleadings %}
+    <div class="card" style="background: #fff; border: 1px solid #cbd5e0; border-radius: 8px; padding: 1.5rem; border-left: 5px solid #3182ce; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;">
+            <span class="badge" style="background: #ebf8ff; color: #2b6cb0; font-size: 0.85rem; font-weight: bold; padding: 4px 10px; border-radius: 4px;">
+                {{ cp.remedy_type }}
+            </span>
+            <span style="font-size: 0.85rem; color: #718096; font-weight: 600;">
+                {{ cp.statutes_merged|length }} Statutes Harmonized
+            </span>
+        </div>
+
+        <h2 style="margin: 0.75rem 0 0.5rem 0; font-size: 1.35rem; color: #1a365d;">
+            <a href="/drafter/{{ cp.id }}" style="text-decoration: none; color: inherit;">
+                {{ cp.title }}
+            </a>
+        </h2>
+
+        <div style="background: #f7fafc; padding: 0.75rem 1rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: #2d3748; margin-bottom: 0.75rem; border: 1px solid #edf2f7; line-height: 1.4;">
+            <strong>Merged Heading:</strong> {{ cp.statutory_header }}
+        </div>
+
+        <p style="color: #4a5568; line-height: 1.55; margin-bottom: 1.25rem;">
+            {{ cp.summary }}
+        </p>
+
+        <!-- STATUTORY MATRIX BADGES -->
+        <div style="margin-bottom: 1.25rem;">
+            <div style="font-size: 0.85rem; font-weight: bold; color: #718096; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem;">
+                Statutory Provisions Merged:
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                {% for sm in cp.statutes_merged %}
+                <span style="background: #edf2f7; color: #2d3748; padding: 4px 8px; border-radius: 4px; font-size: 0.82rem; border: 1px solid #e2e8f0;">
+                    <strong>{{ sm.act_name }}:</strong> {{ sm.provisions }}
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            <a href="/drafter/{{ cp.id }}" class="btn" style="background: #3182ce; color: #fff; text-decoration: none; padding: 8px 18px; border-radius: 6px; font-weight: 600; display: inline-block;">
+                Launch Composite Draft Generator &rarr;
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

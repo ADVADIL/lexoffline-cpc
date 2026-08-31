@@ -316,6 +316,32 @@ def sra_analyzer_detail(pathway_id):
     return render_template('sra_analyzer_detail.html', pathway=pathway)
 
 
+# --- Multi-Statute Composite Drafter ---
+
+import composite_drafter as cdraft
+
+@app.route('/drafter')
+def drafter_index():
+    pleadings = cdraft.list_composite_pleadings()
+    return render_template('drafter_index.html', pleadings=pleadings)
+
+
+@app.route('/drafter/<draft_id>')
+def drafter_builder(draft_id):
+    pleading = cdraft.get_composite_pleading(draft_id)
+    if not pleading:
+        abort(404)
+    current_params = dict(pleading.default_parameters)
+    for k in current_params.keys():
+        if k in request.args:
+            current_params[k] = request.args.get(k)
+    generated_text = pleading.generate(current_params)
+    return render_template('drafter_builder.html',
+                           pleading=pleading,
+                           current_params=current_params,
+                           generated_text=generated_text)
+
+
 # --- Search ---
 
 @app.route('/search')

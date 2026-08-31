@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}{{ pleading.title }} - Composite Drafter - LexOffline{% endblock %}
+
+{% block content %}
+<div class="provision-header" style="margin-bottom: 1.5rem;">
+    <div style="margin-bottom: 0.5rem;">
+        <a href="/drafter" style="color: #2b6cb0; text-decoration: none; font-size: 0.9rem;">&larr; All Multi-Statute Composite Drafts</a>
+    </div>
+    <span class="badge" style="background: #ebf8ff; color: #2b6cb0; font-size: 0.85rem; font-weight: bold; padding: 3px 8px; border-radius: 4px;">
+        {{ pleading.remedy_type }}
+    </span>
+    <h1 style="margin-top: 0.5rem; font-size: 1.65rem; color: #1a365d;">
+        {{ pleading.title }}
+    </h1>
+    <div style="margin-top: 0.5rem; background: #edf2f7; padding: 0.75rem 1rem; border-radius: 6px; font-family: monospace; font-size: 0.88rem; color: #2d3748; line-height: 1.45; border-left: 4px solid #3182ce;">
+        <strong>Merged Invocation:</strong> {{ pleading.statutory_header }}
+    </div>
+</div>
+
+<!-- STATUTORY HARMONIZATION MATRIX -->
+<div class="panel" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
+    <h3 style="margin-top: 0; color: #1a365d; font-size: 1.15rem; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+        🏛️ Statutory Harmonization Matrix (Why Each Act is Merged)
+    </h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 0.75rem;">
+        {% for sm in pleading.statutes_merged %}
+        <div style="background: #f7fafc; padding: 0.75rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <div style="font-weight: bold; color: #2b6cb0; font-size: 0.95rem;">{{ sm.act_name }}</div>
+            <div style="font-family: monospace; font-size: 0.85rem; color: #4a5568; margin: 0.25rem 0;">{{ sm.provisions }}</div>
+            <div style="font-size: 0.85rem; color: #718096; line-height: 1.4;">{{ sm.role_in_draft }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- MANDATORY STATUTORY CLAUSES -->
+<div class="panel" style="background: #fffaf0; border: 1px solid #feebc8; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem; border-left: 5px solid #dd6b20;">
+    <h3 style="margin-top: 0; color: #9c4221; font-size: 1.15rem; border-bottom: 1px solid #feebc8; padding-bottom: 0.5rem;">
+        🚨 Mandatory Statutory Clauses Embedded in This Pleading
+    </h3>
+    <div style="margin-top: 0.75rem;">
+        {% for mc in pleading.mandatory_clauses %}
+        <div style="margin-bottom: 0.5rem; font-size: 0.92rem;">
+            <strong style="color: #c05621;">✔ {{ mc.clause }}:</strong>
+            <span style="color: #7b341e;">{{ mc.requirement }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- PARAMETER CUSTOMIZER FORM -->
+<details class="panel" style="background: #fff; border: 1px solid #cbd5e0; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;" open>
+    <summary style="cursor: pointer; font-weight: bold; color: #1a365d; font-size: 1.05rem;">
+        ✏️ Customize Case Particulars (Auto-Substitutes into Pleading)
+    </summary>
+    <form method="get" action="/drafter/{{ pleading.id }}" style="margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+        {% for key, val in current_params.items() %}
+        <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: bold; color: #4a5568; margin-bottom: 0.25rem;">
+                {{ key|replace('_', ' ') }}
+            </label>
+            <input type="text" name="{{ key }}" value="{{ val }}" style="width: 100%; padding: 7px 10px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.9rem; box-sizing: border-box;">
+        </div>
+        {% endfor %}
+        <div style="grid-column: 1 / -1; margin-top: 0.5rem;">
+            <button type="submit" class="btn" style="background: #3182ce; color: #fff; border: none; padding: 8px 18px; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                ⚡ Apply Case Particulars to Draft
+            </button>
+            <a href="/drafter/{{ pleading.id }}" class="btn" style="background: #edf2f7; color: #4a5568; text-decoration: none; padding: 8px 14px; border-radius: 4px; margin-left: 0.5rem;">
+                Reset Defaults
+            </a>
+        </div>
+    </form>
+</details>
+
+<!-- LIVE GENERATED DRAFT VIEWER -->
+<div class="panel" style="background: #fff; border: 1px solid #cbd5e0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+        <h3 style="margin: 0; color: #1a365d; font-size: 1.15rem;">
+            📄 Complete Court-Ready Multi-Statute Draft
+        </h3>
+        <div style="display: flex; gap: 0.5rem;">
+            <button onclick="copyDraft()" class="btn" style="background: #3182ce; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                📋 Copy Draft
+            </button>
+            <button onclick="downloadDraft()" class="btn" style="background: #2b6cb0; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                💾 Download (.txt)
+            </button>
+        </div>
+    </div>
+    <pre id="draft-content" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1.25rem; font-family: 'Courier New', Courier, monospace; font-size: 0.95rem; line-height: 1.55; white-space: pre-wrap; color: #1a202c; max-height: 700px; overflow-y: auto;">{{ generated_text }}</pre>
+</div>
+
+<script>
+function copyDraft() {
+    const text = document.getElementById('draft-content').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        alert("Complete multi-statute draft copied to clipboard!");
+    });
+}
+
+function downloadDraft() {
+    const text = document.getElementById('draft-content').innerText;
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = "{{ pleading.id }}.txt";
+    link.click();
+}
+</script>
+{% endblock %}

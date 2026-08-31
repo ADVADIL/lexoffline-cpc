@@ -421,6 +421,29 @@ def test_checklist_sra_sec16c():
     assert b'Section 16(c)' in resp.data
 
 
+def test_drafter_index():
+    resp = _client().get('/drafter')
+    assert resp.status_code == 200
+    assert b'Multi-Statute Composite Draft Builder' in resp.data
+    assert b'Composite Plaint for Specific Performance' in resp.data
+    assert b'Statutory Provisions Merged' in resp.data
+
+
+def test_drafter_builder_sp():
+    resp = _client().get('/drafter/composite_specific_performance')
+    assert resp.status_code == 200
+    assert b'Statutory Harmonization Matrix' in resp.data
+    assert b'Section 22(1)(a)' in resp.data
+    assert b'ORDER VII' in resp.data
+    assert b'COMPOSITE PLAINT FOR SPECIFIC PERFORMANCE' in resp.data
+
+
+def test_drafter_builder_custom_param():
+    resp = _client().get('/drafter/composite_specific_performance?PLAINTIFF_NAME=Advocate+Kiran+Verma')
+    assert resp.status_code == 200
+    assert b'Advocate Kiran Verma' in resp.data
+
+
 if __name__ == '__main__':
     tests = [v for k, v in globals().items() if k.startswith('test_')]
     for t in tests:
