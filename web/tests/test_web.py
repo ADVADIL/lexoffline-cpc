@@ -113,6 +113,21 @@ def test_deadline_with_exclusion():
     assert b'15 April 2026' in resp.data
 
 
+def test_deadline_compute_limitation_article_single():
+    resp = _client().get('/deadline?rule_key=LIMART:54&trigger_date=2026-05-10&excluded_days=0')
+    assert resp.status_code == 200
+    assert b'10 May 2029' in resp.data
+    assert b'Article 54' in resp.data
+
+
+def test_deadline_compute_limitation_article_compound():
+    resp = _client().get('/deadline?rule_key=LIMART:61&trigger_date=2026-01-01&excluded_days=0')
+    assert resp.status_code == 200
+    assert b'Article 61' in resp.data
+    assert b'alternative periods' in resp.data
+    assert b'30 years' in resp.data or b'Twelve years' in resp.data or b'12 years' in resp.data
+
+
 def test_404_missing_section():
     resp = _client().get('/cpc/section/9999')
     assert resp.status_code == 404

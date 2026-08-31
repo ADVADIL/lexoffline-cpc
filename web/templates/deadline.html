@@ -48,15 +48,40 @@
 <div class="result-panel panel highlight-panel-success">
     <h2>Computation Result</h2>
     <div class="result-details">
-        <p><strong>Provision:</strong> {{ result.provision }}</p>
-        <p><strong>Period:</strong> {{ result.period_str }} from {{ result.trigger_date }}</p>
-        {% if result.note %}
-        <p><strong>Starting Event:</strong> {{ result.note }}</p>
+        {% if result.is_limitation_article %}
+            <p><strong>Article {{ result.article_no }}</strong> ({{ result.division }}, {{ result.part }})</p>
+            <p><strong>Description:</strong> {{ result.description }}</p>
+            <p><strong>Time begins:</strong> {{ result.time_begins }}</p>
+            <p><strong>CPC Reference:</strong> {{ result.cpc_ref }}</p>
+            {% if result.excluded_days|int > 0 %}
+            <p><strong>Section 12 Exclusion:</strong> +{{ result.excluded_days }} days for certified copy</p>
+            {% endif %}
+
+            {% if result.options|length == 1 %}
+                <h3 class="due-date">Statutory Due Date: {{ result.options[0].due_date }}</h3>
+            {% else %}
+                <div style="margin-top: 1rem;">
+                    <p><em>This Article prescribes alternative periods depending on which sub-clause applies to the facts of the case:</em></p>
+                    <ul>
+                        {% for opt in result.options %}
+                        <li style="margin-bottom: 0.5rem;">
+                            {{ opt.label }} {{ opt.amount }} {{ opt.unit }} &mdash; <strong>Due Date: {{ opt.due_date }}</strong>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% else %}
+            <p><strong>Provision:</strong> {{ result.provision }}</p>
+            <p><strong>Period:</strong> {{ result.period_str }} from {{ result.trigger_date }}</p>
+            {% if result.note %}
+            <p><strong>Starting Event:</strong> {{ result.note }}</p>
+            {% endif %}
+            {% if result.excluded_days|int > 0 %}
+            <p><strong>Section 12 Exclusion:</strong> +{{ result.excluded_days }} days for certified copy</p>
+            {% endif %}
+            <h3 class="due-date">Statutory Due Date: {{ result.due_date }}</h3>
         {% endif %}
-        {% if result.excluded_days|int > 0 %}
-        <p><strong>Section 12 Exclusion:</strong> +{{ result.excluded_days }} days for certified copy</p>
-        {% endif %}
-        <h3 class="due-date">Statutory Due Date: {{ result.due_date }}</h3>
     </div>
 </div>
 {% endif %}

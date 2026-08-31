@@ -253,11 +253,13 @@ def search():
     return render_template('search_results.html', query=q, results=results)
 
 
+import limitation_data as ld
+
 # --- Deadline Calculator ---
 
 @app.route('/deadline')
 def deadline():
-    categories = dl.list_categories()
+    categories = dl.list_categories() + ["All 137 Limitation Act Articles"]
     all_rules = dl.list_rules()
     # Convert DeadlineRule dataclass instances to dicts for Jinja / JS
     rules_data = [
@@ -265,6 +267,16 @@ def deadline():
          'category': r.category, 'note': r.note or ''}
         for r in all_rules
     ]
+    for a in ld.LIMITATION_ARTICLES:
+        desc = a["description"].split("\n")[0][:70]
+        label = f"Art. {a['article_no']} — {desc} ({a['period'].splitlines()[0]}{'...' if len(a['period'].splitlines()) > 1 else ''})"
+        rules_data.append({
+            'key': f"LIMART:{a['article_no']}",
+            'label': label,
+            'provision': f"Article {a['article_no']}",
+            'category': "All 137 Limitation Act Articles",
+            'note': a['time_begins']
+        })
 
     result = None
     selected_rule = request.args.get('rule_key', '')
@@ -276,16 +288,44 @@ def deadline():
         try:
             trigger = datetime.strptime(trigger_date_str, '%Y-%m-%d').date()
             excluded = int(excluded_days_str) if excluded_days_str else 0
-            raw = dl.compute(trigger, selected_rule, excluded_days=excluded)
-            result = {
-                'due_date': raw['due_date'].strftime('%d %B %Y'),
-                'trigger_date': raw['trigger_date'].strftime('%d %B %Y'),
-                'period_str': raw['period_str'],
-                'excluded_days': raw['excluded_days'],
-                'provision': raw['rule'].provision,
-                'note': raw['rule'].note or '',
-                'days': raw['days'],
-            }
+            if selected_rule.startswith("LIMART:"):
+                art_no = selected_rule.split(":", 1)[1]
+                article = next((a for a in ld.LIMITATION_ARTICLES if a["article_no"] == art_no), None)
+                if article:
+                    raw_art = dl.compute_limitation_article(trigger, article, excluded_days=excluded)
+                    options = raw_art["options"]
+                    result = {
+                        'is_limitation_article': True,
+                        'article_no': article['article_no'],
+                        'division': article['division'],
+                        'part': article['part'],
+                        'description': article['description'],
+                        'time_begins': article['time_begins'],
+                        'cpc_ref': article.get('cpc_ref') or '—',
+                        'excluded_days': excluded,
+                        'trigger_date': trigger.strftime('%d %B %Y'),
+                        'options': [
+                            {
+                                'label': opt['label'],
+                                'amount': opt['amount'],
+                                'unit': opt['unit'],
+                                'due_date': opt['due_date'].strftime('%d %B %Y')
+                            }
+                            for opt in options
+                        ]
+                    }
+            else:
+                raw = dl.compute(trigger, selected_rule, excluded_days=excluded)
+                result = {
+                    'is_limitation_article': False,
+                    'due_date': raw['due_date'].strftime('%d %B %Y'),
+                    'trigger_date': raw['trigger_date'].strftime('%d %B %Y'),
+                    'period_str': raw['period_str'],
+                    'excluded_days': raw['excluded_days'],
+                    'provision': raw['rule'].provision,
+                    'note': raw['rule'].note or '',
+                    'days': raw['days'],
+                }
         except (ValueError, KeyError):
             result = None
 
@@ -297,6 +337,7 @@ def deadline():
                            selected_rule=selected_rule,
                            trigger_date=trigger_date_str,
                            excluded_days=excluded_days_str)
+
 
 
 if __name__ == '__main__':
