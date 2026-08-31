@@ -1512,6 +1512,305 @@ PRACTICE_CHECKLISTS: List[PracticeChecklist] = [
             {"kind": "rule", "ref": "Order VI Rule 15A", "title": "Statement of Truth"},
             {"kind": "rule", "ref": "Order VII Rule 11", "title": "Rejection of plaint"}
         ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 18. SPECIFIC PERFORMANCE & READY-WILLINGNESS (SECTIONS 10, 16(c), 20 & 22 SRA)
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="sra_sec16c_specific_performance",
+        title="Specific Performance Trial Checklist (Sections 10, 16(c), 20 & 22 SRA)",
+        provision="Sections 10, 16(c), 20, 22 SRA 1963",
+        category="Trial Court Practice & Pleadings",
+        summary="Post-2018 mandatory specific performance, continuous proof of readiness and willingness, mandatory Section 22 possession and earnest refund prayers, and Section 20 substituted performance notice.",
+        statutory_grounds=[
+            {"ground": "Section 10 (Post-2018)", "description": "Specific performance of contract SHALL be enforced by the court subject to Sections 11(2), 14, and 16. Mandatory statutory relief."},
+            {"ground": "Section 16(c)", "description": "Plaintiff must prove continuous readiness (financial capacity) and willingness (mental readiness) to perform essential terms."},
+            {"ground": "Section 20", "description": "Mandatory 30-day written notice before undertaking substituted performance through third party or own agency."},
+            {"ground": "Section 22(1)(a) & (2)", "description": "No relief for possession or partition shall be granted by court UNLESS SPECIFICALLY CLAIMED in the plaint."},
+            {"ground": "Section 22(1)(b)", "description": "Specific prayer for alternative refund of earnest money or deposit paid in case specific performance is refused."}
+        ],
+        judicial_principles=[
+            {"case": "Sughar Singh v. Hari Singh (2021) 18 SCC 493", "principle": "Post-2018 amendment, specific performance is a mandatory statutory right and not a discretionary equitable relief."},
+            {"case": "N.P. Thirugnanam v. Dr. R. Jagan Mohan Rao (1995) 5 SCC 115", "principle": "Readiness means financial capacity to pay balance price; willingness means conduct showing intention to perform. Both must subsist through trial."},
+            {"case": "Man Kaur v. Hartar Singh Sangha (2010) 10 SCC 512", "principle": "Plaintiff must enter witness box personally to testify to readiness and willingness. Power of Attorney cannot testify to personal facts."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="sp_agreement_validity",
+                label="Valid Agreement & Property Identification",
+                description="Verify written agreement contains clear consensus on identity of property, total consideration, timeline, and signatures of parties.",
+                statutory_ref="Section 10 SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="sp_readiness_financial",
+                label="Documentary Proof of Readiness (Capacity to Pay)",
+                description="Ensure plaintiff produces bank statements, fixed deposits, or loan sanctions demonstrating liquid funds on the target date. Oral assertion is insufficient under N.P. Thirugnanam.",
+                statutory_ref="Section 16(c) SRA & Explanation",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="sp_willingness_conduct",
+                label="Proof of Continuous Willingness & Notices",
+                description="Produce legal notice demanding execution, reply notices, draft sale deed, and evidence of presence at Sub-Registrar's office.",
+                statutory_ref="Section 16(c) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="sp_sec22_possession_prayer",
+                label="Mandatory Section 22(1)(a) Possession Prayer",
+                description="FATAL AUDIT: Plaint MUST contain specific prayer for delivery of possession; under Section 22(2) court cannot grant possession without it.",
+                statutory_ref="Section 22(1)(a) & (2) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="sp_sec22_refund_prayer",
+                label="Mandatory Section 22(1)(b) Earnest Refund Prayer",
+                description="Plaint MUST contain alternative prayer for refund of advance/earnest money with interest and statutory charge under Section 55(6)(b) TPA.",
+                statutory_ref="Section 22(1)(b) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="sp_sec20_substituted_check",
+                label="Section 20 Substituted Performance Compliance",
+                description="Verify plaintiff did not engage third contractor without 30 days prior written notice calling on defendant to perform.",
+                statutory_ref="Section 20(2) SRA",
+                is_mandatory=True
+            )
+        ],
+        common_pitfalls=[
+            "Failing to produce documentary bank statements proving liquidity on the date fixed for sale, leading to dismissal under Section 16(c).",
+            "Omitting specific prayer for delivery of possession under Section 22(1)(a), preventing execution of possession post-decree.",
+            "Omitting alternative prayer for refund of earnest deposit under Section 22(1)(b), leaving client without any monetary restitution if contract fails.",
+            "Plaintiff failing to enter witness box personally to depose on readiness and willingness, relying only on Power of Attorney (barred under Man Kaur)."
+        ],
+        connected_provisions=[
+            {"kind": "sra_section", "ref": "Section 10", "title": "Mandatory specific performance"},
+            {"kind": "sra_section", "ref": "Section 16", "title": "Personal bars to relief"},
+            {"kind": "sra_section", "ref": "Section 22", "title": "Mandatory possession & refund prayers"},
+            {"kind": "limitation_article", "ref": "Article 54", "title": "3-Year limitation period"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 19. SECTION 34 DECLARATORY SUIT & PROVISO BAR
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="sra_sec34_declaration_proviso",
+        title="Section 34 Declaratory Suit & Proviso Consequential Relief Audit",
+        provision="Sections 34 & 35 SRA 1963",
+        category="Trial Court Practice & Pleadings",
+        summary="Audit of legal character, hostile denial, and strict compliance with the Section 34 Proviso to prevent fatal dismissal of suits for mere declaration without consequential possession.",
+        statutory_grounds=[
+            {"ground": "Section 34 Substantive", "description": "Any person entitled to legal character or right as to property may sue any person denying or interested to deny."},
+            {"ground": "Section 34 Proviso (FATAL BAR)", "description": "No court shall make declaration where plaintiff, being able to seek further relief than a mere declaration of title, omits to do so."},
+            {"ground": "Section 35", "description": "Declaration is binding only on parties to suit and persons claiming through them."}
+        ],
+        judicial_principles=[
+            {"case": "Ram Saran v. Ganga Devi (1973) 2 SCC 60", "principle": "Where defendant was in possession of suit property and plaintiff was in a position to claim possession but omitted to do so, suit for mere declaration of title is barred by Section 34 Proviso."},
+            {"case": "Venkataraja v. Vidyane Doureradjaperumal (2014) 14 SCC 502", "principle": "The purpose of Section 34 Proviso is to prevent multiplicity of proceedings by forcing plaintiff to claim all reliefs flowing from title in a single suit."},
+            {"case": "Anathula Sudhakar v. P. Buchi Reddy (2008) 4 SCC 594", "principle": "Where title is disputed and plaintiff is not in de facto possession, suit must be for Declaration and Possession, not mere declaration or bare injunction."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="dec_legal_character",
+                label="Entitlement to Legal Character or Title",
+                description="Plead and establish existing valid title through registered documents, inheritance, or legal status.",
+                statutory_ref="Section 34 SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="dec_hostile_denial",
+                label="Hostile Denial or Cloud on Title",
+                description="Plead specific hostile overt act or denial of title by defendant creating a cloud on plaintiff's enjoyment.",
+                statutory_ref="Section 34 SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="dec_proviso_possession",
+                label="Section 34 Proviso Possession Audit",
+                description="FATAL PROVISO CHECK: Is plaintiff in actual physical possession? If NO, plaintiff MUST pray for recovery of possession. A pure declaration is legally barred under Ram Saran v. Ganga Devi.",
+                statutory_ref="Section 34 Proviso SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="dec_consequential_injunction",
+                label="Consequential Permanent Injunction Prayer",
+                description="If plaintiff is in possession, pray for consequential permanent injunction restraining interference under Section 38.",
+                statutory_ref="Sections 34 & 38 SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="dec_limitation_art58",
+                label="Article 58 Limitation (3 Years from First Denial)",
+                description="Audit that suit is filed within 3 years from the date the right to sue first accrued (first hostile denial).",
+                statutory_ref="Article 58 Limitation Act",
+                is_mandatory=True
+            )
+        ],
+        common_pitfalls=[
+            "Filing suit for mere declaration of title when defendant is in actual physical possession, attracting instant dismissal under Section 34 Proviso.",
+            "Failing to plead date of first hostile denial, triggering Article 58 limitation challenge.",
+            "Paying fixed court fees instead of ad valorem when consequential possession is claimed.",
+            "Seeking declaration without impleading necessary parties who share title."
+        ],
+        connected_provisions=[
+            {"kind": "sra_section", "ref": "Section 34", "title": "Declaratory decrees"},
+            {"kind": "sra_section", "ref": "Section 35", "title": "Effect of declaration"},
+            {"kind": "limitation_article", "ref": "Article 58", "title": "3-Year limitation period"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 20. SECTION 41 STATUTORY BARS ON INJUNCTIONS
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="sra_sec41_injunction_bars",
+        title="Section 41 Statutory Bars on Injunctions Audit",
+        provision="Sections 38, 39 & 41 SRA 1963",
+        category="Interlocutory & Emergency Remedies",
+        summary="Comprehensive audit of the 10 statutory prohibitions under Section 41 (judicial proceedings, criminal matters, continuous supervision, infrastructure projects under 41(ha), and equally efficacious remedies).",
+        statutory_grounds=[
+            {"ground": "Section 41(a) & (b)", "description": "Cannot restrain pending judicial proceedings unless to prevent multiplicity, nor proceedings in a superior court."},
+            {"ground": "Section 41(d)", "description": "Cannot restrain any person from instituting or prosecuting any criminal matter."},
+            {"ground": "Section 41(e)", "description": "Cannot restrain breach of a contract that cannot be specifically enforced under Section 14."},
+            {"ground": "Section 41(h)", "description": "Cannot grant injunction when equally efficacious relief can certainly be obtained by any other usual mode of proceeding."},
+            {"ground": "Section 41(ha)", "description": "Cannot grant injunction if it would impede or delay any infrastructure project specified in The Schedule."},
+            {"ground": "Section 41(i)", "description": "Cannot grant injunction when conduct of plaintiff or agents disentitles him to the assistance of the court (unclean hands)."}
+        ],
+        judicial_principles=[
+            {"case": "Anathula Sudhakar v. P. Buchi Reddy (2008) 4 SCC 594", "principle": "Where defendant establishes cloud on plaintiff's title, simple suit for permanent injunction is barred under Section 41(h). Plaintiff must sue for Declaration."},
+            {"case": "Shiv Kumar Chadha v. MCD (1993) 3 SCC 161", "principle": "Injunction is an equitable relief; person seeking it must come with clean hands. Suppression of notice or deviation disentitles injunction under Section 41(i)."},
+            {"case": "Gujarat Bottling Co. Ltd v. Coca Cola Co. (1995) 5 SCC 545", "principle": "Doctrine of clean hands: Court will examine whether plaintiff's conduct is fair, honest, and unblemished before granting equitable relief."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="inj_no_pending_judicial",
+                label="Verify No Pending Judicial Proceedings Restraint (41(a))",
+                description="Ensure prayer does not seek to stay proceedings in another court.",
+                statutory_ref="Section 41(a) & (b) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="inj_no_criminal_restraint",
+                label="Verify No Criminal Matter Restraint (41(d))",
+                description="Injunction cannot be sought to prevent police complaint or criminal investigation.",
+                statutory_ref="Section 41(d) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="inj_efficacious_remedy_check",
+                label="Equally Efficacious Relief Audit (41(h))",
+                description="FATAL AUDIT: If plaintiff is out of possession or title is seriously disputed, simple injunction is barred under Section 41(h) and Anathula Sudhakar. Must seek Declaration and Possession.",
+                statutory_ref="Section 41(h) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="inj_infrastructure_bar_check",
+                label="Infrastructure Project Prohibition Audit (41(ha))",
+                description="MANDATORY 2018 AUDIT: Verify dispute does not involve roads, bridges, metro, power, water, telecom, or affordable housing in The Schedule.",
+                statutory_ref="Sections 20A & 41(ha) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="inj_clean_hands_audit",
+                label="Doctrine of Clean Hands & Conduct (41(i))",
+                description="Ensure plaintiff has disclosed all previous litigations, notices, and agreements without suppression of material facts.",
+                statutory_ref="Section 41(i) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="inj_section40_damages",
+                label="Mandatory Section 40 Damages Prayer",
+                description="Under Section 40(2), damages in lieu or in addition to injunction CANNOT be granted unless claimed in the plaint.",
+                statutory_ref="Section 40 SRA",
+                is_mandatory=True
+            )
+        ],
+        common_pitfalls=[
+            "Filing suit for bare injunction against infrastructure projects (highways, power lines, housing), facing mandatory dismissal under Section 20A & 41(ha).",
+            "Filing bare injunction suit when plaintiff is not in actual physical possession, barred by Section 41(h).",
+            "Suppression of municipal notices or boundary disputes, disentitling relief under Section 41(i).",
+            "Omitting prayer for damages under Section 40, forfeiting financial compensation if injunction is refused."
+        ],
+        connected_provisions=[
+            {"kind": "sra_section", "ref": "Section 38", "title": "Perpetual injunction when granted"},
+            {"kind": "sra_section", "ref": "Section 41", "title": "Injunction when refused"},
+            {"kind": "sra_section", "ref": "Schedule", "title": "Infrastructure Sub-Sectors"},
+            {"kind": "rule", "ref": "Order XXXIX Rule 1", "title": "Temporary injunction"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 21. SECTION 6 SUMMARY POSSESSION SUIT
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="sra_sec6_summary_possession",
+        title="Section 6 Dispossession Summary Suit Checklist",
+        provision="Section 6 SRA 1963",
+        category="Trial Court Practice & Pleadings",
+        summary="Swift summary possessory remedy for persons dispossessed without consent. Title is excluded, no appeal lies, strict 6-month limitation bar, and government cannot be sued.",
+        statutory_grounds=[
+            {"ground": "Section 6(1)", "description": "Person dispossessed without consent otherwise than in due course of law may recover possession notwithstanding any other title."},
+            {"ground": "Section 6(2)(a)", "description": "No suit under this section shall be brought after expiry of six months from date of dispossession."},
+            {"ground": "Section 6(2)(b)", "description": "No suit under this section shall be brought against the Government."},
+            {"ground": "Section 6(3)", "description": "No appeal and no review shall lie from any order or decree passed under this section."},
+            {"ground": "Section 6(4)", "description": "Does not bar any person from suing to establish title and recover possession."}
+        ],
+        judicial_principles=[
+            {"case": "Lallu Yeshwant Singh v. Rao Jagdish Singh (1968) 2 SCR 203", "principle": "Law respects possession even of a trespasser against everyone except true owner. Even true owner cannot dispossess by force; he must take due process of law."},
+            {"case": "East India Hotels Ltd v. Syndicate Bank (1992) Supp (2) SCC 29", "principle": "A person in juridical possession dispossessed without consent is entitled to summary restoration under Section 6 irrespective of defect in title."},
+            {"case": "Sanjay Kumar Pandey v. Gulbahar Sheikh (2004) 4 SCC 664", "principle": "Court in Section 6 suit will not adjudicate upon title. Decree under Section 6 does not bar unsuccessful party from subsequently establishing title under Section 6(4)."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="sec6_prior_possession",
+                label="Proof of Peaceful Prior Juridical Possession",
+                description="Produce electricity bills, municipal receipts, lease deed, or photographs proving plaintiff was in actual physical possession immediately prior to dispossession.",
+                statutory_ref="Section 6(1) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="sec6_unlawful_dispossession",
+                label="Averment of Dispossession Without Consent",
+                description="Plead specific date, time, and unlawful manner of dispossession without consent and not in due course of law.",
+                statutory_ref="Section 6(1) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="sec6_strict_6months",
+                label="Strict 6-Month Limitation Audit (Section 6(2)(a))",
+                description="FATAL JURISDICTIONAL BAR: Verify date of suit is strictly within 6 months from date of dispossession. Day 181 is an absolute bar.",
+                statutory_ref="Section 6(2)(a) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="sec6_not_government",
+                label="Verify Defendant is NOT Government",
+                description="Section 6(2)(b) prohibits suits against Central/State Government or municipal bodies.",
+                statutory_ref="Section 6(2)(b) SRA",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="sec6_exclude_title_pleas",
+                label="Exclude Proprietary Title Averments",
+                description="Do NOT plead title in a Section 6 suit. Confine pleadings strictly to prior possession and dispossession to avoid unnecessary issues on title.",
+                statutory_ref="Section 6(1) & (4) SRA",
+                is_mandatory=True
+            )
+        ],
+        common_pitfalls=[
+            "Filing on day 181 (after 6 months), which is completely barred; client must then file a regular title suit under Section 5 / Article 64/65.",
+            "Filing against Government or municipal officers, which is strictly barred by Section 6(2)(b).",
+            "Attempting to file an Appeal under Section 96 against a Section 6 decree; only Civil Revision under Section 115 CPC is maintainable.",
+            "Introducing arguments on title, allowing defendant to distract the court from the sole issue of prior possession."
+        ],
+        connected_provisions=[
+            {"kind": "sra_section", "ref": "Section 6", "title": "Summary suit by dispossessed person"},
+            {"kind": "sra_section", "ref": "Section 5", "title": "Recovery based on title"},
+            {"kind": "section", "ref": "Section 115", "title": "Civil Revision (sole remedy against Sec 6 decree)"}
+        ]
     )
 ]
 

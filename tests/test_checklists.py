@@ -15,8 +15,8 @@ from checklists_data import (
 )
 
 
-def test_all_seventeen_checklists_present():
-    assert len(PRACTICE_CHECKLISTS) == 17
+def test_all_twenty_one_checklists_present():
+    assert len(PRACTICE_CHECKLISTS) == 21
     expected_ids = {
         "o7_r11",
         "o39_r1_2",
@@ -34,7 +34,11 @@ def test_all_seventeen_checklists_present():
         "set_aside_ex_parte_o9_r13",
         "execution_petition_o21",
         "first_appeal_sec96",
-        "commercial_suit_cca"
+        "commercial_suit_cca",
+        "sra_sec16c_specific_performance",
+        "sra_sec34_declaration_proviso",
+        "sra_sec41_injunction_bars",
+        "sra_sec6_summary_possession"
     }
     found_ids = {c.id for c in PRACTICE_CHECKLISTS}
     assert found_ids == expected_ids

@@ -29,6 +29,7 @@ import checklists_data as cd
 import templates_data as tdata
 import execution_data as edata
 import case_stages as cs
+import sra_navigator as sn
 
 
 def html_escape(s):
@@ -1056,6 +1057,189 @@ class ExecutionNavigatorTab(QWidget):
                 return
 
 
+class SRANavigatorTab(QWidget):
+    """Specific Relief Act (SRA) Strategic Decision Engine & Relief Analyzer."""
+
+    def __init__(self, db: ActDatabase, on_jump):
+        super().__init__()
+        self.db = db
+        self.on_jump = on_jump
+
+        layout = QHBoxLayout(self)
+        splitter = QSplitter(Qt.Horizontal)
+        layout.addWidget(splitter)
+
+        left = QWidget()
+        left_layout = QVBoxLayout(left)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+
+        left_layout.addWidget(QLabel("<b>SRA Strategic Pathways:</b>"))
+        self.list_widget = QListWidget()
+        self.list_widget.itemClicked.connect(self._on_item_clicked)
+        left_layout.addWidget(self.list_widget, stretch=1)
+        splitter.addWidget(left)
+
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.viewer = QWidget()
+        self.vlayout = QVBoxLayout(self.viewer)
+        self.vlayout.setAlignment(Qt.AlignTop)
+        self.scroll.setWidget(self.viewer)
+        splitter.addWidget(self.scroll)
+
+        splitter.setSizes([320, 680])
+        self._populate_list()
+
+        if self.list_widget.count() > 0:
+            self.list_widget.setCurrentRow(0)
+            self._on_item_clicked(self.list_widget.item(0))
+
+    def _populate_list(self):
+        self.list_widget.clear()
+        for p in sn.list_sra_pathways():
+            it = QListWidgetItem(f"{p.title}\n[{p.statutory_relief}]")
+            it.setData(Qt.UserRole, p.id)
+            self.list_widget.addItem(it)
+
+    def _on_item_clicked(self, item):
+        pid = item.data(Qt.UserRole)
+        p = sn.get_sra_pathway(pid)
+        if not p:
+            return
+
+        while self.vlayout.count():
+            child = self.vlayout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        header = QLabel(
+            f"<h2>{p.title}</h2>"
+            f"<p style='color:#2b6cb0; font-weight:bold;'>{p.statutory_relief} &bull; {p.sra_provisions}</p>"
+            f"<p style='font-size:10pt; line-height:1.4; color:#4a5568;'>{p.summary}</p>"
+            f"<p style='color:#718096; font-size:9pt;'><b>Governing Framework:</b> {p.cpc_limitation_ref}</p>"
+        )
+        header.setWordWrap(True)
+        self.vlayout.addWidget(header)
+
+        # 1. Statutory Prerequisites
+        prereq_box = QGroupBox("📋 Statutory Pre-Requisites & Cause of Action")
+        prereq_box.setStyleSheet("QGroupBox { font-weight: bold; color: #1a365d; }")
+        pr_layout = QVBoxLayout(prereq_box)
+        for pre in p.statutory_prerequisites:
+            lbl = QLabel(f"• {pre}")
+            lbl.setWordWrap(True)
+            pr_layout.addWidget(lbl)
+        self.vlayout.addWidget(prereq_box)
+
+        # 2. Mandatory Prayers
+        prayer_box = QGroupBox("🚨 Mandatory Plaint Prayers Checklist (To Avoid Fatal Dismissal)")
+        prayer_box.setStyleSheet("QGroupBox { font-weight: bold; color: #9b2c2c; }")
+        pr_layout2 = QVBoxLayout(prayer_box)
+        for mp in p.mandatory_prayers:
+            lbl = QLabel(f"<b style='color:#9b2c2c;'>✔ {mp['prayer']}</b><br><span style='color:#4a5568;'>{mp['audit']}</span>")
+            lbl.setWordWrap(True)
+            pr_layout2.addWidget(lbl)
+        self.vlayout.addWidget(prayer_box)
+
+        # 3. Fatal Traps
+        trap_box = QGroupBox("⚠️ Fatal Statutory Traps & Pitfalls")
+        trap_box.setStyleSheet("QGroupBox { font-weight: bold; color: #c05621; }")
+        t_layout = QVBoxLayout(trap_box)
+        for tr in p.fatal_statutory_traps:
+            lbl = QLabel(f"<b style='color:#c05621;'>⛔ {tr['trap']}</b><br><span style='color:#7b341e;'>{tr['explanation']}</span>")
+            lbl.setWordWrap(True)
+            t_layout.addWidget(lbl)
+        self.vlayout.addWidget(trap_box)
+
+        # 4. Landmark Authorities
+        auth_box = QGroupBox("🏛️ Landmark Supreme Court Principles")
+        auth_box.setStyleSheet("QGroupBox { font-weight: bold; color: #2b6cb0; }")
+        a_layout = QVBoxLayout(auth_box)
+        for auth in p.landmark_authorities:
+            lbl = QLabel(f"<b style='color:#2b6cb0;'>{auth['case']}</b><br><span style='color:#4a5568;'>{auth['principle']}</span>")
+            lbl.setWordWrap(True)
+            a_layout.addWidget(lbl)
+        self.vlayout.addWidget(auth_box)
+
+        # 5. Defense Counter-Tactics
+        def_box = QGroupBox("🛡️ Tactical Defense Counter-Attacks (Defendant's Playbook)")
+        def_box.setStyleSheet("QGroupBox { font-weight: bold; color: #22543d; }")
+        d_layout = QVBoxLayout(def_box)
+        for dt in p.defense_counter_tactics:
+            lbl = QLabel(f"• {dt}")
+            lbl.setWordWrap(True)
+            d_layout.addWidget(lbl)
+        self.vlayout.addWidget(def_box)
+
+        # 6. Court Fee Rules
+        cf_box = QGroupBox("💰 Valuation & Court Fee Rules")
+        cf_box.setStyleSheet("QGroupBox { font-weight: bold; color: #1a365d; }")
+        cf_layout = QVBoxLayout(cf_box)
+        cf_lbl = QLabel(p.court_fee_rules)
+        cf_lbl.setWordWrap(True)
+        cf_layout.addWidget(cf_lbl)
+        self.vlayout.addWidget(cf_box)
+
+        # 7. Connected Provisions Jump Buttons
+        if p.connected_provisions:
+            conn_box = QGroupBox("🔗 Connected Provisions & Court-Tested Templates")
+            conn_box.setStyleSheet("QGroupBox { font-weight: bold; color: #1a365d; }")
+            conn_layout = QHBoxLayout(conn_box)
+            for cp in p.connected_provisions:
+                btn = QPushButton(f"{cp['ref']} — {cp['title']}")
+                btn.clicked.connect(lambda checked=False, target=cp: self._jump_to_provision(target))
+                conn_layout.addWidget(btn)
+            conn_layout.addStretch(1)
+            self.vlayout.addWidget(conn_box)
+
+    def _jump_to_provision(self, cp):
+        ref_text = cp["ref"]
+        if cp.get("kind") == "template":
+            # Jump to templates tab
+            p_widget = self.window()
+            if hasattr(p_widget, "tabs"):
+                for i in range(p_widget.tabs.count()):
+                    w = p_widget.tabs.widget(i)
+                    if isinstance(w, DraftingTemplatesTab):
+                        p_widget.tabs.setCurrentIndex(i)
+                        for row in range(w.list_widget.count()):
+                            if w.list_widget.item(row).data(Qt.UserRole) == cp["ref"]:
+                                w.list_widget.setCurrentRow(row)
+                                w._on_item_clicked(w.list_widget.item(row))
+                                return
+        elif "Section" in ref_text:
+            s_no = ref_text.replace("Section", "").strip().split()[0]
+            if cp.get("kind") == "sra_section" or "Specific Relief" in cp.get("title", "") or "SRA" in ref_text:
+                row = self.db.get_sra_section_by_no(s_no)
+                if row:
+                    self.on_jump("sra_section", row["id"])
+                    return
+            elif cp.get("kind") == "limitation_section":
+                row = self.db.get_limitation_section_by_no(s_no)
+                if row:
+                    self.on_jump("limitation_section", row["id"])
+                    return
+            else:
+                row = self.db.get_section_by_no(s_no)
+                if row:
+                    self.on_jump("section", row["id"])
+                    return
+        elif "Article" in ref_text:
+            a_no = ref_text.replace("Article", "").strip().split("(")[0].strip()
+            row = self.db.find_article_by_no(a_no)
+            if row:
+                self.on_jump("limitation_article", row["id"])
+                return
+        elif "Order" in ref_text and "Rule" in ref_text:
+            parts = ref_text.replace("Order", "").split("Rule")
+            o_no = parts[0].strip()
+            r_no = parts[1].strip().split("(")[0].strip()
+            row = self.db.find_rule_in_order(o_no, r_no)
+            if row:
+                self.on_jump("rule", row["id"])
+                return
+
+
 class AddCaseDialog(QDialog):
     """Dialog to add a new litigation matter into the Case Diary."""
     def __init__(self, parent=None):
@@ -1425,7 +1609,10 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(tabs)
 
         self.explorer = ExplorerTab(self.db)
-        tabs.addTab(self.explorer, "Act Explorer (CPC & Limitation)")
+        tabs.addTab(self.explorer, "Act Explorer (CPC, Limitation & SRA)")
+
+        self.sra_nav_tab = SRANavigatorTab(self.db, self._jump)
+        tabs.addTab(self.sra_nav_tab, "🧭 SRA Navigator")
 
         self.diary_tab = CaseDiaryTab(self.db)
         tabs.addTab(self.diary_tab, "Case Diary")

@@ -15,8 +15,8 @@ from templates_data import (
 )
 
 
-def test_all_54_templates_present():
-    assert len(TEMPLATES) == 54
+def test_all_58_templates_present():
+    assert len(TEMPLATES) == 58
     expected_ids = {
         "caveat_sec_148a",
         "injunction_o39_r1_2",
@@ -71,7 +71,11 @@ def test_all_54_templates_present():
         "restitution_sec144",
         "regular_second_appeal_sec100",
         "civil_revision_sec115",
-        "writ_art227_supervisory"
+        "writ_art227_supervisory",
+        "sra_sec20_notice",
+        "sra_sec6_plaint",
+        "sra_sec28_application",
+        "sra_sec14a_expert"
     }
     found_ids = {t.id for t in TEMPLATES}
     assert found_ids == expected_ids

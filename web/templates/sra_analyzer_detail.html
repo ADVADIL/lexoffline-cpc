@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}{{ pathway.title }} - SRA Strategic Navigator - LexOffline{% endblock %}
+
+{% block content %}
+<div class="provision-header" style="margin-bottom: 1.5rem;">
+    <div style="margin-bottom: 0.5rem;">
+        <a href="/sra/analyzer" style="color: #2b6cb0; text-decoration: none; font-size: 0.9rem;">&larr; All SRA Strategic Decision Trees</a>
+    </div>
+    <span class="badge" style="background: #ebf8ff; color: #2b6cb0; font-size: 0.8rem; font-weight: bold; padding: 3px 8px; border-radius: 4px;">
+        {{ pathway.statutory_relief }} &bull; {{ pathway.sra_provisions }}
+    </span>
+    <h1 style="margin-top: 0.5rem; font-size: 1.7rem; color: #1a365d;">
+        {{ pathway.title }}
+    </h1>
+    <p style="color: #4a5568; margin-top: 0.5rem; font-size: 1.05rem; line-height: 1.55;">
+        {{ pathway.summary }}
+    </p>
+    <div style="margin-top: 0.75rem; font-size: 0.9rem; color: #718096;">
+        <strong>Governing Framework:</strong> {{ pathway.cpc_limitation_ref }}
+    </div>
+</div>
+
+<!-- SECTION 1: STATUTORY PREREQUISITES -->
+<div class="panel" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
+    <h3 style="margin-top: 0; color: #1a365d; font-size: 1.15rem; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+        📋 Statutory Pre-Requisites &amp; Cause of Action
+    </h3>
+    <ul style="margin: 0.75rem 0 0 1.25rem; color: #2d3748; line-height: 1.65;">
+        {% for pre in pathway.statutory_prerequisites %}
+        <li style="margin-bottom: 0.4rem;">{{ pre }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- SECTION 2: MANDATORY PLAINT PRAYERS -->
+<div class="panel" style="background: #fff; border: 1px solid #fed7d7; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem; border-left: 5px solid #e53e3e;">
+    <h3 style="margin-top: 0; color: #9b2c2c; font-size: 1.15rem; border-bottom: 1px solid #fed7d7; padding-bottom: 0.5rem;">
+        🚨 Mandatory Plaint Prayers Checklist (To Avoid Fatal Dismissal)
+    </h3>
+    <div style="margin-top: 0.75rem;">
+        {% for mp in pathway.mandatory_prayers %}
+        <div style="margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px dashed #feb2b2;">
+            <div style="font-weight: bold; color: #9b2c2c; font-size: 1rem;">
+                ✔ {{ mp.prayer }}
+            </div>
+            <div style="color: #4a5568; margin-top: 0.25rem; line-height: 1.5; font-size: 0.92rem;">
+                {{ mp.audit }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- SECTION 3: FATAL STATUTORY TRAPS -->
+<div class="panel" style="background: #fffaf0; border: 1px solid #feebc8; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem; border-left: 5px solid #dd6b20;">
+    <h3 style="margin-top: 0; color: #9c4221; font-size: 1.15rem; border-bottom: 1px solid #feebc8; padding-bottom: 0.5rem;">
+        ⚠️ Fatal Statutory Traps &amp; Common Pitfalls
+    </h3>
+    <div style="margin-top: 0.75rem;">
+        {% for trap in pathway.fatal_statutory_traps %}
+        <div style="margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px dashed #fbd38d;">
+            <div style="font-weight: bold; color: #c05621; font-size: 0.98rem;">
+                ⛔ {{ trap.trap }}
+            </div>
+            <div style="color: #7b341e; margin-top: 0.25rem; line-height: 1.5; font-size: 0.92rem;">
+                {{ trap.explanation }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- SECTION 4: LANDMARK AUTHORITIES -->
+<div class="panel" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
+    <h3 style="margin-top: 0; color: #1a365d; font-size: 1.15rem; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+        🏛️ Landmark Supreme Court Principles
+    </h3>
+    <div style="margin-top: 0.75rem;">
+        {% for auth in pathway.landmark_authorities %}
+        <div style="margin-bottom: 0.75rem; padding: 0.75rem; background: #f7fafc; border-radius: 6px; border-left: 4px solid #3182ce;">
+            <div style="font-weight: bold; color: #2b6cb0; font-size: 0.95rem;">
+                {{ auth.case }}
+            </div>
+            <div style="color: #4a5568; margin-top: 0.25rem; font-size: 0.9rem; line-height: 1.5;">
+                {{ auth.principle }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- SECTION 5: DEFENSE COUNTER-TACTICS -->
+<div class="panel" style="background: #f0fff4; border: 1px solid #c6f6d5; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem; border-left: 5px solid #38a169;">
+    <h3 style="margin-top: 0; color: #22543d; font-size: 1.15rem; border-bottom: 1px solid #c6f6d5; padding-bottom: 0.5rem;">
+        🛡️ Tactical Defense Counter-Attacks (Defendant's Playbook)
+    </h3>
+    <ul style="margin: 0.75rem 0 0 1.25rem; color: #22543d; line-height: 1.65;">
+        {% for dt in pathway.defense_counter_tactics %}
+        <li style="margin-bottom: 0.4rem;">{{ dt }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- SECTION 6: COURT FEE RULES -->
+<div class="panel" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; margin-bottom: 1.5rem;">
+    <h3 style="margin-top: 0; color: #1a365d; font-size: 1.15rem; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+        💰 Valuation &amp; Court Fee Rules
+    </h3>
+    <p style="margin-top: 0.75rem; color: #4a5568; line-height: 1.6;">
+        {{ pathway.court_fee_rules }}
+    </p>
+</div>
+
+<!-- SECTION 7: CONNECTED PROVISIONS & TEMPLATES -->
+{% if pathway.connected_provisions %}
+<div class="panel" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; background: #fff;">
+    <h3 style="margin-top: 0; font-size: 1.1rem; color: #1a365d;">🔗 Connected Provisions &amp; Court-Tested Templates</h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem;">
+        {% for cp in pathway.connected_provisions %}
+            {% if cp.kind == 'sra_section' %}
+                <a href="/sra/sections" class="btn" style="padding: 6px 12px; background: #edf2f7; color: #2b6cb0; text-decoration: none; border-radius: 4px; font-size: 0.88rem; font-weight: 600; border: 1px solid #cbd5e0;">
+                    📜 {{ cp.ref }} &mdash; {{ cp.title }}
+                </a>
+            {% elif cp.kind == 'template' %}
+                <a href="/template/{{ cp.ref }}" class="btn" style="padding: 6px 12px; background: #feebc8; color: #c05621; text-decoration: none; border-radius: 4px; font-size: 0.88rem; font-weight: 600; border: 1px solid #fbd38d;">
+                    📄 Template: {{ cp.title }}
+                </a>
+            {% elif cp.kind == 'limitation_article' %}
+                <a href="/limitation/articles" class="btn" style="padding: 6px 12px; background: #edf2f7; color: #2b6cb0; text-decoration: none; border-radius: 4px; font-size: 0.88rem; font-weight: 600; border: 1px solid #cbd5e0;">
+                    ⏱️ {{ cp.ref }} &mdash; {{ cp.title }}
+                </a>
+            {% else %}
+                <a href="/cpc/orders" class="btn" style="padding: 6px 12px; background: #edf2f7; color: #2b6cb0; text-decoration: none; border-radius: 4px; font-size: 0.88rem; font-weight: 600; border: 1px solid #cbd5e0;">
+                    ⚖️ {{ cp.ref }} &mdash; {{ cp.title }}
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}SRA Strategic Navigator &amp; Relief Decision Engine - LexOffline{% endblock %}
+
+{% block content %}
+<div class="header-section" style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1>🧭 SRA Strategic Navigator &amp; Relief Decision Engine</h1>
+            <p class="subtitle" style="font-size: 1.05rem; color: #4a5568; margin-top: 0.25rem;">
+                Court-tested tactical decision trees for civil trial advocates &bull; Specific Performance, Declarations, Possessory Injunctions &amp; Cancellations
+            </p>
+        </div>
+        <div>
+            <a href="/sra/sections" class="btn" style="background: #edf2f7; color: #2b6cb0; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; border: 1px solid #cbd5e0;">
+                📜 Bare Act (Sections 1–42)
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card-grid" style="display: grid; grid-template-columns: 1fr; gap: 1.25rem;">
+    {% for p in pathways %}
+    <div class="card" style="padding: 1.5rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: transform 0.15s ease, box-shadow 0.15s ease; border-left: 5px solid #2b6cb0;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;">
+            <span class="badge" style="background: #ebf8ff; color: #2b6cb0; font-size: 0.8rem; font-weight: bold; padding: 3px 8px; border-radius: 4px;">
+                {{ p.statutory_relief }}
+            </span>
+            <span style="font-size: 0.85rem; color: #718096; font-weight: 500;">
+                {{ p.sra_provisions }}
+            </span>
+        </div>
+        <h2 style="margin: 0.75rem 0 0.5rem 0; font-size: 1.35rem; color: #1a365d;">
+            <a href="/sra/analyzer/{{ p.id }}" style="text-decoration: none; color: inherit;">
+                {{ p.title }}
+            </a>
+        </h2>
+        <p style="color: #4a5568; line-height: 1.55; margin-bottom: 1rem;">
+            {{ p.summary }}
+        </p>
+
+        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.88rem; color: #4a5568; margin-bottom: 1.25rem; background: #f7fafc; padding: 0.75rem 1rem; border-radius: 6px;">
+            <div>
+                <strong>⏱️ Limitation:</strong> {{ p.cpc_limitation_ref }}
+            </div>
+            <div>
+                <strong>🚨 Mandatory Prayers:</strong> {{ p.mandatory_prayers|length }} essential clauses
+            </div>
+            <div>
+                <strong>⚠️ Fatal Traps:</strong> {{ p.fatal_statutory_traps|length }} statutory bars
+            </div>
+        </div>
+
+        <div>
+            <a href="/sra/analyzer/{{ p.id }}" class="btn" style="background: #2b6cb0; color: #fff; text-decoration: none; padding: 7px 16px; border-radius: 6px; font-weight: 600; display: inline-block;">
+                Explore Strategic Decision Tree &rarr;
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

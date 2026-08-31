@@ -300,6 +300,22 @@ def sra_section(id):
                            connected_links=connected_links)
 
 
+import sra_navigator as sn
+
+@app.route('/sra/analyzer')
+def sra_analyzer():
+    pathways = sn.list_sra_pathways()
+    return render_template('sra_analyzer_index.html', pathways=pathways)
+
+
+@app.route('/sra/analyzer/<pathway_id>')
+def sra_analyzer_detail(pathway_id):
+    pathway = sn.get_sra_pathway(pathway_id)
+    if not pathway:
+        abort(404)
+    return render_template('sra_analyzer_detail.html', pathway=pathway)
+
+
 # --- Search ---
 
 @app.route('/search')

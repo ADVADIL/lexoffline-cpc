@@ -384,6 +384,43 @@ def test_search_sra_provisions():
     assert b'/sra/section/' in resp.data
 
 
+def test_sra_analyzer_index():
+    resp = _client().get('/sra/analyzer')
+    assert resp.status_code == 200
+    assert b'SRA Strategic Navigator' in resp.data
+    assert b'Specific Performance of Agreement of Sale' in resp.data
+    assert b'Declaratory Suits' in resp.data
+
+
+def test_sra_analyzer_detail_sec10():
+    resp = _client().get('/sra/analyzer/specific_performance_sec10')
+    assert resp.status_code == 200
+    assert b'Mandatory Plaint Prayers Checklist' in resp.data
+    assert b'Section 22(1)(a)' in resp.data
+    assert b'Sughar Singh' in resp.data
+
+
+def test_sra_analyzer_detail_sec34():
+    resp = _client().get('/sra/analyzer/declaration_sec34')
+    assert resp.status_code == 200
+    assert b'Section 34 Proviso' in resp.data
+    assert b'Ram Saran v. Ganga Devi' in resp.data
+
+
+def test_template_sra_sec20_notice():
+    resp = _client().get('/template/sra_sec20_notice')
+    assert resp.status_code == 200
+    assert b'STATUTORY NOTICE UNDER SECTION 20(2)' in resp.data
+    assert b'THIRTY (30) DAYS' in resp.data
+
+
+def test_checklist_sra_sec16c():
+    resp = _client().get('/checklist/sra_sec16c_specific_performance')
+    assert resp.status_code == 200
+    assert b'Specific Performance Trial Checklist' in resp.data
+    assert b'Section 16(c)' in resp.data
+
+
 if __name__ == '__main__':
     tests = [v for k, v in globals().items() if k.startswith('test_')]
     for t in tests:

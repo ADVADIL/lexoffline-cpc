@@ -2867,9 +2867,259 @@ Place: [CITY]
 Date: [DATE]
                                                         ADVOCATE FOR PETITIONER
 """
+    ),
+    # -------------------------------------------------------------------------
+    # 55. SECTION 20 SRA 30-DAY STATUTORY NOTICE FOR SUBSTITUTED PERFORMANCE
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="sra_sec20_notice",
+        title="Statutory Notice for Substituted Performance (Section 20 SRA)",
+        provision="Section 20(2) Specific Relief Act, 1963",
+        category="Pre-Suit Notices & Statutory Demands",
+        summary="Mandatory 30-day statutory notice required post-2018 amendment before party suffering breach can engage a third party or their own agency to execute unperformed contractual work and recover actual expenses.",
+        practice_notes="Under Section 20(2) SRA (as substituted by Act 18 of 2018), NO substituted performance can be undertaken unless the party gives a notice in writing of NOT LESS THAN 30 DAYS calling upon the party in breach to perform. If omitted, expenses cannot be recovered under Section 20(1) and specific performance is forfeited under Section 20(3).",
+        connected_provisions=[
+            {"kind": "sra_section", "ref": "Section 20", "title": "Substituted performance of contract"},
+            {"kind": "sra_section", "ref": "Section 14(a)", "title": "Bar on specific performance where substituted performance obtained"},
+            {"kind": "sra_section", "ref": "Section 16(a)", "title": "Personal bar against party who obtained substituted performance"}
+        ],
+        template_text="""REGISTERED POST WITH ACKNOWLEDGEMENT DUE / SPEED POST
+
+Date: [DATE OF NOTICE]
+
+To,
+[PARTY IN BREACH NAME / CONTRACTOR / VENDOR],
+[DESIGNATION / FIRM NAME, IF APPLICABLE],
+Residing / Having Office at: [COMPLETE ADDRESS],
+Contact: [PHONE / EMAIL]
+
+SUBJECT: STATUTORY NOTICE UNDER SECTION 20(2) OF THE SPECIFIC RELIEF ACT, 1963 (AS AMENDED BY ACT 18 OF 2018) CALLING UPON YOU TO PERFORM CONTRACT WITHIN THIRTY (30) DAYS, FAILING WHICH SUBSTITUTED PERFORMANCE SHALL BE UNDERTAKEN AT YOUR RISK, COST, AND CONSEQUENCES.
+
+Sir / Madam,
+
+Under instructions from and on behalf of my client, [CLIENT FULL NAME], residing at [CLIENT ADDRESS] (hereinafter referred to as "My Client"), I hereby serve upon you this mandatory Statutory Notice under Section 20(2) of the Specific Relief Act, 1963:
+
+1. CONTRACTUAL BACKGROUND:
+That on [DATE OF CONTRACT/AGREEMENT], an agreement in writing was entered into between you and My Client titled "[NAME OF AGREEMENT/WORK ORDER NO.]", whereby you agreed and undertook to [BRIEFLY DESCRIBE PROMISE/CONSTRUCTION/SUPPLY/SERVICE] for a total agreed consideration of Rs. [TOTAL VALUE]/-.
+
+2. FULFILLMENT OF OBLIGATIONS BY MY CLIENT:
+That My Client has faithfully, punctually, and completely performed all mutual obligations cast upon him under the said contract, including the timely payment of an aggregate sum of Rs. [AMOUNT PAID]/- as acknowledged in your receipts / vouchers.
+
+3. DEFAULT AND UNLAWFUL BREACH COMMITTED BY YOU:
+That as per Clause [ ] of the said agreement, you were contractually bound to complete and deliver the said work / performance on or before [TARGET COMPLETION DATE]. However, you failed, neglected, and abandoned the performance thereof since [DATE OF ABANDONMENT/DEFAULT], despite repeated oral reminders and email communications dated [DATES OF PREVIOUS COMMUNICATIONS].
+
+4. STATUTORY MANDATE UNDER SECTION 20 SRA:
+That Section 20(1) of the Specific Relief Act, 1963 confers a statutory option upon My Client, being the party suffering by your breach, to have the unperformed contract executed through a third party or through My Client's own agency, and to recover all expenses and costs actually incurred and suffered from you.
+
+5. THIRTY (30) DAYS PEREMPTORY NOTICE:
+NOW THEREFORE, in strict compliance with the statutory mandate of Section 20(2) of the Specific Relief Act, 1963, My Client hereby calls upon you to:
+
+    (A) Resume, perform, and completely execute the remaining unperformed contractual obligations, namely [SPECIFICALLY LIST PENDING WORK/ITEMS], in strict accordance with the agreed specifications, within a period of THIRTY (30) DAYS from the date of receipt of this notice;
+
+PLEASE TAKE FURTHER NOTICE that in the event of your failure, refusal, or neglect to perform the said contract within the aforesaid statutory period of thirty (30) days:
+
+    (i) My Client shall immediately exercise the statutory option under Section 20(1) of the Specific Relief Act, 1963 to get the entire unperformed contract executed and completed through a third-party agency / contractor or through My Client's own agency;
+    (ii) You shall be held strictly and exclusively liable to indemnify, reimburse, and pay to My Client all actual expenses, escalation costs, professional fees, and damages suffered and spent by My Client;
+    (iii) Legal proceedings shall be instituted against you before the competent Civil Court for recovery of the said expenditures together with commercial interest at 18% per annum and full costs of litigation entirely at your risk as to costs and consequences.
+
+A copy of this Statutory Notice is retained in my chamber for future legal production.
+
+Yours faithfully,
+
+[ADVOCATE NAME], Advocate
+[ENROLLMENT NO.]
+[CHAMBER ADDRESS & CONTACT]"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 56. SECTION 6 SRA PLAINT FOR SUMMARY POSSESSION
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="sra_sec6_plaint",
+        title="Plaint for Summary Possession by Dispossessed Person (Section 6 SRA)",
+        provision="Section 6 Specific Relief Act, 1963",
+        category="Core Pleadings (Plaints & Written Statements)",
+        summary="Swift summary possessory plaint for recovery of immovable property by a person dispossessed without consent otherwise than in due course of law, filed within 6 months. Title is excluded.",
+        practice_notes="Section 6(2)(a) imposes an absolute 6-month limitation bar from date of dispossession. Section 6(2)(b) bars suits against Government. Section 6(3) prohibits appeals and reviews. Do NOT plead proprietary title; confine averments strictly to prior peaceful juridical possession and unlawful dispossession.",
+        connected_provisions=[
+            {"kind": "sra_section", "ref": "Section 6", "title": "Suit by person dispossessed of immovable property"},
+            {"kind": "sra_section", "ref": "Section 5", "title": "Recovery of specific immovable property"},
+            {"kind": "section", "ref": "Section 115", "title": "Civil Revision"}
+        ],
+        template_text="""IN THE COURT OF THE [PRINCIPAL DISTRICT JUDGE / SENIOR CIVIL JUDGE / CIVIL JUDGE] AT [COURT LOCATION]
+ORIGINAL SUIT NO. ________ OF 202[ ]
+(SUIT UNDER SECTION 6 OF THE SPECIFIC RELIEF ACT, 1963)
+
+IN THE MATTER OF:
+[PLAINTIFF FULL NAME],
+Aged about [ ] years, S/o or D/o [PARENT NAME],
+Residing at [PLAINTIFF RESIDENTIAL ADDRESS],
+Contact: [PHONE / EMAIL]                                                  ... PLAINTIFF
+VERSUS
+[DEFENDANT FULL NAME],
+Aged about [ ] years, S/o or D/o [PARENT NAME],
+Residing at [DEFENDANT RESIDENTIAL ADDRESS],
+Contact: [PHONE / EMAIL]                                                  ... DEFENDANT
+
+PLAINT UNDER SECTION 6 OF THE SPECIFIC RELIEF ACT, 1963 READ WITH SECTION 26 AND ORDER VII RULES 1 & 2 OF THE CODE OF CIVIL PROCEDURE, 1908
+
+The Plaintiff above-named states as follows:
+
+1. DESCRIPTION OF PARTIES:
+That the Plaintiff is a law-abiding citizen residing at the address set forth above. The Defendant is a private individual residing within the territorial jurisdiction of this Hon'ble Court.
+
+2. PRIOR PEACEFUL JURIDICAL POSSESSION OF PLAINTIFF:
+That immediately prior to the unlawful act of dispossession complained of herein, the Plaintiff was in actual, continuous, uninterrupted, and peaceful physical juridical possession and enjoyment of the immovable property more particularly described in the Schedule hereunder (hereinafter referred to as the "Suit Property").
+
+3. EVIDENCE OF PRIOR POSSESSION:
+That the Plaintiff has been enjoying physical possession of the Suit Property since [DATE OF COMMENCEMENT OF POSSESSION] under [NATURE OF OCCUPATION: E.G. REGISTERED LEASE / PURCHASE / INHERITANCE / PERMISSION]. In proof of continuous prior physical possession, the Plaintiff craves leave to rely upon:
+(a) Electricity consumption bills and receipts in Plaintiff's name dated [DATES];
+(b) Property tax / Municipal receipts bearing Assessment No. [ ] dated [DATES];
+(c) Photographs and panchnama showing Plaintiff's establishment and lock.
+
+4. UNLAWFUL DISPOSSESSION WITHOUT CONSENT (CAUSE OF ACTION):
+That on [DATE OF DISPOSSESSION], at about [TIME: E.G. 11:30 PM], while the Plaintiff was [TEMPORARILY AWAY / ASLEEP], the Defendant along with his henchmen unlawfully, violently, and high-handedly trespassed into the Suit Property, broke open the locks, threw out the Plaintiff's belongings, and forcefully occupied the Suit Property WITHOUT THE CONSENT of the Plaintiff and OTHERWISE THAN IN DUE COURSE OF LAW.
+
+5. POLICE COMPLAINT FILED IMMEDIATELY:
+That the Plaintiff immediately lodged a criminal complaint before the [NAME OF POLICE STATION] Police Station on [DATE OF COMPLAINT], CSR / FIR No. [ ], but the police authorities advised the Plaintiff to seek civil redressal from the competent Civil Court.
+
+6. STRICT COMPLIANCE WITH SECTION 6(2) SRA:
+(a) The present suit is instituted on [DATE OF FILING], which is within [NUMBER] days from [DATE OF DISPOSSESSION], and strictly within the period of SIX MONTHS as mandated by Section 6(2)(a) of the Specific Relief Act, 1963;
+(b) The Defendant is a private individual and NOT the Central or State Government or any public officer acting under authority, fully satisfying Section 6(2)(b) of the Act.
+
+7. EXCLUSION OF TITLE UNDER SECTION 6:
+That as settled by the Hon'ble Supreme Court in Lallu Yeshwant Singh v. Rao Jagdish Singh (1968) 2 SCR 203, even the true owner cannot take the law into his own hands and forcefully dispossess a person in juridical possession. This Hon'ble Court is not called upon to adjudicate proprietary title in this summary possessory suit.
+
+8. VALUATION AND COURT FEES:
+The Suit Property is valued for the purpose of court fees and jurisdiction at Rs. [VALUATION AMOUNT]/- being the market / rental value, and a court fee of Rs. [COURT FEE AMOUNT]/- is paid under Section [ ] of the [STATE] Court Fees and Suits Valuation Act, 1955.
+
+PRAYER:
+Wherefore the Plaintiff respectfully prays that this Hon'ble Court may be pleased to pass a judgment and decree in favour of the Plaintiff and against the Defendant:
+(a) Directing the Defendant to restore and deliver actual physical and vacant possession of the Suit Schedule Property to the Plaintiff under Section 6(1) of the Specific Relief Act, 1963;
+(b) Directing the Defendant to remove all locks, padlocks, goods, and unauthorized encumbrances placed by him upon the Suit Property;
+(c) Directing the jurisdictional Police Authorities to provide necessary protection and assistance to execute the decree for possession;
+(d) Awarding full costs of this suit to the Plaintiff; and
+(e) Granting such other and further reliefs as this Hon'ble Court deems fit and proper in the circumstances of the case.
+
+SCHEDULE OF IMMOVABLE PROPERTY
+[INSERT FULL MUNICIPAL / REVENUE DESCRIPTION, SURVEY NO., EXTENT, AND FOUR BOUNDARIES]
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR PLAINTIFF
+
+VERIFICATION
+I, [PLAINTIFF NAME], do hereby declare and verify that the contents of paragraphs 1 to 8 of this plaint are true and correct to my personal knowledge. Verified at [CITY] on this [DATE].
+
+                                                        PLAINTIFF"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 57. SECTION 28 SRA POST-DECREE APPLICATION TO RESCIND AGREEMENT
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="sra_sec28_application",
+        title="Application for Rescission of Agreement of Sale Post-Decree (Section 28 SRA)",
+        provision="Section 28 Specific Relief Act, 1963",
+        category="Post-Decree, Review & Restoration Applications",
+        summary="Vendor's post-decree application to rescind the agreement of sale and forfeit earnest money when the decree-holder purchaser defaults in paying the balance purchase money within the court-stipulated timeframe.",
+        practice_notes="Under Section 28(1) SRA, a decree for specific performance is in the nature of a preliminary decree. The court retains jurisdiction in the SAME SUIT. If purchaser fails to pay within the decreed or extended time, vendor applies in the same suit for rescission and restoration of possession.",
+        connected_provisions=[
+            {"kind": "sra_section", "ref": "Section 28", "title": "Rescission in certain circumstances of contracts for sale/lease"},
+            {"kind": "sra_section", "ref": "Section 10", "title": "Specific performance of contracts"},
+            {"kind": "rule", "ref": "Order XXI Rule 34", "title": "Decree for execution of document"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [LOCATION]
+INTERLOCUTORY APPLICATION NO. ________ OF 202[ ]
+IN
+ORIGINAL SUIT NO. ________ OF 202[ ]
+
+IN THE MATTER OF:
+[PLAINTIFF / DECREE-HOLDER NAME]                                          ... RESPONDENT / PLAINTIFF
+VERSUS
+[DEFENDANT / JUDGMENT-DEBTOR VENDOR NAME]                                 ... APPLICANT / DEFENDANT
+
+APPLICATION UNDER SECTION 28(1) & (2) OF THE SPECIFIC RELIEF ACT, 1963 TO RESCIND THE AGREEMENT OF SALE DATED [DATE] FOR DEFAULT IN DEPOSITING BALANCE PURCHASE MONEY
+
+The Applicant / Defendant above-named states as follows:
+
+1. STATUS OF SUIT & DECREE:
+That this Hon'ble Court was pleased to pass a judgment and decree dated [DATE OF DECREE] in the above Original Suit for specific performance of the Agreement of Sale dated [DATE OF AGREEMENT] in respect of the suit schedule property.
+
+2. SPECIFIC TIME MANDATE OF DECREE:
+That as per the operative direction in Paragraph [ ] of the said decree, the Respondent / Plaintiff was directed to deposit the balance purchase money of Rs. [BALANCE AMOUNT]/- into this Hon'ble Court within a period of [NUMBER: E.G. 60 / 90] DAYS from the date of the decree, i.e., on or before [STIPULATED EXPIRY DATE].
+
+3. WILFUL DEFAULT AND NON-DEPOSIT:
+That the stipulated period of [ ] days expired on [STIPULATED EXPIRY DATE]. The Respondent / Plaintiff has utterly failed, neglected, and defaulted in depositing the said balance purchase money into this Hon'ble Court, nor has the Respondent sought or obtained any extension of time from this Hon'ble Court.
+
+4. INHERENT JURISDICTION UNDER SECTION 28 SRA:
+That as settled by the Hon'ble Supreme Court in Ramankutty Guptan v. Avara (1994) 2 SCC 642, the trial court does not become functus officio upon passing a decree for specific performance; the decree is in the nature of a preliminary decree and the court retains control over the contract. Under Section 28(1) of the Specific Relief Act, 1963, the vendor is entitled to apply in the very same suit to have the contract rescinded.
+
+5. RELIEF OF RESTORATION AND PROFITS:
+(a) Under Section 28(2)(a), if the purchaser has obtained possession under the contract, the court shall direct the purchaser to restore possession to the vendor;
+(b) Under Section 28(2)(b), the court may direct payment of all rents and profits accrued during the purchaser's occupation and order forfeiture of earnest money.
+
+PRAYER:
+Wherefore the Applicant / Defendant respectfully prays that this Hon'ble Court may be pleased to:
+(a) Pass an order under Section 28(1) of the Specific Relief Act, 1963 rescinding the Agreement of Sale dated [DATE OF AGREEMENT] altogether on account of the Respondent / Plaintiff's wilful default;
+(b) Order forfeiture of the earnest money deposit of Rs. [ ]/- paid by the Respondent;
+(c) Direct the Respondent to forthwith restore vacant physical possession of the suit property to the Applicant under Section 28(2)(a) SRA; and
+(d) Pass such further orders as this Hon'ble Court deems fit and proper.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 58. SECTION 14A SRA APPLICATION FOR ENGAGEMENT OF COURT EXPERTS
+    # -------------------------------------------------------------------------
+    DraftingTemplate(
+        id="sra_sec14a_expert",
+        title="Application for Court Engagement of Independent Expert (Section 14A SRA)",
+        provision="Section 14A Specific Relief Act, 1963",
+        category="Interlocutory Applications (IAs)",
+        summary="Application under the 2018 amendment to engage independent technical, valuation, engineering, or scientific experts to assist the civil court on complex contractual issues.",
+        practice_notes="Section 14A was inserted by the 2018 amendment. The court may engage one or more experts, direct relevant persons to provide documents/goods, and the expert's report forms part of the record of the suit. Parties may examine the expert in open court with permission.",
+        connected_provisions=[
+            {"kind": "sra_section", "ref": "Section 14A", "title": "Power of court to engage experts"},
+            {"kind": "rule", "ref": "Order XXVI Rule 9", "title": "Commissions for local investigations"},
+            {"kind": "rule", "ref": "Order XXVI Rule 10A", "title": "Commission for scientific investigation"}
+        ],
+        template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE / COMMERCIAL COURT] AT [LOCATION]
+INTERLOCUTORY APPLICATION NO. ________ OF 202[ ]
+IN
+ORIGINAL SUIT NO. ________ OF 202[ ]
+
+IN THE MATTER OF:
+[PLAINTIFF FULL NAME]                                                     ... APPLICANT / PLAINTIFF
+VERSUS
+[DEFENDANT FULL NAME]                                                     ... RESPONDENT / DEFENDANT
+
+APPLICATION UNDER SECTION 14A OF THE SPECIFIC RELIEF ACT, 1963 READ WITH SECTION 151 OF THE CODE OF CIVIL PROCEDURE, 1908 FOR ENGAGEMENT OF AN INDEPENDENT EXPERT
+
+The Applicant / Plaintiff above-named states as follows:
+
+1. STAGE OF PROCEEDING & COMPLEX ISSUE:
+That the above suit is instituted for specific performance of contract and damages arising out of [BRIEFLY DESCRIBE CONTRACT]. The matter involves technical / architectural / financial issues regarding [DESCRIBE SPECIFIC TECHNICAL ISSUE: E.G. STRUCTURAL STABILITY / PERCENTAGE OF WORK COMPLETED / VALUATION OF UNPERFORMED WORK].
+
+2. STATUTORY POWER UNDER SECTION 14A:
+That Section 14A(1) of the Specific Relief Act, 1963 (inserted by Act 18 of 2018) specifically empowers this Hon'ble Court, where it considers necessary to get expert opinion to assist it on any specific issue involved in the suit, to engage one or more independent experts and direct them to inspect and report on such issue.
+
+3. REQUISITE NATURE OF EXPERT ASSISTANCE:
+That the determination of [SPECIFIC ISSUE] requires specialized technical inspection which cannot be adequately adjudicated by oral testimony alone. The appointment of an independent expert will save judicial time and ensure an objective, scientific determination of the dispute.
+
+PRAYER:
+Wherefore the Applicant / Plaintiff prays that this Hon'ble Court may be pleased to:
+(a) Engage and appoint an independent Expert [E.G. CHARTERED VALUER / STRUCTURAL ENGINEER / ARCHITECT] under Section 14A of the Specific Relief Act, 1963 to inspect the suit project and submit an objective report on [SPECIFIC TERMS OF REFERENCE];
+(b) Fix the professional fee and expenses payable to the Expert; and
+(c) Direct both parties to provide access, documents, and necessary cooperation to the Expert.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT"""
     )
 ]
-
 
 def list_templates(category: Optional[str] = None) -> List[DraftingTemplate]:
     if category:
