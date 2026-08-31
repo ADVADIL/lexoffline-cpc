@@ -259,11 +259,17 @@ import checklists_data as cd
 
 @app.route('/checklists')
 def checklists():
-    selected_cat = request.args.get('category', '')
+    selected_cat = request.args.get('category', '').strip()
+    all_items = cd.list_checklists()
+    from collections import Counter
+    cat_counts = Counter(c.category for c in all_items)
     categories = cd.list_checklist_categories()
+    category_list = [{"name": cat, "count": cat_counts.get(cat, 0)} for cat in categories]
     items = cd.list_checklists(category=selected_cat if selected_cat else None)
     return render_template('checklists_index.html',
                            categories=categories,
+                           category_list=category_list,
+                           total_count=len(all_items),
                            selected_category=selected_cat,
                            checklists=items)
 

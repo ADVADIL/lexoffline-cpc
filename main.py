@@ -570,12 +570,22 @@ class ChecklistsTab(QWidget):
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
 
+        from collections import Counter
+        all_checklists = cd.list_checklists()
+        cat_counts = Counter(c.category for c in all_checklists)
+
         self.cat_combo = QComboBox()
-        self.cat_combo.addItem("All Categories", None)
+        self.cat_combo.addItem(f"All Categories ({len(all_checklists)})", None)
         for cat in cd.list_checklist_categories():
-            self.cat_combo.addItem(cat, cat)
+            count = cat_counts.get(cat, 0)
+            self.cat_combo.addItem(f"{cat} ({count})", cat)
         self.cat_combo.currentIndexChanged.connect(self._populate_list)
         left_layout.addWidget(self.cat_combo)
+
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText("🔍 Filter checklists...")
+        self.search_input.textChanged.connect(self._populate_list)
+        left_layout.addWidget(self.search_input)
 
         self.list_widget = QListWidget()
         self.list_widget.itemClicked.connect(self._on_item_clicked)
@@ -600,8 +610,11 @@ class ChecklistsTab(QWidget):
     def _populate_list(self):
         self.list_widget.clear()
         selected_cat = self.cat_combo.currentData()
+        q = self.search_input.text().lower().strip() if hasattr(self, 'search_input') else ""
         items = cd.list_checklists(category=selected_cat)
         for c in items:
+            if q and (q not in c.title.lower() and q not in c.provision.lower() and q not in c.summary.lower()):
+                continue
             it = QListWidgetItem(f"{c.title}\n[{c.provision}]")
             it.setData(Qt.UserRole, c.id)
             self.list_widget.addItem(it)
@@ -629,7 +642,10 @@ class ChecklistsTab(QWidget):
         sg_box = QGroupBox("📋 Statutory Grounds & Threshold Tests")
         sg_layout = QVBoxLayout(sg_box)
         for g in c.statutory_grounds:
-            g_label = QLabel(f"<b>{g['clause']}: {g['ground']}</b><br><span style='color:#4a5568;'>{g['detail']}</span>")
+            clause_str = f"{g['clause']}: " if g.get('clause') else ""
+            ground_str = g.get('ground', '')
+            detail_str = g.get('detail', g.get('description', ''))
+            g_label = QLabel(f"<b>{clause_str}{ground_str}</b><br><span style='color:#4a5568;'>{detail_str}</span>")
             g_label.setWordWrap(True)
             sg_layout.addWidget(g_label)
         self.vlayout.addWidget(sg_box)
@@ -637,7 +653,10 @@ class ChecklistsTab(QWidget):
         jp_box = QGroupBox("⚖️ Settled Judicial Principles (Landmark Precedents)")
         jp_layout = QVBoxLayout(jp_box)
         for p in c.judicial_principles:
-            p_label = QLabel(f"<b>{p['principle']}</b><br><i style='color:#2b6cb0;'>{p['citation']}</i><br><span style='color:#4a5568;'>{p['detail']}</span>")
+            principle_str = p.get('principle', '')
+            citation_str = f"<i style='color:#2b6cb0;'>{p['citation']}</i><br>" if p.get('citation') else ""
+            detail_str = f"<span style='color:#4a5568;'>{p.get('detail', p.get('description', ''))}</span>" if (p.get('detail') or p.get('description')) else ""
+            p_label = QLabel(f"<b>{principle_str}</b><br>{citation_str}{detail_str}")
             p_label.setWordWrap(True)
             jp_layout.addWidget(p_label)
         self.vlayout.addWidget(jp_box)

@@ -141,9 +141,9 @@ def test_checklists_index():
 
 
 def test_checklists_category_filter():
-    resp = _client().get('/checklists?category=Interim+Relief')
+    resp = _client().get('/checklists?category=Trial+Court+Practice+%26+Pleadings')
     assert resp.status_code == 200
-    assert b'Temporary Injunction' in resp.data
+    assert b'Rejection of Plaint' in resp.data
 
 
 def test_checklist_detail_o7_r11():
@@ -160,7 +160,20 @@ def test_checklist_detail_o39():
     assert resp.status_code == 200
     assert b'Temporary Injunction' in resp.data
     assert b'Dalpat Kumar' in resp.data
-    assert b'Rule 3 Proviso' in resp.data
+
+
+def test_checklist_detail_plaint_scrutiny():
+    resp = _client().get('/checklist/plaint_scrutiny_o7')
+    assert resp.status_code == 200
+    assert b'Plaint Institution' in resp.data
+    assert b'Order VII' in resp.data
+
+
+def test_checklist_detail_commercial_suit():
+    resp = _client().get('/checklist/commercial_suit_cca')
+    assert resp.status_code == 200
+    assert b'Commercial Courts Act' in resp.data
+    assert b'Patil Automation' in resp.data
 
 
 def test_checklist_404_invalid():

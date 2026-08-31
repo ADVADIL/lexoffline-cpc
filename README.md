@@ -72,15 +72,32 @@ Open `http://localhost:5000` in your browser.
   - Category-filtered calculator for CPC procedural deadlines and ~30 curated, commonly-cited statutory Limitation periods, each with its full Order/Rule/Section cross-reference spelled out.
   - Plus a general calculator covering **all 137 Schedule Articles** to the Limitation Act — not just the curated ones — so no Article is browsable-only. Handles Articles with alternative periods (e.g. Article 61's three sub-clauses) by showing every option rather than guessing which applies.
   - **Section 12 Exclusion Support**: Deduct/exclude time taken for obtaining certified copies of decrees and judgments.
-- **Courtroom Practice Checklists**:
-  - 7 essential statutory compliance checklists for core courtroom proceedings:
-    - **Order VII Rule 11**: Rejection of Plaint (7 statutory clauses, *Dahiben* / *Saleem Bhai* threshold tests, no-partial-rejection rule).
-    - **Order XXXIX Rules 1 & 2**: Temporary Injunctions (3-prong test, Rule 3 Proviso same-day delivery mandate, Rule 3A 30-day disposal endeavour).
-    - **Section 80**: Notice to Government (2 full months requirement, essential ingredients, Section 80(2) urgency waiver application).
-    - **Order XXII**: Death of Parties & LR Substitution (90-day limitation under Art. 120, automatic abatement, 60-day set aside under Art. 121, Sec. 5 condonation, Rule 10A pleader duty).
-    - **Section 148A**: Caveat Practice (service obligations, 90-day expiry rule).
-    - **Section 100**: Second Appeal (Substantial Question of Law test, *Sir Chunilal Mehta* formulation rules, Sections 100A/102 bars).
-    - **Section 115**: Civil Revision (3 jurisdictional error tests, 1999 Proviso final-disposition bar, Art. 131 90-day limitation).
+- **Courtroom Practice Checklists (17 Authoritative Statutory Compliance Engines)**:
+  - **Trial Court Practice & Pleadings**:
+    - **Plaint Institution & Registry Scrutiny (Section 26 & Order VII Rules 1–18 CPC)**: Proper description, cause of action bundle, valuation slip, court fees calculation, boundaries, and Rule 14 document list.
+    - **Rejection of Plaint (Order VII Rule 11 CPC)**: 7 statutory clauses, *Dahiben* / *Saleem Bhai* threshold tests, and no-partial-rejection rule (*Madhav Prasad Aggarwal*).
+    - **Written Statement & Counter-Claim Compliance (Order VIII Rules 1–10 CPC)**: Strict 30/90/120-day limitation, specific denial, Doctrine of Non-Traverse, preliminary legal objections, and counter-claim filing window (*Ashok Kumar Kalra*).
+    - **Order XXXVII Summary Suit & Leave to Defend**: 10-day summons for appearance, 10-day leave to defend, and the *IDBI Trusteeship v. Hubtown* 5-prong merits test.
+    - **Amendment of Pleadings (Order VI Rule 17 CPC)**: Pre-trial vs post-commencement of trial tests, statutory *due diligence* proviso (*Vidyabai*), fundamental character rule (*Revajeetu*), and Rule 18 14-day filing limit.
+  - **Interlocutory & Emergency Remedies**:
+    - **Temporary Injunctions (Order XXXIX Rules 1 & 2 CPC)**: 3-prong test (*Dalpat Kumar*), clean hands doctrine, Rule 3 Proviso same-day delivery compliance affidavit, and Rule 3A 30-day disposal endeavour.
+    - **Appointment of Court Commissioner (Order XXVI Rule 9 CPC)**: Legitimate local investigation, surveyor assistance, memo of instructions, and the cardinal rule prohibiting collection of evidence or possession enquiry.
+    - **Attachment Before Judgment (Order XXXVIII Rule 5 CPC)**: Drastic remedy standards (*Raman Tech*), concrete intent to obstruct execution, show-cause mandate, and Rule 5(4) voidness rule.
+  - **Pre-Suit Procedures & Statutory Bars**:
+    - **Notice to Government (Section 80 CPC)**: 2 full months requirement, proper addressee, essential ingredients, and Section 80(2) urgency leave application.
+    - **Commercial Courts Act Pre-Filing Compliance**: Section 2(1)(c) classification, Rs. 3,00,000+ specified value threshold, mandatory Section 12A Pre-Institution Mediation (*Patil Automation*), and Order VI Rule 15A Statement of Truth.
+  - **Pre-Emptive & Protective Proceedings**:
+    - **Caveat Practice (Section 148A CPC)**: Right to lodge caveat, service obligations on applicant, court registry search duty, and strict 90-day expiration audit.
+  - **Parties & Trial Proceedings**:
+    - **Death of Parties & LR Substitution (Order XXII CPC)**: Survival of right to sue, 90-day limitation under Art. 120, automatic abatement, 60-day set aside under Art. 121, Section 5 condonation, and Rule 10A pleader duty (*Perumon Bhagvathy*).
+  - **Post-Decree & Restoration Remedies**:
+    - **Setting Aside Ex-Parte Decree (Order IX Rule 13 CPC)**: Grounds of non-service vs sufficient cause (*Parimal*), 30-day limitation from decree vs knowledge (Article 123), and second proviso notice safeguard (*Sunil Poddar*).
+  - **Execution Proceedings**:
+    - **Order XXI Execution Petition Scrutiny**: Mandatory 10-column tabular format (Rule 11(2)), Rule 22 mandatory notice, Section 60 property exemptions, and 12-year limitation audit (Article 136) vs 3 years for mandatory injunctions (Article 135).
+  - **Appeals & Revisions**:
+    - **Regular First Appeal (Section 96 & Order XLI Rules 1–5 CPC)**: Certified copy requirements, 30/90-day limitation (Article 116), Section 12 certified copy exclusion, distinct grounds formulation, and Order XLI Rule 5 stay tests (*Atma Ram Properties*).
+    - **Regular Second Appeal (Section 100 CPC)**: Substantial Question of Law test (*Sir Chunilal Mehta*), concurrent findings of fact protection (*Nazir Mohamed*), and Section 100A / 102 statutory bars.
+    - **Civil Revision (Section 115 CPC)**: 3 jurisdictional error tests, 1999 Proviso 'final disposal' test (*Shiv Shakti*), Article 131 90-day limitation, and Article 227 supervisory writ alternative (*Surya Dev Rai* / *Radhey Shyam*).
 - **Court-Ready Drafting Templates Library (54 Court-Tested Formats)**:
   - **Core Interlocutory Applications (IAs)**:
     - **Temporary Injunction Application (Order XXXIX Rules 1 & 2 CPC)** + Supporting Affidavit + Rule 3 Urgency grounds.

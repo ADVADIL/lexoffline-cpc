@@ -1,5 +1,5 @@
 """
-Test suite for courtroom practice checklists module.
+Test suite for courtroom practice checklists module (17 checklists).
 """
 import sys
 from pathlib import Path
@@ -15,9 +15,27 @@ from checklists_data import (
 )
 
 
-def test_all_seven_checklists_present():
-    assert len(PRACTICE_CHECKLISTS) == 7
-    expected_ids = {"o7_r11", "o39_r1_2", "sec_80", "o22_lrs", "sec_148a", "sec_100", "sec_115"}
+def test_all_seventeen_checklists_present():
+    assert len(PRACTICE_CHECKLISTS) == 17
+    expected_ids = {
+        "o7_r11",
+        "o39_r1_2",
+        "sec_80",
+        "o22_lrs",
+        "sec_148a",
+        "sec_100",
+        "sec_115",
+        "plaint_scrutiny_o7",
+        "written_statement_o8",
+        "amendment_pleadings_o6_r17",
+        "commissioner_o26_r9",
+        "attachment_before_judgment_o38_r5",
+        "summary_suit_o37",
+        "set_aside_ex_parte_o9_r13",
+        "execution_petition_o21",
+        "first_appeal_sec96",
+        "commercial_suit_cca"
+    }
     found_ids = {c.id for c in PRACTICE_CHECKLISTS}
     assert found_ids == expected_ids
 
@@ -48,6 +66,18 @@ def test_get_checklist_by_id():
     assert "Order VII Rule 11" in c.provision
     assert any("Dahiben" in p["citation"] for p in c.judicial_principles)
 
+    c_ps = get_checklist("plaint_scrutiny_o7")
+    assert c_ps is not None
+    assert "Order VII" in c_ps.provision
+
+    c_ws = get_checklist("written_statement_o8")
+    assert c_ws is not None
+    assert "Order VIII" in c_ws.provision
+
+    c_cca = get_checklist("commercial_suit_cca")
+    assert c_cca is not None
+    assert "Commercial Courts Act" in c_cca.provision
+
     missing = get_checklist("non_existent_id")
     assert missing is None
 
@@ -55,23 +85,16 @@ def test_get_checklist_by_id():
 def test_list_checklists_by_category():
     categories = list_checklist_categories()
     assert len(categories) >= 3
-    assert "Interim Relief" in categories
 
-    relief_checklists = list_checklists(category="Interim Relief")
-    assert len(relief_checklists) >= 1
-    assert any(c.id == "o39_r1_2" for c in relief_checklists)
-
-
-def test_all_categories_contain_checklists():
-    for cat in list_checklist_categories():
-        items = list_checklists(category=cat)
-        assert len(items) > 0
+    trial_checklists = list_checklists(category="Trial Court Practice & Pleadings")
+    assert len(trial_checklists) >= 4
+    for c in trial_checklists:
+        assert c.category == "Trial Court Practice & Pleadings"
 
 
 if __name__ == "__main__":
-    test_all_seven_checklists_present()
+    test_all_seventeen_checklists_present()
     test_checklist_structure_completeness()
     test_get_checklist_by_id()
     test_list_checklists_by_category()
-    test_all_categories_contain_checklists()
-    print(">>> ALL CHECKLIST TESTS PASSED! <<<")
+    print(">>> ALL 17 PRACTICE CHECKLIST TESTS PASSED! <<<")

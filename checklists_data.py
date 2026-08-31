@@ -40,7 +40,7 @@ PRACTICE_CHECKLISTS: List[PracticeChecklist] = [
         id="o7_r11",
         title="Rejection of Plaint (Threshold Dismissal)",
         provision="Order VII Rule 11 CPC",
-        category="Pleadings & Threshold Challenges",
+        category="Trial Court Practice & Pleadings",
         summary="A summary remedy terminating the suit at the threshold before trial where the plaint suffers from incurable legal defects specified in clauses (a) to (f).",
         statutory_grounds=[
             {
@@ -162,7 +162,7 @@ PRACTICE_CHECKLISTS: List[PracticeChecklist] = [
         id="o39_r1_2",
         title="Temporary Injunction & Interlocutory Orders",
         provision="Order XXXIX Rules 1 & 2 CPC",
-        category="Interim Relief",
+        category="Interlocutory & Emergency Remedies",
         summary="Equitable interim relief to preserve the status quo of property or restrain alienation, wastage, damage, or breach of contract pending final disposal of the suit.",
         statutory_grounds=[
             {
@@ -273,7 +273,7 @@ PRACTICE_CHECKLISTS: List[PracticeChecklist] = [
         id="sec_80",
         title="Notice to Government / Public Officers",
         provision="Section 80 CPC",
-        category="Government Litigation",
+        category="Pre-Suit Procedures & Statutory Bars",
         summary="Statutory condition precedent requiring 2 months' written notice before instituting any suit against the Government or a public officer for acts done in official capacity.",
         statutory_grounds=[
             {
@@ -378,7 +378,7 @@ PRACTICE_CHECKLISTS: List[PracticeChecklist] = [
         id="o22_lrs",
         title="Death of Parties, Abatement & LR Substitution",
         provision="Order XXII CPC r/w Articles 120–121 Limitation Act",
-        category="Parties & Succession",
+        category="Parties & Trial Proceedings",
         summary="Procedural roadmap when a plaintiff or defendant dies pending suit: survival of right to sue, 90-day limitation for substitution, automatic abatement, and setting aside abatement.",
         statutory_grounds=[
             {
@@ -487,7 +487,7 @@ PRACTICE_CHECKLISTS: List[PracticeChecklist] = [
         id="sec_148a",
         title="Caveat Petition & Notice Protection",
         provision="Section 148A CPC",
-        category="Interim Relief & Pre-Emption",
+        category="Pre-Emptive & Protective Proceedings",
         summary="Statutory safeguard preventing adverse ex-parte orders by requiring mandatory notice and hearing before any interlocutory order or injunction is granted.",
         statutory_grounds=[
             {
@@ -765,9 +765,755 @@ PRACTICE_CHECKLISTS: List[PracticeChecklist] = [
             {"kind": "rule", "ref": "Order XLIII Rule 1", "title": "Appeals from orders"},
             {"kind": "limitation_article", "ref": "Article 131", "title": "Civil Revision to High Court (90 days)"}
         ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 8. PLAINT INSTITUTION & REGISTRY SCRUTINY (ORDER VII)
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="plaint_scrutiny_o7",
+        title="Plaint Institution & Registry Scrutiny Checklist",
+        provision="Section 26 & Order VII Rules 1–18 CPC",
+        category="Trial Court Practice & Pleadings",
+        summary="Statutory registry scrutiny checklist for instituting civil plaints, ensuring full compliance with Order VII particulars, valuation, court fees, and document production.",
+        statutory_grounds=[
+            {"ground": "Order VII Rule 1", "description": "Mandatory particulars to be contained in every plaint (court name, parties, facts, cause of action, jurisdiction, valuation, and specific relief claimed)."},
+            {"ground": "Order VII Rule 3", "description": "Where the subject matter is immovable property, description sufficient to identify it with survey number, boundaries, and extent."},
+            {"ground": "Order VII Rule 14", "description": "Mandatory production of documents sued upon in plaintiff's possession and list of documents not in possession."},
+            {"ground": "Order VI Rule 15", "description": "Mandatory verification of pleadings by plaintiff at foot on personal knowledge and belief, supported by affidavit."}
+        ],
+        judicial_principles=[
+            {"citation": "Salem Advocate Bar Association v. Union of India (2005) 6 SCC 344", "principle": "Procedural compliance under Order VII is intended to eliminate frivolous litigation at the threshold and ensure fair notice."},
+            {"citation": "Sopan Sukhdeo Sable v. Asst Charity Commr (2004) 3 SCC 137", "principle": "Cause of action is a bundle of essential facts which plaintiff must prove to obtain a decree; distinct dates and places must be pleaded."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="ps_parties_description",
+                label="Proper Description & Capacity of Parties (Rule 1(a)-(c))",
+                description="Verify accurate names, parentage, occupations, and full residential addresses of all parties. If minors or persons of unsound mind are arrayed, ensure representation through next friend / guardian under Order XXXII.",
+                statutory_ref="Order VII Rule 1(a)-(c) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ps_cause_of_action_bundle",
+                label="Specific Bundle of Facts & Dates Constituting Cause of Action",
+                description="Plaint must specifically plead: (1) The bundle of facts constituting the cause of action; (2) The exact date and place where the cause of action first arose and subsequently subsisted.",
+                statutory_ref="Order VII Rule 1(e) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ps_jurisdiction_facts",
+                label="Territorial & Pecuniary Jurisdiction Averments (Rule 1(f))",
+                description="Plead facts demonstrating court's jurisdiction: (a) Immovable property situated within territorial jurisdiction (Sec 16); (b) Cause of action wholly or in part arose within jurisdiction (Sec 20(c)); (c) Suit valuation is within pecuniary limits.",
+                statutory_ref="Order VII Rule 1(f) & Sections 15-20 CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ps_valuation_court_fees",
+                label="Valuation Slip & Court Fee Calculation (Rule 1(i))",
+                description="File separate Valuation Slip setting out valuation for purposes of court fees and jurisdiction under the State Court Fees & Suits Valuation Act, attaching appropriate court fee stamps or e-Challan receipt.",
+                statutory_ref="Order VII Rule 1(i) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ps_specific_relief_prayed",
+                label="Precise & Categorical Prayer Clause (Rule 7)",
+                description="Every plaint must state specifically the relief which plaintiff claims, either simply or in the alternative. Also include prayer for costs and general relief.",
+                statutory_ref="Order VII Rule 7 CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ps_schedule_property_boundaries",
+                label="Property Schedule with Four Boundaries & Sy. No. (Rule 3)",
+                description="Where the suit is for immovable property, the plaint must contain a description of the property sufficient to identify it: Survey No., Municipal assessment no., extent, and boundaries East, West, North, South.",
+                statutory_ref="Order VII Rule 3 CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ps_document_list_rule_14",
+                label="Order VII Rule 14 Document Production & List",
+                description="Plaintiff must append: (1) List of documents sued upon / in his possession produced with plaint; (2) List of documents relied upon but NOT in his possession, stating in whose custody they are.",
+                statutory_ref="Order VII Rule 14(1) & (2) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ps_verification_statement_truth",
+                label="Order VI Rule 15 Verification & Supporting Affidavit",
+                description="Plaint must be verified by plaintiff at foot, stating specifically what paragraphs are verified on personal knowledge and what on information received and believed to be true, accompanied by supporting affidavit.",
+                statutory_ref="Order VI Rule 15 & Section 26(2) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ps_summons_copies_batta",
+                label="Duplicate Copies of Plaint & Process Fee (Order VII Rule 9)",
+                description="Plaintiff must present one copy of plaint for each defendant along with summons forms, postal covers, and process fee (batta) within 7 days of summons order.",
+                statutory_ref="Order VII Rule 9 CPC",
+                is_mandatory=True
+            )
+        ],
+        common_pitfalls=[
+            "Omitting specific boundaries in the schedule, making physical execution of decree impossible under Order XXI Rule 35.",
+            "Failing to file list of documents relied upon under Order VII Rule 14, preventing their subsequent admission at trial without leave.",
+            "Pleading a vague cause of action date like 'arose recently', inviting rejection under Order VII Rule 11(a) or (d).",
+            "Failing to pay process fees (batta) within 7 days, resulting in dismissal of suit under Order IX Rule 2 CPC."
+        ],
+        connected_provisions=[
+            {"kind": "section", "ref": "Section 26", "title": "Institution of suits"},
+            {"kind": "rule", "ref": "Order VII Rule 1", "title": "Particulars to be contained in plaint"},
+            {"kind": "rule", "ref": "Order VII Rule 11", "title": "Rejection of plaint"},
+            {"kind": "rule", "ref": "Order VII Rule 14", "title": "Production of document on which plaintiff sues or relies"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 9. WRITTEN STATEMENT & COUNTER-CLAIM COMPLIANCE (ORDER VIII)
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="written_statement_o8",
+        title="Written Statement & Counter-Claim Compliance Checklist",
+        provision="Order VIII Rules 1–10 CPC",
+        category="Trial Court Practice & Pleadings",
+        summary="Strict timelines, specific denial tests, doctrine of non-traverse, preliminary objections, and counter-claim compliance under Order VIII.",
+        statutory_grounds=[
+            {"ground": "Order VIII Rule 1", "description": "Written statement must be filed within 30 days of summons service; extendable up to 90 days for reasons recorded in writing."},
+            {"ground": "Order VIII Rule 3", "description": "Denial to be specific; general denial is no denial in the eye of law."},
+            {"ground": "Order VIII Rule 5", "description": "Every allegation of fact not denied specifically or by necessary implication is deemed to be admitted (Doctrine of Non-Traverse)."},
+            {"ground": "Order VIII Rule 6A", "description": "Counter-claim maintainable before defense is delivered or time for delivery expires, having effect of a cross-suit."}
+        ],
+        judicial_principles=[
+            {"citation": "Kailash v. Nanhku (2005) 4 SCC 480", "principle": "90-day time limit under Order VIII Rule 1 is directory in ordinary civil suits, but extension requires extraordinary recorded reasons."},
+            {"citation": "SCG Contracts (India) Pvt Ltd v. K.S. Chamankar Infrastructure (2019) 12 SCC 210", "principle": "In Commercial Suits, the 120-day outer limit is mandatory and non-extendable, resulting in total forfeiture of right to file WS."},
+            {"citation": "Badat & Co. v. East India Trading Co. AIR 1964 SC 538", "principle": "Rules of specific denial under Rules 3 and 5 are mandatory; evasive denials constitute clear admission of fact."},
+            {"citation": "Ashok Kumar Kalra v. Wing Cdr. Surendra Agnihotri (2020) 2 SCC 394", "principle": "Counter-claim cannot be permitted to be filed after framing of issues."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="ws_strict_limitation_audit",
+                label="30-Day / 90-Day Limitation Audit (O.8 R.1)",
+                description="Written statement must be filed within 30 days of summons service. Court may extend up to 90 days for reasons recorded in writing. (In Commercial Suits, strict 120-day outer limit forfeits defense).",
+                statutory_ref="Order VIII Rule 1 CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ws_specific_denial_rule",
+                label="Specific Para-Wise Denials (Rules 3 & 4)",
+                description="Denial of allegations of fact in plaint must be specific. Defendant must deal specifically with each allegation of fact of which he does not admit the truth.",
+                statutory_ref="Order VIII Rules 3 & 4 CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ws_doctrine_of_non_traverse",
+                label="Doctrine of Non-Traverse Audit (O.8 R.5)",
+                description="Every allegation of fact in the plaint, if not denied specifically or by necessary implication, shall be taken to be admitted by the defendant.",
+                statutory_ref="Order VIII Rule 5(1) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ws_preliminary_legal_objections",
+                label="Mandatory Preliminary Legal Objections Formulated",
+                description="Pleas of limitation (Sec 3 Limitation Act), res judicata (Sec 11 CPC), non-joinder of necessary parties (O.1 R.9), lack of jurisdiction, or deficient court fee must be raised at the threshold.",
+                statutory_ref="Order VIII Rule 2 CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ws_counter_claim_rules",
+                label="Order VIII Rule 6A Counter-Claim Compliance",
+                description="Counter-claim must relate to a cause of action accruing before delivery of defense or before time limited for delivery has expired. Court fees must be paid as on a separate plaint.",
+                statutory_ref="Order VIII Rule 6A CPC",
+                is_mandatory=False
+            ),
+            ChecklistItem(
+                id="ws_document_disclosure",
+                label="Order VIII Rule 1A Document List & Production",
+                description="Defendant must produce all documents in his possession or power upon which he bases his defense or counter-claim in court when WS is presented.",
+                statutory_ref="Order VIII Rule 1A CPC",
+                is_mandatory=True
+            )
+        ],
+        common_pitfalls=[
+            "Using evasive or general denials like 'contents of paragraph 3 are denied as false', leading to deemed admission under Rule 5.",
+            "Filing Written Statement beyond 30 days without an accompanying condonation application explaining sufficient cause.",
+            "Attempting to file a counter-claim after issues are framed, which is barred under Ashok Kumar Kalra (2020).",
+            "Failing to produce defense title documents under Rule 1A, precluding their admission in evidence at trial."
+        ],
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order VIII Rule 1", "title": "Written statement"},
+            {"kind": "rule", "ref": "Order VIII Rule 3", "title": "Denial to be specific"},
+            {"kind": "rule", "ref": "Order VIII Rule 5", "title": "Specific denial"},
+            {"kind": "rule", "ref": "Order VIII Rule 6A", "title": "Counter-claim by defendant"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 10. AMENDMENT OF PLEADINGS (ORDER VI RULE 17)
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="amendment_pleadings_o6_r17",
+        title="Order VI Rule 17 Amendment of Pleadings Checklist",
+        provision="Order VI Rule 17 CPC",
+        category="Trial Court Practice & Pleadings",
+        summary="Pre-trial vs post-commencement of trial tests, statutory due diligence proviso, fundamental character rule, and limitation bars under Order VI Rule 17.",
+        statutory_grounds=[
+            {"ground": "Order VI Rule 17 Main Body", "description": "Court may at any stage of proceedings allow either party to alter or amend pleadings in such manner as may be just for determining real questions in controversy."},
+            {"ground": "Order VI Rule 17 Proviso", "description": "Mandatory bar: No application for amendment shall be allowed after trial has commenced, unless court concludes that in spite of due diligence, the party could not have raised the matter before trial commenced."},
+            {"ground": "Order VI Rule 18", "description": "Failure to amend within 14 days of order prevents amendment without leave of court."}
+        ],
+        judicial_principles=[
+            {"citation": "Vidyabai v. Padmalatha (2009) 2 SCC 409", "principle": "Court lacks jurisdiction to allow post-trial amendment unless the condition precedent of 'due diligence' is strictly pleaded and proved."},
+            {"citation": "Revajeetu Builders & Developers v. Narayanaswamy & Sons (2009) 10 SCC 84", "principle": "Amendment cannot be allowed if it alters the fundamental character of the suit, causes irreparable prejudice, or takes away an accrued right of limitation."},
+            {"citation": "Life Insurance Corporation of India v. Sanjeev Builders (2022) 16 SCC 1", "principle": "All amendments ought to be allowed which satisfy two conditions: (a) not working injustice to other side; (b) necessary for determining real questions in controversy."},
+            {"citation": "Mohinder Kumar Mehra v. Roop Rani Mehra (2018) 2 SCC 132", "principle": "Trial commences when issues are framed and affidavit of examination-in-chief of witness is tendered."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="amend_stage_trial_commenced",
+                label="Stage Audit: Has the Trial Commenced?",
+                description="Has the court framed issues and has the plaintiff filed the affidavit in examination-in-chief of witness under Order XVIII Rule 4?",
+                statutory_ref="Order VI Rule 17 Proviso",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="amend_due_diligence_proviso",
+                label="Statutory Due Diligence Test (Post-Trial Proviso)",
+                description="If trial has commenced, has the applicant pleaded and proven with cogent evidence that in spite of due diligence, he could not have raised the matter before trial commenced?",
+                statutory_ref="Order VI Rule 17 Proviso & Vidyabai (2009)",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="amend_fundamental_character",
+                label="Fundamental Character & Nature of Suit Unaltered",
+                description="Does the proposed amendment change the fundamental nature or character of the suit? (e.g. converting a bare injunction suit into a declaration and possession suit after limitation).",
+                statutory_ref="Revajeetu Builders (2009) 10 SCC 84",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="amend_accrued_limitation_right",
+                label="No Deprivation of Accrued Limitation Defense",
+                description="Does the amendment seek to introduce a time-barred claim that would defeat a valuable accrued right of limitation acquired by the opposite party?",
+                statutory_ref="Revajeetu Builders (2009) 10 SCC 84",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="amend_real_question_controversy",
+                label="Determination of Real Question in Controversy",
+                description="Is the amendment necessary for the purpose of determining the real questions in controversy between the parties and avoiding multiplicity of suits?",
+                statutory_ref="Order VI Rule 17 Main Body",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="amend_rule_18_fourteen_days",
+                label="Order VI Rule 18 Fourteen-Day Filing Window",
+                description="Once amendment is allowed, the party must amend the pleading and file amended copy within 14 days from the date of the order (or time fixed by court).",
+                statutory_ref="Order VI Rule 18 CPC",
+                is_mandatory=True
+            )
+        ],
+        common_pitfalls=[
+            "Failing to plead 'due diligence' in the supporting affidavit when moving an amendment application after trial has commenced.",
+            "Attempting to withdraw an unequivocal admission made in the Written Statement by way of amendment.",
+            "Failing to file the amended copy of plaint or written statement within the mandatory 14-day window under Order VI Rule 18.",
+            "Seeking an amendment that introduces a time-barred cause of action, depriving adversary of statutory limitation defense."
+        ],
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order VI Rule 17", "title": "Amendment of pleadings"},
+            {"kind": "rule", "ref": "Order VI Rule 18", "title": "Failure to amend after Order (14 days)"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 11. COURT COMMISSIONER (ORDER XXVI RULE 9)
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="commissioner_o26_r9",
+        title="Order XXVI Rule 9 Court Commissioner Checklist",
+        provision="Order XXVI Rule 9 CPC",
+        category="Interlocutory & Emergency Remedies",
+        summary="Statutory tests for local investigation, boundaries, encroachment, and the cardinal rule prohibiting collection of evidence or possession enquiry.",
+        statutory_grounds=[
+            {"ground": "Order XXVI Rule 9", "description": "Court may issue commission to any person directing him to make local investigation for purpose of elucidating any matter in dispute, or ascertaining market value or mesne profits."},
+            {"ground": "Order XXVI Rule 10(2)", "description": "Report of Commissioner and evidence taken by him shall be evidence in the suit and form part of the record."},
+            {"ground": "Order XXVI Rule 10A", "description": "Commission for scientific investigation, expert examination, or performance of experiment."}
+        ],
+        judicial_principles=[
+            {"citation": "Haryana Waqf Board v. Shanti Sarup (2008) 8 SCC 671", "principle": "Controversy regarding demarcation and encroachment can only be resolved by appointing a commissioner with surveyor assistance."},
+            {"citation": "Padam Sen v. State of Uttar Pradesh AIR 1961 SC 218", "principle": "Inherent powers cannot be exercised to appoint commissioner to seize private documents or usurp court functions."},
+            {"citation": "Southern Command Military Engg Services v. V.K.K. Nair (1987)", "principle": "Commissioner cannot be appointed to collect evidence or report who is in physical possession."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="comm_legitimate_object",
+                label="Legitimate Object for Local Investigation",
+                description="Is the commission required for: (a) Elucidating any matter in dispute; (b) Ascertaining market value / mesne profits; (c) Inspecting physical boundaries and demarcating encroachment?",
+                statutory_ref="Order XXVI Rule 9 CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="comm_no_possession_enquiry",
+                label="Cardinal Prohibition: No Commission on Possession",
+                description="Ensure application does NOT pray for commissioner to report 'who is in physical possession' of the property.",
+                statutory_ref="Settled Supreme Court & High Court Law",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="comm_no_collection_of_evidence",
+                label="Prohibition Against 'Collection of Evidence'",
+                description="Verify that the applicant is not using the commissioner to gather evidence to fill up gaps or lacunae in his own case.",
+                statutory_ref="Padam Sen AIR 1961 SC 218",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="comm_surveyor_assistance_memo",
+                label="Surveyor Assistance & Record Reference",
+                description="Does the application seek assistance of a qualified Government / Taluk Surveyor to measure the property with reference to village maps and survey records?",
+                statutory_ref="Order XXVI Rule 9 CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="comm_memo_of_instructions",
+                label="Clear & Precise Memo of Instructions Ready",
+                description="Have specific, objective, and non-argumentative points of reference been drafted for the commissioner's inspection memo?",
+                statutory_ref="Order XXVI Rule 10 CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="comm_evidentiary_value",
+                label="Evidentiary Status of Report (Rule 10(2))",
+                description="The report of the Commissioner and evidence taken by him shall be evidence in the suit and form part of the record, but either party may examine the commissioner in court.",
+                statutory_ref="Order XXVI Rule 10(2) CPC",
+                is_mandatory=False
+            )
+        ],
+        common_pitfalls=[
+            "Praying for commissioner to ascertain 'who is in actual possession', leading to immediate dismissal.",
+            "Appointing an advocate commissioner without government surveyor assistance in boundary encroachment disputes.",
+            "Failing to file formal written Objections to the commissioner's report within 14 days of filing in court.",
+            "Failing to summon the commissioner for cross-examination when challenging an erroneous survey sketch."
+        ],
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XXVI Rule 9", "title": "Commissions to make local investigations"},
+            {"kind": "rule", "ref": "Order XXVI Rule 10", "title": "Procedure of Commissioner. Report and evidence"},
+            {"kind": "rule", "ref": "Order XXVI Rule 10A", "title": "Commission for scientific investigation"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 12. ATTACHMENT BEFORE JUDGMENT (ORDER XXXVIII RULE 5)
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="attachment_before_judgment_o38_r5",
+        title="Order XXXVIII Rule 5 Attachment Before Judgment Checklist",
+        provision="Order XXXVIII Rule 5 CPC",
+        category="Interlocutory & Emergency Remedies",
+        summary="Drastic remedy standards, strict proof of intent to obstruct execution, show-cause mandate, and Rule 5(4) voidness rule.",
+        statutory_grounds=[
+            {"ground": "Order XXXVIII Rule 5(1)", "description": "Court satisfied defendant is about to dispose of or remove property from jurisdiction with intent to obstruct or delay execution."},
+            {"ground": "Order XXXVIII Rule 5(1) Proviso", "description": "Court must direct defendant to furnish security or appear and show cause why he should not furnish security."},
+            {"ground": "Order XXXVIII Rule 5(4)", "description": "Attachment made without complying with sub-rule (1) shall be VOID."},
+            {"ground": "Order XXXVIII Rule 6", "description": "Attachment where cause not shown or security not furnished."}
+        ],
+        judicial_principles=[
+            {"citation": "Raman Tech. & Process Engg. Co. v. Bharat Perfumes Ltd. (2008) 2 SCC 302", "principle": "Power under Order XXXVIII Rule 5 is a drastic and extraordinary power; cannot be used to convert an unsecured debt into a secured debt."},
+            {"citation": "Rajendran v. Shankar Sundaram (2008) 2 SCC 724", "principle": "Prima facie case of debt and concrete material showing imminent attempt to defeat execution must co-exist."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="abj_drastic_remedy_standard",
+                label="Drastic & Extraordinary Remedy Standard",
+                description="Is the plaintiff aware that ABJ is a drastic power that should not be exercised mechanically merely because plaintiff has a good case on merits?",
+                statutory_ref="Raman Tech (2008) 2 SCC 302",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="abj_specific_intent_to_defraud",
+                label="Specific Evidence of Attempt to Dispose of Property",
+                description="Has plaintiff placed concrete, specific facts showing defendant is about to dispose of or remove property from court jurisdiction with INTENT to obstruct or delay execution?",
+                statutory_ref="Order XXXVIII Rule 5(1) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="abj_mandatory_show_cause",
+                label="Mandatory Show-Cause / Security Option (Rule 5(1))",
+                description="Court MUST first direct defendant either to furnish security in sum specified or appear and show cause why he should not furnish security.",
+                statutory_ref="Order XXXVIII Rule 5(1) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="abj_rule_5_4_voidness_rule",
+                label="Rule 5(4) Mandatory Voidness Rule",
+                description="If an order of attachment is made without complying with the provisions of sub-rule (1), such attachment shall be VOID.",
+                statutory_ref="Order XXXVIII Rule 5(4) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="abj_unencumbered_property_schedule",
+                label="Detailed Schedule of Unencumbered Immovable Property",
+                description="Provide full particulars of the property sought to be attached: survey number, boundaries, municipal number, and verify absence of prior bank mortgage.",
+                statutory_ref="Order XXXVIII Rule 5(1) CPC",
+                is_mandatory=True
+            )
+        ],
+        common_pitfalls=[
+            "Making mechanical, bald assertions that 'defendant is attempting to sell property' without specifying brokers, buyers, or deeds.",
+            "Obtaining an absolute order of attachment without giving the defendant the mandatory statutory opportunity to furnish security.",
+            "Seeking to attach property situated outside the territorial jurisdiction of the trial court.",
+            "Seeking attachment of property already mortgaged to a secured creditor bank, which takes statutory precedence."
+        ],
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XXXVIII Rule 5", "title": "Attachment before judgment"},
+            {"kind": "rule", "ref": "Order XXXVIII Rule 6", "title": "Attachment where cause not shown"},
+            {"kind": "rule", "ref": "Order XXXVIII Rule 9", "title": "Removal of attachment when security furnished"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 13. SUMMARY SUITS & LEAVE TO DEFEND (ORDER XXXVII)
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="summary_suit_o37",
+        title="Order XXXVII Summary Suit & Leave to Defend Checklist",
+        provision="Order XXXVII Rules 1, 2 & 3 CPC",
+        category="Trial Court Practice & Pleadings",
+        summary="Summary suit eligibility, strict 10-day appearance & leave to defend timelines, and the IDBI Trusteeship 5-prong test.",
+        statutory_grounds=[
+            {"ground": "Order XXXVII Rule 1(2)", "description": "Applicable to suits upon bills of exchange, hundis, promissory notes, or for recovery of debts/liquidated demands arising on written contracts or guarantees."},
+            {"ground": "Order XXXVII Rule 2(3)", "description": "Defendant shall not defend suit unless he enters appearance; in default of appearance, allegations in plaint deemed admitted and plaintiff entitled to decree."},
+            {"ground": "Order XXXVII Rule 3(5)", "description": "Defendant may apply for leave to defend within 10 days from service of summons for judgment, disclosing substantial defense."},
+            {"ground": "Article 118 Limitation Act", "description": "10 days limitation for leave to appear and defend a summary suit."}
+        ],
+        judicial_principles=[
+            {"citation": "IDBI Trusteeship Services Ltd v. Hubtown Ltd (2017) 1 SCC 568", "principle": "Re-formulated 5-point test for leave to defend: substantial defense entitles unconditional leave; triable issue entitles unconditional leave; plausible/doubtful defense entitles conditional leave upon deposit."},
+            {"citation": "B.L. Kashyap & Sons Ltd. v. JMS Steels (2022) 3 SCC 294", "principle": "Leave to defend should not be granted on illusory or moonshine defense, but summary procedure is not a shortcut to shut out real defenses."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="o37_eligible_class_of_suit",
+                label="Eligible Subject Matter under Rule 1(2)",
+                description="Suit must be upon: (a) Bills of exchange, hundis, or promissory notes; OR (b) Recovery of a debt or liquidated demand arising on a written contract, enactment, or guarantee.",
+                statutory_ref="Order XXXVII Rule 1(2) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="o37_strict_10_day_appearance",
+                label="10-Day Summons for Appearance (Rule 3(1))",
+                description="Defendant must enter appearance within 10 days of service of summons under Form No. 4, Appendix B, and file address for service in court.",
+                statutory_ref="Order XXXVII Rule 3(1) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="o37_summons_for_judgment",
+                label="Service of Summons for Judgment (Rule 3(4))",
+                description="Plaintiff must serve Summons for Judgment in Form No. 4A supported by affidavit verifying cause of action and amount claimed, stating belief of no defense.",
+                statutory_ref="Order XXXVII Rule 3(4) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="o37_strict_10_day_leave_defend",
+                label="10-Day Leave to Defend Window (Article 118)",
+                description="Defendant must apply for leave to defend by affidavit disclosing facts sufficient to entitle him to defend within STRICT 10 DAYS from service of summons for judgment.",
+                statutory_ref="Order XXXVII Rule 3(5) CPC & Article 118",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="o37_idbi_hubtown_test",
+                label="IDBI Trusteeship v. Hubtown 5-Prong Merits Test",
+                description="Examine defense against Hubtown principles: (1) Substantial defense -> Unconditional leave; (2) Triable issue showing fair/reasonable defense -> Unconditional leave; (3) Dubious/plausible defense -> Conditional leave (deposit of money); (4) Sham/moonshine defense -> Refusal of leave.",
+                statutory_ref="IDBI Trusteeship (2017) 1 SCC 568",
+                is_mandatory=True
+            )
+        ],
+        common_pitfalls=[
+            "Filing regular Written Statement instead of entering appearance within 10 days of summons, resulting in default decree.",
+            "Missing the strict 10-day deadline for applying for leave to defend from summons for judgment.",
+            "Instituting suit under Order XXXVII for unliquidated damages or tortious claims, resulting in conversion to ordinary suit.",
+            "Failing to annex original negotiable instruments / written contracts to the summary plaint."
+        ],
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XXXVII Rule 1", "title": "Application of Order"},
+            {"kind": "rule", "ref": "Order XXXVII Rule 2", "title": "Institution of summary suits"},
+            {"kind": "rule", "ref": "Order XXXVII Rule 3", "title": "Procedure for appearance of defendant"},
+            {"kind": "limitation_article", "ref": "Article 118", "title": "Leave to defend summary suit (10 days)"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 14. SETTING ASIDE EX-PARTE DECREE (ORDER IX RULE 13)
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="set_aside_ex_parte_o9_r13",
+        title="Order IX Rule 13 Setting Aside Ex-Parte Decree Checklist",
+        provision="Order IX Rule 13 CPC & Article 123 Limitation Act",
+        category="Post-Decree & Restoration Remedies",
+        summary="Grounds of non-service vs sufficient cause, date of knowledge limitation audit, second proviso safeguard, and conditional restoration.",
+        statutory_grounds=[
+            {"ground": "Order IX Rule 13", "description": "Defendant may apply to court by which decree was passed for an order to set it aside upon satisfying court of non-service of summons or sufficient cause for non-appearance."},
+            {"ground": "Order IX Rule 13 Second Proviso", "description": "Court shall not set aside decree on ground of irregularity in service of summons if satisfied defendant had notice in sufficient time."},
+            {"ground": "Article 123 Limitation Act", "description": "Limitation is 30 days from date of decree, or where summons not duly served, 30 days from date of knowledge of decree."}
+        ],
+        judicial_principles=[
+            {"citation": "Parimal v. Veena (2011) 3 SCC 545", "principle": "Sufficient cause must be an explanation beyond control of party; court must record clear finding on whether defendant was prevented by bona fide cause."},
+            {"citation": "G.P. Srivastava v. R.K. Raizada (2000) 3 SCC 54", "principle": "Court should adopt liberal approach on date of hearing if non-appearance was not intentional, so matter is decided on merits."},
+            {"citation": "Sunil Poddar v. Union Bank of India (2008) 2 SCC 326", "principle": "Under second proviso, if defendant had knowledge of suit proceedings, technical irregularity in summons service does not justify setting aside decree."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="exparte_two_statutory_grounds",
+                label="Two Exclusive Statutory Grounds under Rule 13",
+                description="Defendant must satisfy court that: EITHER (1) Summons was not duly served; OR (2) He was prevented by any 'sufficient cause' from appearing when suit was called on for hearing.",
+                statutory_ref="Order IX Rule 13 CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="exparte_limitation_article_123",
+                label="Article 123 Limitation: Date of Decree vs Date of Knowledge",
+                description="Limitation is 30 DAYS: (a) From date of decree (if summons served); OR (b) From date of KNOWLEDGE of the decree (where summons was NOT duly served).",
+                statutory_ref="Article 123, Limitation Act 1963",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="exparte_second_proviso_bar",
+                label="Second Proviso Safeguard (Notice in Sufficient Time)",
+                description="Court SHALL NOT set aside decree merely on irregularity in service of summons, if satisfied that defendant had notice of date of hearing in sufficient time to appear.",
+                statutory_ref="Order IX Rule 13 Second Proviso",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="exparte_sufficient_cause_proof",
+                label="Sufficient Cause Substantiated by Cogent Evidence",
+                description="Was non-appearance on the hearing date caused by genuine illness, accident, bereavement, or unavoidable circumstances? Produce medical records / hospital discharge summary.",
+                statutory_ref="Parimal v. Veena (2011) 3 SCC 545",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="exparte_terms_costs",
+                label="Terms as to Costs & Deposit under Rule 13",
+                description="Court may set aside decree upon such terms as to costs, payment into court, or otherwise as it thinks fit.",
+                statutory_ref="Order IX Rule 13 CPC",
+                is_mandatory=False
+            )
+        ],
+        common_pitfalls=[
+            "Filing application beyond 30 days from date of decree without explaining the date of knowledge or filing Section 5 condonation application.",
+            "Relying on technical defects in bailiff report when defendant in fact had actual notice of the suit.",
+            "Failing to demonstrate a meritorious prima facie defense to the suit in the supporting affidavit.",
+            "Failing to deposit conditional costs or security ordered by court, resulting in dismissal of restoration application."
+        ],
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order IX Rule 13", "title": "Setting aside decree ex parte against defendant"},
+            {"kind": "section", "ref": "Section 5", "title": "Extension of prescribed period (Limitation Act)"},
+            {"kind": "limitation_article", "ref": "Article 123", "title": "To set aside an ex-parte decree (30 days)"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 15. EXECUTION PETITION SCRUTINY (ORDER XXI)
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="execution_petition_o21",
+        title="Order XXI Execution Petition Scrutiny Checklist",
+        provision="Order XXI Rules 11, 22 & Section 60 CPC",
+        category="Execution Proceedings",
+        summary="Mandatory 10-column execution particulars, Rule 22 notice requirements, Section 60 property exemptions, and 12-year limitation audit.",
+        statutory_grounds=[
+            {"ground": "Order XXI Rule 11(2)", "description": "Written application for execution containing in tabular form all 10 statutory particulars (a) to (j)."},
+            {"ground": "Order XXI Rule 22", "description": "Mandatory show-cause notice to JD if EP is filed after two years from decree date or against legal representatives."},
+            {"ground": "Section 60 CPC", "description": "Statutory list of properties liable to attachment and sale, and mandatory list of non-attachable exempt properties."},
+            {"ground": "Article 136 Limitation Act", "description": "12-year limitation period for execution of any decree (other than mandatory injunction)."}
+        ],
+        judicial_principles=[
+            {"citation": "Rahul S. Shah v. Jinendra Kumar Gandhi (2021) 6 SCC 418", "principle": "Supreme Court directions: executing court must dispose of execution petitions within 6 months and ensure decree holder gets fruits of decree."},
+            {"citation": "Jagan Singh v. Dhanwanti (2012) 2 SCC 628", "principle": "Executing court cannot go behind the decree; it must execute the decree as it stands."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="ep_limitation_article_136",
+                label="Limitation Audit: Article 136 (12 Years) vs Article 135",
+                description="Execution for money, possession, or general decree: 12 YEARS from when decree becomes enforceable. Mandatory injunction: 3 YEARS under Article 135.",
+                statutory_ref="Articles 135 & 136, Limitation Act 1963",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ep_rule_11_ten_columns",
+                label="Mandatory 10-Column Tabular Format (Rule 11(2))",
+                description="Execution petition must be in writing, verified by DH, containing in tabular form all 10 particulars: suit no., parties, decree date, appeal status, payments made, costs, mode of assistance.",
+                statutory_ref="Order XXI Rule 11(2) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ep_rule_22_notice_audit",
+                label="Order XXI Rule 22 Mandatory Show-Cause Notice",
+                description="Notice to JD is MANDATORY where EP is filed: (a) More than two years after date of decree; OR (b) Against legal representatives of deceased JD; OR (c) Where decree is against assignee in insolvency.",
+                statutory_ref="Order XXI Rule 22(1) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ep_section_60_exemptions",
+                label="Section 60 Statutory Property Exemptions Audit",
+                description="Verify that property sought to be attached is NOT exempt: tools of artisans, agricultural implements, wearing apparel, cooking vessels, 2/3rd of salary above first Rs. 1,000, pensions, and gratuities.",
+                statutory_ref="Section 60(1) Provisos (a)-(p) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="ep_jurisdiction_transmission",
+                label="Territorial Jurisdiction & Transfer of Decree (Sec 38/39)",
+                description="Is the property situated within this court's territorial jurisdiction? If property is in another district, obtain Certificate of Non-Satisfaction and decree transmission under Section 39.",
+                statutory_ref="Sections 38 & 39 CPC",
+                is_mandatory=True
+            )
+        ],
+        common_pitfalls=[
+            "Executing a mandatory injunction decree after 3 years under the mistaken belief that 12-year limitation applies.",
+            "Issuing attachment warrant without serving Rule 22 notice when execution is filed after 2 years from decree date.",
+            "Attempting to attach properties exempt under Section 60 CPC (e.g. pension, basic agricultural tools, 2/3rd salary).",
+            "Executing against property in another district without obtaining transfer of decree under Section 39 CPC."
+        ],
+        connected_provisions=[
+            {"kind": "rule", "ref": "Order XXI Rule 11", "title": "Application for execution"},
+            {"kind": "rule", "ref": "Order XXI Rule 22", "title": "Notice to show cause against execution"},
+            {"kind": "section", "ref": "Section 60", "title": "Property liable to attachment and sale"},
+            {"kind": "limitation_article", "ref": "Article 136", "title": "Execution of decree (12 years)"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 16. REGULAR FIRST APPEAL FILING (SECTION 96 & ORDER XLI)
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="first_appeal_sec96",
+        title="Section 96 & Order XLI Regular First Appeal Checklist",
+        provision="Section 96 & Order XLI Rules 1–5 CPC",
+        category="Appeals & Revisions",
+        summary="Certified copy requirements, limitation periods, Section 12 exclusion, grounds of appeal drafting, and Order XLI Rule 5 stay tests.",
+        statutory_grounds=[
+            {"ground": "Section 96 CPC", "description": "Appeal lies from every original decree passed by any court exercising original jurisdiction to court authorized to hear appeals."},
+            {"ground": "Order XLI Rule 1", "description": "Form of appeal; memorandum must be accompanied by certified copy of decree and judgment."},
+            {"ground": "Order XLI Rule 5", "description": "Stay by Appellate Court; filing appeal does not operate as automatic stay of execution."},
+            {"ground": "Article 116 Limitation Act", "description": "Limitation for appeal under CPC: 30 days to District Court; 90 days to High Court."}
+        ],
+        judicial_principles=[
+            {"citation": "Santosh Hazari v. Purushottam Tiwari (2001) 3 SCC 179", "principle": "First appellate court is the final court of fact and must address all points of controversy and re-appreciate evidence."},
+            {"citation": "Atma Ram Properties v. Federal Motors (2005) 1 SCC 705", "principle": "Appellate court has discretion to impose reasonable conditions including deposit of market rent/damages when granting stay under Order XLI Rule 5."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="rfa_certified_copies_attached",
+                label="Certified Copy of Decree & Judgment (Order XLI Rule 1)",
+                description="Memorandum of appeal must be accompanied by a certified copy of the decree appealed from and (unless appellate court dispenses) a copy of the judgment.",
+                statutory_ref="Order XLI Rule 1(1) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="rfa_limitation_article_116",
+                label="Limitation Audit: 30 Days (District Court) vs 90 Days (High Court)",
+                description="Appeal to District Court: 30 DAYS under Article 116(a). Appeal to High Court: 90 DAYS under Article 116(b).",
+                statutory_ref="Article 116, Limitation Act 1963",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="rfa_section_12_exclusion",
+                label="Section 12 Exclusion of Time for Certified Copy",
+                description="The time requisite for obtaining a copy of the decree and the judgment shall be excluded from computing limitation.",
+                statutory_ref="Section 12(2) & (3) Limitation Act 1963",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="rfa_grounds_of_appeal_format",
+                label="Grounds of Appeal Formulated Distinctly (Rule 1(2))",
+                description="Grounds must set forth concisely and under distinct heads the grounds of objection to the decree without any argument or narrative, numbered consecutively.",
+                statutory_ref="Order XLI Rule 1(2) CPC",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="rfa_stay_order_41_rule_5",
+                label="Order XLI Rule 5 Stay Application & 3-Prong Test",
+                description="Filing appeal does NOT operate as an automatic stay of decree. Stay application must establish: (1) Substantial loss may result unless stay is granted; (2) Application made without unreasonable delay; (3) Security has been given for performance.",
+                statutory_ref="Order XLI Rule 5(1) & (3) CPC",
+                is_mandatory=False
+            )
+        ],
+        common_pitfalls=[
+            "Assuming that mere filing of an appeal operates as an automatic stay of the trial court decree.",
+            "Failing to calculate certified copy exclusion under Section 12, incorrectly believing appeal is barred by limitation.",
+            "Drafting argumentative essays instead of distinct, concise grounds of appeal under Order XLI Rule 1(2).",
+            "Failing to offer security for performance of decree when seeking stay of money or possession decree under Rule 5."
+        ],
+        connected_provisions=[
+            {"kind": "section", "ref": "Section 96", "title": "Appeal from original decree"},
+            {"kind": "rule", "ref": "Order XLI Rule 1", "title": "Form of appeal. What to accompany memorandum"},
+            {"kind": "rule", "ref": "Order XLI Rule 5", "title": "Stay by Appellate Court"},
+            {"kind": "limitation_article", "ref": "Article 116", "title": "Appeal under CPC (30/90 days)"}
+        ]
+    ),
+
+    # -------------------------------------------------------------------------
+    # 17. COMMERCIAL COURTS ACT PRE-FILING (COMMERCIAL COURTS ACT)
+    # -------------------------------------------------------------------------
+    PracticeChecklist(
+        id="commercial_suit_cca",
+        title="Commercial Courts Act Pre-Filing Compliance Checklist",
+        provision="Commercial Courts Act, 2015",
+        category="Pre-Suit Procedures & Statutory Bars",
+        summary="Section 2(1)(c) classification, specified value threshold, Section 12A mandatory pre-institution mediation, Statement of Truth, and strict document discovery.",
+        statutory_grounds=[
+            {"ground": "Section 2(1)(c)", "description": "Exhaustive classification of commercial disputes arising out of ordinary transactions of merchants, bankers, financiers, trade, and IP."},
+            {"ground": "Section 2(1)(i) & 12", "description": "Specified value of subject matter of commercial dispute not less than three lakh rupees (Rs. 3,00,000/-)."},
+            {"ground": "Section 12A", "description": "Mandatory Pre-Institution Mediation through Legal Services Authority unless urgent interim relief is contemplated."},
+            {"ground": "Order VI Rule 15A", "description": "Mandatory verification of pleadings by Statement of Truth; without it, pleading cannot be read in evidence."}
+        ],
+        judicial_principles=[
+            {"citation": "Patil Automation Pvt Ltd v. Rakheja Engineers (2022) 10 SCC 1", "principle": "Section 12A pre-institution mediation is MANDATORY; suit filed without it is liable to be rejected under Order VII Rule 11."},
+            {"citation": "Yamini Manohar v. T.K.D. Keerthi (2024) 5 SCC 815", "principle": "Urgent interim relief plea must be bona fide on meaningful reading of plaint, not a subterfuge to bypass Section 12A."},
+            {"citation": "Ambalal Sarabhai Enterprises v. KS Infraspace (2020) 15 SCC 585", "principle": "Immovable property disputes qualify as commercial disputes only if property is used exclusively in trade or commerce."}
+        ],
+        steps=[
+            ChecklistItem(
+                id="cca_commercial_dispute_classification",
+                label="Section 2(1)(c) Commercial Dispute Classification",
+                description="Does the dispute fall squarely within one of clauses (i) to (xxii) of Section 2(1)(c)? (e.g. mercantile transactions, export/import, carriage of goods, franchising, distribution, IP, partnership, infrastructure).",
+                statutory_ref="Section 2(1)(c) Commercial Courts Act, 2015",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="cca_specified_value_threshold",
+                label="Specified Value Verification (Threshold Rs. 3,00,000+)",
+                description="Verify that the 'Specified Value' of the subject matter computed under Section 12 is NOT less than three lakh rupees (Rs. 3,00,000/-) or higher state threshold.",
+                statutory_ref="Section 2(1)(i) & Section 12 Commercial Courts Act",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="cca_section_12a_mediation",
+                label="Section 12A Pre-Institution Mediation Compliance",
+                description="Has plaintiff completed Pre-Institution Mediation through DLSA and obtained Non-Starter Report, OR has plaintiff demonstrated genuine need for urgent interim relief?",
+                statutory_ref="Section 12A Commercial Courts Act & Patil Automation (2022)",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="cca_statement_of_truth_mandatory",
+                label="Mandatory Statement of Truth (Order VI Rule 15A)",
+                description="Plaint and Written Statement MUST be verified by a Statement of Truth in Appendix I format under Order VI Rule 15A, signed by authorized representative.",
+                statutory_ref="Order VI Rule 15A CPC (Commercial Schedule)",
+                is_mandatory=True
+            ),
+            ChecklistItem(
+                id="cca_order_11_disclosure",
+                label="Order XI Mandatory Document Disclosure with Plaint",
+                description="Plaintiff must file an exhaustive list and copies of ALL documents in his power, possession, control, or custody relating to suit, and make declaration on oath.",
+                statutory_ref="Order XI Rule 1 CPC (as amended by CCA)",
+                is_mandatory=True
+            )
+        ],
+        common_pitfalls=[
+            "Filing a commercial suit without exhausting Section 12A Pre-Institution Mediation where no genuine urgent interim relief is needed, inviting threshold rejection under Order VII Rule 11.",
+            "Failing to file the mandatory Statement of Truth under Order VI Rule 15A, preventing the plaint from being read in evidence.",
+            "Withholding relevant commercial documents from the initial filing under Order XI, resulting in total preclusion from producing them at trial.",
+            "Filing in Commercial Court where specified value is below Rs. 3,00,000, resulting in return of plaint."
+        ],
+        connected_provisions=[
+            {"kind": "section", "ref": "Section 12A", "title": "Pre-Institution Mediation and Settlement"},
+            {"kind": "rule", "ref": "Order VI Rule 15A", "title": "Statement of Truth"},
+            {"kind": "rule", "ref": "Order VII Rule 11", "title": "Rejection of plaint"}
+        ]
     )
 ]
-
 
 def list_checklists(category: Optional[str] = None) -> List[PracticeChecklist]:
     if category:
