@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Order XXI Execution Navigator - LexOffline{% endblock %}
+
+{% block content %}
+<div class="header-section">
+    <h1>⚔️ Order XXI Execution Roadmap &amp; Navigator</h1>
+    <p class="subtitle">Procedural execution pathways for Indian civil decrees: attachment, court auctions, physical possession, garnishee orders, and civil prison.</p>
+</div>
+
+<div class="panel" style="background: #fffaf0; border-left: 4px solid #dd6b20; padding: 1rem; margin-bottom: 1.5rem;">
+    <p style="margin: 0; color: #7b341e; font-size: 0.95rem;">
+        <em>"The difficulties of a litigant in India begin when he has obtained a decree."</em> &mdash; Privy Council.<br>
+        Order XXI contains 106 statutory rules. Select your decree category below to navigate the exact sequential steps, statutory provisos, and limitation periods.
+    </p>
+</div>
+
+<div class="workflows-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem;">
+    {% for w in workflows %}
+    <div class="card" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+        <span class="badge" style="background: #feebc8; color: #7b341e; font-size: 0.8rem; font-weight: bold; padding: 3px 8px; border-radius: 4px; align-self: flex-start; margin-bottom: 0.5rem;">
+            {{ w.stages|length }} Sequential Stages
+        </span>
+        <h3 style="margin: 0.25rem 0 0.5rem 0; font-size: 1.2rem;">
+            <a href="/execution/{{ w.id }}" style="color: #1a365d; text-decoration: none;">{{ w.title }}</a>
+        </h3>
+        <p style="color: #2b6cb0; font-size: 0.85rem; margin-bottom: 0.75rem; font-weight: 600;">
+            {{ w.decree_type }}
+        </p>
+        <p style="color: #4a5568; font-size: 0.9rem; line-height: 1.4; flex-grow: 1;">
+            {{ w.summary }}
+        </p>
+        <div style="margin-top: 1rem; border-top: 1px solid #edf2f7; padding-top: 0.75rem;">
+            <a href="/execution/{{ w.id }}" class="btn" style="display: inline-block; padding: 6px 14px; background: #2b6cb0; color: #fff; text-decoration: none; border-radius: 4px; font-size: 0.85rem;">
+                Open Execution Roadmap &rarr;
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

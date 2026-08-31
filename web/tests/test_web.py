@@ -201,11 +201,40 @@ def test_template_404_invalid():
     assert resp.status_code == 404
 
 
+def test_execution_index():
+    resp = _client().get('/execution')
+    assert resp.status_code == 200
+    assert b'Order XXI Execution Roadmap' in resp.data
+    assert b'Money Decrees' in resp.data
+
+
+def test_execution_detail_money_decree():
+    resp = _client().get('/execution/money_decree')
+    assert resp.status_code == 200
+    assert b'Money Decrees' in resp.data
+    assert b'Attachment of Judgment Debtor' in resp.data
+    assert b'Order XXI Rule 54' in resp.data
+
+
+def test_execution_detail_possession():
+    resp = _client().get('/execution/immovable_possession')
+    assert resp.status_code == 200
+    assert b'Delivery of Immovable Property' in resp.data
+    assert b'Rule 35' in resp.data
+    assert b'Rule 97' in resp.data
+
+
+def test_execution_404_invalid():
+    resp = _client().get('/execution/non_existent_workflow')
+    assert resp.status_code == 404
+
+
 if __name__ == '__main__':
     tests = [v for k, v in globals().items() if k.startswith('test_')]
     for t in tests:
         t()
         print(f'  OK  {t.__name__}')
     print(f'\n>>> ALL {len(tests)} WEB TESTS PASSED! <<<')
+
 
 

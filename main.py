@@ -26,6 +26,7 @@ import deadlines as dl
 import limitation_data as ld
 import checklists_data as cd
 import templates_data as tdata
+import execution_data as edata
 
 
 def html_escape(s):
@@ -621,24 +622,20 @@ class ChecklistsTab(QWidget):
         if not c:
             return
 
-        # Clear layout
         while self.vlayout.count():
             child = self.vlayout.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
 
-        # Title block
         header = QLabel(f"<h2>{c.title}</h2><p style='color:#4a5568;'><b>Provision:</b> {c.provision} &nbsp;|&nbsp; <b>Category:</b> {c.category}</p><p style='font-size:10pt; line-height:1.4;'>{c.summary}</p>")
         header.setWordWrap(True)
         self.vlayout.addWidget(header)
 
-        # Separator
         line = QFrame()
         line.setFrameShape(QFrame.HLine)
         line.setFrameShadow(QFrame.Sunken)
         self.vlayout.addWidget(line)
 
-        # Statutory Grounds Section
         sg_box = QGroupBox("📋 Statutory Grounds & Threshold Tests")
         sg_layout = QVBoxLayout(sg_box)
         for g in c.statutory_grounds:
@@ -647,7 +644,6 @@ class ChecklistsTab(QWidget):
             sg_layout.addWidget(g_label)
         self.vlayout.addWidget(sg_box)
 
-        # Settled Judicial Principles
         jp_box = QGroupBox("⚖️ Settled Judicial Principles (Landmark Precedents)")
         jp_layout = QVBoxLayout(jp_box)
         for p in c.judicial_principles:
@@ -656,7 +652,6 @@ class ChecklistsTab(QWidget):
             jp_layout.addWidget(p_label)
         self.vlayout.addWidget(jp_box)
 
-        # Actionable Checklist
         steps_box = QGroupBox("☑️ Actionable Courtroom Checklist (Check off while preparing)")
         steps_layout = QVBoxLayout(steps_box)
         for s in c.steps:
@@ -667,7 +662,6 @@ class ChecklistsTab(QWidget):
             steps_layout.addWidget(desc)
         self.vlayout.addWidget(steps_box)
 
-        # Common Pitfalls Warning
         pit_box = QGroupBox("⚠️ Common Pitfalls & Fatal Traps")
         pit_box.setStyleSheet("QGroupBox { font-weight: bold; color: #c53030; }")
         pit_layout = QVBoxLayout(pit_box)
@@ -678,7 +672,6 @@ class ChecklistsTab(QWidget):
             pit_layout.addWidget(pit_label)
         self.vlayout.addWidget(pit_box)
 
-        # Connected Provisions
         conn_box = QGroupBox("🔗 Connected Provisions (Click to Jump)")
         conn_layout = QHBoxLayout(conn_box)
         for cp in c.connected_provisions:
@@ -737,7 +730,6 @@ class DraftingTemplatesTab(QWidget):
         splitter = QSplitter(Qt.Horizontal)
         layout.addWidget(splitter)
 
-        # Left panel: category filter + template list
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
@@ -754,11 +746,9 @@ class DraftingTemplatesTab(QWidget):
         left_layout.addWidget(self.list_widget, stretch=1)
         splitter.addWidget(left)
 
-        # Right panel: template viewer & editor
         right = QWidget()
         rlayout = QVBoxLayout(right)
 
-        # Top bar with title and copy button
         top_bar = QHBoxLayout()
         self.title_label = QLabel("Select a template")
         self.title_label.setStyleSheet("font-weight: 600; font-size: 13pt; color: #1a365d;")
@@ -776,13 +766,11 @@ class DraftingTemplatesTab(QWidget):
         self.notes_label.setWordWrap(True)
         rlayout.addWidget(self.notes_label)
 
-        # Editor
         self.editor = QPlainTextEdit()
         font = QFont("Courier New", 10)
         self.editor.setFont(font)
         rlayout.addWidget(self.editor, stretch=1)
 
-        # Connected provisions
         self.conn_row = QHBoxLayout()
         self.conn_widget = QWidget()
         self.conn_widget.setLayout(self.conn_row)
@@ -835,6 +823,150 @@ class DraftingTemplatesTab(QWidget):
             orig_text = self.copy_btn.text()
             self.copy_btn.setText("✓ Copied to Clipboard!")
             QTimer.singleShot(2000, lambda: self.copy_btn.setText(orig_text))
+
+    def _jump_to_provision(self, cp):
+        ref_text = cp["ref"]
+        if "Section" in ref_text:
+            s_no = ref_text.replace("Section", "").strip().split()[0]
+            if cp.get("kind") == "limitation_section":
+                row = self.db.get_limitation_section_by_no(s_no)
+                if row:
+                    self.on_jump("limitation_section", row["id"])
+                    return
+            else:
+                row = self.db.get_section_by_no(s_no)
+                if row:
+                    self.on_jump("section", row["id"])
+                    return
+        elif "Article" in ref_text:
+            a_no = ref_text.replace("Article", "").strip().split("(")[0].strip()
+            row = self.db.find_article_by_no(a_no)
+            if row:
+                self.on_jump("limitation_article", row["id"])
+                return
+        elif "Order" in ref_text and "Rule" in ref_text:
+            parts = ref_text.replace("Order", "").split("Rule")
+            o_no = parts[0].strip()
+            r_no = parts[1].strip().split("(")[0].strip()
+            row = self.db.find_rule_in_order(o_no, r_no)
+            if row:
+                self.on_jump("rule", row["id"])
+                return
+        elif "Order" in ref_text:
+            o_no = ref_text.replace("Order", "").strip()
+            row = self.db.find_order_by_no(o_no)
+            if row:
+                self.on_jump("order", row["id"])
+                return
+
+
+class ExecutionNavigatorTab(QWidget):
+    """Order XXI Execution Roadmap & Navigator."""
+
+    def __init__(self, db: ActDatabase, on_jump):
+        super().__init__()
+        self.db = db
+        self.on_jump = on_jump
+
+        layout = QHBoxLayout(self)
+        splitter = QSplitter(Qt.Horizontal)
+        layout.addWidget(splitter)
+
+        # Left panel: list of workflows
+        left = QWidget()
+        left_layout = QVBoxLayout(left)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+
+        left_layout.addWidget(QLabel("<b>Execution Roadmaps:</b>"))
+        self.list_widget = QListWidget()
+        self.list_widget.itemClicked.connect(self._on_item_clicked)
+        left_layout.addWidget(self.list_widget, stretch=1)
+        splitter.addWidget(left)
+
+        # Right panel: multi-stage viewer
+        self.scroll = QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.viewer = QWidget()
+        self.vlayout = QVBoxLayout(self.viewer)
+        self.vlayout.setAlignment(Qt.AlignTop)
+        self.scroll.setWidget(self.viewer)
+        splitter.addWidget(self.scroll)
+
+        splitter.setSizes([320, 680])
+        self._populate_list()
+
+        if self.list_widget.count() > 0:
+            self.list_widget.setCurrentRow(0)
+            self._on_item_clicked(self.list_widget.item(0))
+
+    def _populate_list(self):
+        self.list_widget.clear()
+        for w in edata.list_execution_workflows():
+            it = QListWidgetItem(f"{w.title}\n({len(w.stages)} stages)")
+            it.setData(Qt.UserRole, w.id)
+            self.list_widget.addItem(it)
+
+    def _on_item_clicked(self, item):
+        wid = item.data(Qt.UserRole)
+        w = edata.get_execution_workflow(wid)
+        if not w:
+            return
+
+        while self.vlayout.count():
+            child = self.vlayout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        header = QLabel(f"<h2>{w.title}</h2><p style='color:#2b6cb0; font-weight:bold;'>{w.decree_type}</p><p style='font-size:10pt; line-height:1.4; color:#4a5568;'>{w.summary}</p>")
+        header.setWordWrap(True)
+        self.vlayout.addWidget(header)
+
+        line = QFrame()
+        line.setFrameShape(QFrame.HLine)
+        line.setFrameShadow(QFrame.Sunken)
+        self.vlayout.addWidget(line)
+
+        # Stages
+        for stage in w.stages:
+            stage_box = QGroupBox(f"Stage {stage.stage_number}: {stage.title}")
+            stage_box.setStyleSheet("QGroupBox { font-weight: bold; color: #1a365d; font-size: 10.5pt; }")
+            s_layout = QVBoxLayout(stage_box)
+
+            meta = QLabel(f"<span style='background:#edf2f7; color:#2d3748; padding:3px 8px; border-radius:4px; font-weight:bold;'>Rules: {stage.governing_rules}</span> &nbsp; "
+                          f"<span style='background:#feebc8; color:#7b341e; padding:3px 8px; border-radius:4px; font-weight:bold;'>Limitation: {stage.limitation_period}</span>")
+            meta.setWordWrap(True)
+            s_layout.addWidget(meta)
+
+            act_header = QLabel("<b>Actions Required:</b>")
+            s_layout.addWidget(act_header)
+            for act in stage.actions_required:
+                a_label = QLabel(f"  • {act}")
+                a_label.setWordWrap(True)
+                s_layout.addWidget(a_label)
+
+            if stage.statutory_provisos:
+                prov_box = QLabel("<b>Statutory Provisos & Caveats:</b><br>" + "<br>".join(f"  ⚠️ {p}" for p in stage.statutory_provisos))
+                prov_box.setWordWrap(True)
+                prov_box.setStyleSheet("color: #742a2a; background: #fff5f5; padding: 6px; border-left: 3px solid #e53e3e;")
+                s_layout.addWidget(prov_box)
+
+            tact_box = QLabel(f"<b>💡 Advocate Tactic:</b> {stage.advocate_tactics}")
+            tact_box.setWordWrap(True)
+            tact_box.setStyleSheet("color: #2c5282; background: #ebf8ff; padding: 6px; border-left: 3px solid #3182ce;")
+            s_layout.addWidget(tact_box)
+
+            self.vlayout.addWidget(stage_box)
+
+        # Connected Provisions
+        conn_box = QGroupBox("🔗 Connected Order XXI Rules & Limitation Articles")
+        conn_layout = QHBoxLayout(conn_box)
+        for cp in w.connected_provisions:
+            btn = QPushButton(cp["ref"])
+            btn.setToolTip(cp.get("title", ""))
+            btn.clicked.connect(lambda checked=False, target=cp: self._jump_to_provision(target))
+            conn_layout.addWidget(btn)
+        conn_layout.addStretch(1)
+        self.vlayout.addWidget(conn_box)
 
     def _jump_to_provision(self, cp):
         ref_text = cp["ref"]
@@ -941,6 +1073,9 @@ class MainWindow(QMainWindow):
 
         self.templates_tab = DraftingTemplatesTab(self.db, self._jump)
         tabs.addTab(self.templates_tab, "Drafting Templates")
+
+        self.execution_tab = ExecutionNavigatorTab(self.db, self._jump)
+        tabs.addTab(self.execution_tab, "Execution Navigator")
 
         self.search_tab = SearchTab(self.db, self._jump)
         tabs.addTab(self.search_tab, "Search")

@@ -91,10 +91,17 @@ Open `http://localhost:5000` in your browser.
     - **Statutory Notice to Government (Section 80 CPC)** (2-month mandatory pre-suit notice).
     - **Plaint General Skeleton (Order VII CPC)** (chronological facts, cause of action, valuation, jurisdiction, prayer, verification).
     - **Written Statement General Skeleton (Order VIII CPC)** (preliminary objections, specific para-wise denials, verification).
-  - Features 1-click clipboard copy on desktop and web, in-app draft editor, downloadable `.txt` files, and connected statutory cross-links.
+- **Order XXI Execution Roadmap & Navigator**:
+  - 5 interactive execution pathways navigating the 106 rules of Order XXI:
+    - **Money Decrees (Attachment & Sale)**: 9 sequential stages covering limitation audits, Rule 11 petitions, Rule 22 notices, Rule 41 asset disclosures, Rule 43/46/48/54 attachments, Section 60 statutory exemptions, Rule 58 claims, Rule 64–72 auctions, Rule 89/90 setting aside sale, and Rule 92/94 confirmation.
+    - **Delivery of Immovable Property (Possession)**: Actual physical possession (Rule 35(1)), symbolic delivery (Rule 36), police protection applications, Rule 97 resistance removal, Rule 99 dispossession, and Rule 101 full title trials.
+    - **Injunction & Specific Performance Decrees**: Rule 34 court-executed conveyance, Rule 32 attachment/civil prison, and Rule 32(5) court-appointed commissioner.
+    - **Garnishee Proceedings**: Rules 46A–46I third-party debt recovery and statutory discharge.
+    - **Arrest & Detention in Civil Prison**: Section 51 Proviso means test, Section 56 absolute protection for women, Section 58 duration tiers, Rule 37 show-cause notice, and Rule 39 subsistence allowance.
+  - Features sequential stage timeline, governing statutory rule badges, limitation indicators, advocate tactical insights, and one-click provision jumps.
 - **Web Companion (`web/`)**:
   - Lightweight, server-rendered Flask web app sharing the exact same underlying SQLite database and deterministic logic.
-  - Accessible from chambers, mobile, or home for quick statutory lookups, checklists, and drafting templates.
+  - Accessible from chambers, mobile, or home for quick statutory lookups, checklists, templates, and execution workflows.
 
 ## Architecture
 
@@ -102,14 +109,16 @@ Open `http://localhost:5000` in your browser.
 - `limitation_data.py` — Structured statutory dataset for The Limitation Act, 1963 (Sections 1–32 + Schedule Articles 1–137).
 - `checklists_data.py` — Structured courtroom practice checklists, statutory grounds, and landmark precedents.
 - `templates_data.py` — Structured court-ready petition templates, statutory notices, and execution formats.
+- `execution_data.py` — Structured Order XXI execution workflows, sequential stages, and advocate tactics.
 - `deadlines.py` — Fixed CPC deadline rules, Limitation Act schedule rules, and Section 12 exclusion arithmetic.
 - `xref.py` — Deterministic in-text cross-reference extraction and database resolution.
 - `state_amend.py` — Deterministic state-amendment blob splitter.
-- `main.py` — PySide6 desktop interface (Explorer, Practice Checklists, Drafting Templates, Search, Bookmarks, Deadline & Limitation Tracker).
+- `main.py` — PySide6 desktop interface (Explorer, Practice Checklists, Drafting Templates, Execution Navigator, Search, Bookmarks, Deadline & Limitation Tracker).
 - `web/` — Flask web companion application (`app.py`, templates, responsive CSS, and tests).
 - `build_cpc_db.py` — Ingestion and database compilation script.
-- `tests/` — Desktop regression test suite covering `test_templates.py`, `test_checklists.py`, `test_limitation.py`, `test_deadlines.py`, `test_state_amend.py`, and `test_xref.py` (38 tests).
-- `web/tests/` — Web test suite covering all 30 web routes, templates, checklists, and calculator endpoints.
+- `tests/` — Desktop regression test suite covering `test_execution.py`, `test_templates.py`, `test_checklists.py`, `test_limitation.py`, `test_deadlines.py`, `test_state_amend.py`, and `test_xref.py` (43 tests).
+- `web/tests/` — Web test suite covering all 34 web routes, execution roadmaps, templates, checklists, and calculator endpoints.
+
 
 
 

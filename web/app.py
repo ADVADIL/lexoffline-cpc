@@ -379,8 +379,67 @@ def template_detail(template_id):
                            connected_links=resolved_links)
 
 
+import execution_data as edata
+
+# --- Order XXI Execution Navigator ---
+
+@app.route('/execution')
+def execution_index():
+    workflows = edata.list_execution_workflows()
+    return render_template('execution_index.html', workflows=workflows)
+
+
+@app.route('/execution/<workflow_id>')
+def execution_detail(workflow_id):
+    w = edata.get_execution_workflow(workflow_id)
+    if not w:
+        abort(404)
+    db = get_db()
+
+    # Resolve connected provisions to web URLs
+    resolved_links = []
+    for cp in w.connected_provisions:
+        ref_text = cp["ref"]
+        url = None
+        if "Section" in ref_text:
+            s_no = ref_text.replace("Section", "").strip().split()[0]
+            if cp.get("kind") == "limitation_section":
+                row = db.get_limitation_section_by_no(s_no)
+                if row:
+                    url = f"/limitation/section/{row['id']}"
+            else:
+                row = db.get_section_by_no(s_no)
+                if row:
+                    url = f"/cpc/section/{row['id']}"
+        elif "Article" in ref_text:
+            a_no = ref_text.replace("Article", "").strip().split("(")[0].strip()
+            row = db.find_article_by_no(a_no)
+            if row:
+                url = f"/limitation/article/{row['id']}"
+        elif "Order" in ref_text and "Rule" in ref_text:
+            parts = ref_text.replace("Order", "").split("Rule")
+            o_no = parts[0].strip()
+            r_no = parts[1].strip().split("(")[0].strip()
+            row = db.find_rule_in_order(o_no, r_no)
+            if row:
+                url = f"/cpc/rule/{row['id']}"
+        elif "Order" in ref_text:
+            url = "/cpc/orders"
+
+        resolved_links.append({
+            "ref": cp["ref"],
+            "title": cp.get("title", ""),
+            "url": url
+        })
+
+    return render_template('execution_detail.html',
+                           workflow=w,
+                           connected_links=resolved_links)
+
+
 
 import limitation_data as ld
+
 
 
 # --- Deadline Calculator ---
