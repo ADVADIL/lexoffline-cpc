@@ -1,34 +1,57 @@
 {% extends "base.html" %}
 
-{% block title %}LexOffline — CPC 1908 & Limitation Act 1963{% endblock %}
+{% block title %}LexOffline — Civil Litigation Reference Suite (CPC, Limitation & SRA){% endblock %}
 
 {% block content %}
 <div class="home-hero">
     <h1>LexOffline</h1>
-    <p class="subtitle">Offline-first statutory reference for Indian civil litigation.</p>
-    <p>Access the Code of Civil Procedure, 1908 and the Limitation Act, 1963 without an internet connection.</p>
+    <p class="subtitle">Offline-first statutory reference and practice toolkit for Indian civil litigation.</p>
+    <p>Complete bare-act reference for the Civil Procedure Trilogy: Code of Civil Procedure 1908, Limitation Act 1963, and Specific Relief Act 1963.</p>
 </div>
 
-<div class="card-grid">
+<div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
     <a href="/cpc/sections" class="card">
         <h2>Code of Civil Procedure, 1908</h2>
-        <p>Browse sections, orders, rules, state amendments, and cross-references.</p>
+        <p>158 sections, 51 orders, 714 rules, state amendments for 11 states, and automatic cross-references.</p>
     </a>
     
     <a href="/limitation/sections" class="card">
         <h2>Limitation Act, 1963</h2>
-        <p>Browse sections and the complete schedule of articles with limitation periods.</p>
+        <p>32 sections and all 137 schedule articles with trigger events, computation rules, and Section 12 exclusions.</p>
+    </a>
+
+    <a href="/sra/sections" class="card">
+        <h2>Specific Relief Act, 1963</h2>
+        <p>Complete 42 sections + Infrastructure Schedule, incorporating the mandatory 2018 Specific Performance amendments.</p>
     </a>
 </div>
 
-<div class="action-links">
-    <h3>Tools</h3>
-    <ul>
-        <li><a href="/search">Search Provisions</a></li>
-        <li><a href="/deadline">Deadline Calculator</a></li>
+<div class="card-grid" style="margin-top: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+    <a href="/diary" class="card" style="border-left: 4px solid #3182ce;">
+        <h3>📅 Chamber Case Diary</h3>
+        <p>Track civil matters, 10 procedural stages, and hearing history.</p>
+    </a>
+    <a href="/checklists" class="card" style="border-left: 4px solid #38a169;">
+        <h3>📋 17 Practice Checklists</h3>
+        <p>Statutory compliance tests &amp; landmark Supreme Court principles.</p>
+    </a>
+    <a href="/templates" class="card" style="border-left: 4px solid #d69e2e;">
+        <h3>📄 54 Drafting Templates</h3>
+        <p>Court-tested IAs, plaints, execution petitions, and appeals.</p>
+    </a>
+    <a href="/execution" class="card" style="border-left: 4px solid #805ad5;">
+        <h3>🔨 Execution Navigator</h3>
+        <p>5 interactive Order XXI execution pathways with statutory tactics.</p>
+    </a>
+</div>
+
+<div class="action-links" style="margin-top: 2rem;">
+    <h3>Tools &amp; Desktop App</h3>
+    <ul style="margin-bottom: 1rem;">
+        <li><a href="/search">🔍 Full-Text Search across CPC, Limitation &amp; SRA</a></li>
+        <li><a href="/deadline">⏱️ Deadline &amp; Limitation Calculator</a></li>
     </ul>
 
-    <h3>Desktop App</h3>
-    <p><a href="https://github.com/ADVADIL/lexoffline-cpc/releases" target="_blank" rel="noopener noreferrer" class="btn">Download for Windows/Mac/Linux</a></p>
+    <p><a href="https://github.com/ADVADIL/lexoffline-cpc/releases" target="_blank" rel="noopener noreferrer" class="btn">Download Desktop App for Windows/Mac/Linux</a></p>
 </div>
 {% endblock %}

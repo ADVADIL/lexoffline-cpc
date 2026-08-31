@@ -221,6 +221,31 @@ class ActDatabase:
             "SELECT * FROM limitation_articles WHERE cpc_ref LIKE ? ORDER BY id", (like,)
         ).fetchall()
 
+    # ---------- The Specific Relief Act, 1963 ----------
+    def sra_sections_by_part(self):
+        from collections import OrderedDict
+        rows = self.conn.execute(
+            "SELECT id, section_no, title, part, chapter FROM sra_sections ORDER BY id"
+        ).fetchall()
+        parts = OrderedDict()
+        for r in rows:
+            p = r["part"] or "OTHER"
+            parts.setdefault(p, []).append(r)
+        return parts
+
+    def get_sra_section(self, section_id):
+        return self.conn.execute(
+            "SELECT * FROM sra_sections WHERE id=?", (section_id,)
+        ).fetchone()
+
+    def get_sra_section_by_no(self, section_no):
+        return self.conn.execute(
+            "SELECT * FROM sra_sections WHERE section_no=? ORDER BY id LIMIT 1", (str(section_no),)
+        ).fetchone()
+
+    def all_sra_sections(self):
+        return self.conn.execute("SELECT * FROM sra_sections ORDER BY id").fetchall()
+
     # ---------- case diary ----------
     def add_case(self, case_no, court_name, client_name, client_role="Plaintiff",
                  opposite_party="", opposite_counsel="", stage="", next_date="", notes=""):

@@ -241,6 +241,65 @@ def limitation_article(id):
                            article_data=article_data)
 
 
+# --- The Specific Relief Act, 1963 ---
+
+@app.route('/sra/sections')
+def sra_sections():
+    db = get_db()
+    parts_raw = db.sra_sections_by_part()
+    parts = {}
+    for part_name, secs in parts_raw.items():
+        parts[part_name] = rows_to_dicts(secs)
+    return render_template('sra_sections.html', parts=parts)
+
+
+@app.route('/sra/section/<int:id>')
+def sra_section(id):
+    db = get_db()
+    row = db.get_sra_section(id)
+    if not row:
+        abort(404)
+
+    sec = row_to_dict(row)
+    sec_no = sec['section_no']
+    title = f"Specific Relief Act 1963 — Section {sec_no}: {sec['title']}"
+
+    # Map connected provisions
+    connected_links = []
+    if sec_no in ('5', '6'):
+        connected_links.extend([
+            {"ref": "Order XXI", "title": "Execution of Decrees for Possession", "url": "/cpc/orders"},
+            {"ref": "Article 64", "title": "Suit based on previous possession (12 years)", "url": "/limitation/articles"},
+            {"ref": "Article 65", "title": "Suit for possession of immovable property based on title (12 years)", "url": "/limitation/articles"}
+        ])
+    elif sec_no in ('10', '14', '14A', '16', '20', '20A', '20B', '20C', '21', '22'):
+        connected_links.extend([
+            {"ref": "Article 54", "title": "Suit for specific performance of a contract (3 years)", "url": "/limitation/articles"},
+            {"ref": "Template: Specific Performance Plaint", "title": "Standard Plaint for Specific Performance", "url": "/template/plaint_specific_performance"}
+        ])
+    elif sec_no in ('31', '32', '33'):
+        connected_links.extend([
+            {"ref": "Article 59", "title": "To cancel or set aside an instrument (3 years)", "url": "/limitation/articles"},
+            {"ref": "Template: Cancellation of Deed", "title": "Plaint for Cancellation of Voidable Sale Deed", "url": "/template/plaint_cancellation_deed"}
+        ])
+    elif sec_no in ('34', '35'):
+        connected_links.extend([
+            {"ref": "Article 58", "title": "To obtain any other declaration (3 years)", "url": "/limitation/articles"},
+            {"ref": "Template: Declaration of Title", "title": "Plaint for Declaration of Title & Possession", "url": "/template/plaint_declaration_possession"}
+        ])
+    elif sec_no in ('36', '37', '38', '39', '40', '41', '42'):
+        connected_links.extend([
+            {"ref": "Order XXXIX Rules 1 & 2", "title": "Temporary Injunctions", "url": "/cpc/orders"},
+            {"ref": "Checklist: Order XXXIX", "title": "Temporary Injunction 3-Prong Statutory Test", "url": "/checklist/o39_r1_2"},
+            {"ref": "Template: Temporary Injunction", "title": "Order XXXIX Application & Affidavit", "url": "/template/injunction_o39_r1_2"}
+        ])
+
+    return render_template('sra_detail.html',
+                           section=sec,
+                           title=title,
+                           connected_links=connected_links)
+
+
 # --- Search ---
 
 @app.route('/search')

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - LexOffline{% endblock %}
+
+{% block content %}
+<div class="provision-header" style="margin-bottom: 1.25rem;">
+    <div style="margin-bottom: 0.5rem;">
+        <a href="/sra/sections" style="color: #2b6cb0; text-decoration: none; font-size: 0.9rem;">&larr; All SRA Sections</a>
+    </div>
+    <span class="badge" style="background: #ebf8ff; color: #2b6cb0; font-size: 0.8rem; font-weight: bold; padding: 3px 8px; border-radius: 4px;">
+        {{ section.part }} &bull; {{ section.chapter }}
+    </span>
+    <h1 style="margin-top: 0.5rem; font-size: 1.6rem; color: #1a365d;">
+        {% if section.section_no == 'Schedule' %}The Schedule{% else %}Section {{ section.section_no }}.{% endif %} {{ section.title }}
+    </h1>
+</div>
+
+<div class="provision-body panel" style="background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 0.75rem;">
+        <button onclick="copySectionText()" class="btn" style="padding: 5px 12px; font-size: 0.85rem; background: #2b6cb0; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
+            📋 Copy Section Text
+        </button>
+    </div>
+    <pre id="section-content" style="font-family: Georgia, 'Times New Roman', serif; font-size: 1.05rem; line-height: 1.65; white-space: pre-wrap; margin: 0; color: #2d3748;">{{ section.text }}</pre>
+</div>
+
+{% if connected_links %}
+<div class="connected-section panel" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; background: #fff;">
+    <h3 style="margin-top: 0; font-size: 1.1rem; color: #1a365d;">🔗 Connected CPC Provisions &amp; Limitation Articles</h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem;">
+        {% for cl in connected_links %}
+            {% if cl.url %}
+            <a href="{{ cl.url }}" class="btn" style="padding: 6px 12px; background: #edf2f7; color: #2b6cb0; text-decoration: none; border-radius: 4px; font-size: 0.88rem; font-weight: 600; border: 1px solid #cbd5e0;">
+                {{ cl.ref }} &mdash; {{ cl.title }}
+            </a>
+            {% else %}
+            <span style="padding: 6px 12px; background: #f7fafc; color: #718096; border-radius: 4px; font-size: 0.88rem; border: 1px solid #e2e8f0;">
+                {{ cl.ref }} &mdash; {{ cl.title }}
+            </span>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<script>
+function copySectionText() {
+    const text = document.getElementById('section-content').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+        alert("Section text copied to clipboard!");
+    });
+}
+</script>
+{% endblock %}

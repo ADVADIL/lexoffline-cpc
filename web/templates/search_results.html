@@ -24,6 +24,7 @@
                         {% elif result.kind == 'appendix' %}/cpc/appendix/{{ result.ref_id }}
                         {% elif result.kind == 'limitation_section' %}/limitation/section/{{ result.ref_id }}
                         {% elif result.kind == 'limitation_article' %}/limitation/article/{{ result.ref_id }}
+                        {% elif result.kind == 'sra_section' %}/sra/section/{{ result.ref_id }}
                         {% endif %}
                     ">
                         <h3>{{ result.label }}</h3>

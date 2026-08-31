@@ -350,6 +350,40 @@ def test_diary_case_404():
     assert resp.status_code == 404
 
 
+def test_sra_sections():
+    resp = _client().get('/sra/sections')
+    assert resp.status_code == 200
+    assert b'The Specific Relief Act, 1963' in resp.data
+    assert b'PART II' in resp.data
+    assert b'Section 10' in resp.data
+
+
+def test_sra_section_detail_sec10():
+    resp = _client().get('/sra/section/10')
+    assert resp.status_code == 200
+    assert b'Specific performance in respect of contracts' in resp.data
+    assert b'shall be enforced by the court' in resp.data
+    assert b'Article 54' in resp.data
+
+
+def test_sra_section_detail_sec20a():
+    resp = _client().get('/sra/section/22')
+    assert resp.status_code == 200
+    assert b'infrastructure project' in resp.data
+
+
+def test_sra_section_404():
+    resp = _client().get('/sra/section/9999')
+    assert resp.status_code == 404
+
+
+def test_search_sra_provisions():
+    resp = _client().get('/search?q=substituted+performance')
+    assert resp.status_code == 200
+    assert b'SRA Section 20' in resp.data
+    assert b'/sra/section/' in resp.data
+
+
 if __name__ == '__main__':
     tests = [v for k, v in globals().items() if k.startswith('test_')]
     for t in tests:

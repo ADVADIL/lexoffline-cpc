@@ -1,7 +1,7 @@
-# LexOffline — CPC, 1908 & The Limitation Act, 1963 Module
+# LexOffline — CPC 1908, Limitation Act 1963 & Specific Relief Act 1963
 
-Offline desktop app (Python + PySide6 + local SQLite) for the **Code of
-Civil Procedure, 1908** and **The Limitation Act, 1963**. Part of the
+Offline desktop app (Python + PySide6 + local SQLite) and companion web application for the **Code of
+Civil Procedure, 1908**, **The Limitation Act, 1963**, and **The Specific Relief Act, 1963** (incorporating all amendments up to Act 18 of 2018). Part of the
 LexOffline suite, built to the same rule: every fact shown comes from the
 local database or from plain, auditable arithmetic — nothing is generated
 or inferred by a model.
@@ -56,16 +56,17 @@ Open `http://localhost:5000` in your browser.
 
 ## What's in this build
 
-- **Act Explorer (Dual Statutory Coverage)**:
+- **Act Explorer (The Civil Litigation Trilogy)**:
   - **Code of Civil Procedure, 1908**: Sections 1–158 (by Part), Orders I–LI with all Rules, Appendices A–I.
   - **The Limitation Act, 1963**: Full substantive Sections 1–32 (Parts I–V) plus the complete Schedule of Articles 1–137 (First Division: Suits, Second Division: Appeals, Third Division: Applications).
+  - **The Specific Relief Act, 1963**: Sections 1–42 across Parts I–III and Chapters I–VIII, plus The Schedule of Infrastructure Sub-Sectors (Sections 20A & 41(ha)). Fully incorporates the mandatory 2018 Specific Performance amendments (Act 18 of 2018).
 - **Cross-References & Limitation Linkage**:
   - Deterministic in-text citation detection ("Section 47", "Order XXI Rule 54", "O. XXI, R. 58", etc.), resolved against the local database.
-  - **CPC ↔ Limitation Linkage**: Automatically surfaces corresponding Limitation Articles when viewing CPC provisions (e.g. Order IX Rule 13 ↔ Article 123, Order XXII ↔ Articles 120/121, Order XLI ↔ Article 116, Order XXI ↔ Articles 127–136, Section 115 ↔ Article 131).
+  - **CPC ↔ Limitation ↔ SRA Linkage**: Automatically surfaces corresponding provisions (e.g. Order IX Rule 13 ↔ Article 123, Order XXII ↔ Articles 120/121, Order XXXIX ↔ SRA Sections 36–42, Specific Performance plaints ↔ SRA Sections 10/16/20/22 & Limitation Article 54, Declaration suits ↔ SRA Section 34 & Limitation Article 58).
 - **Full-Text Search (SQLite FTS5)**:
-  - Instant full-text search indexing CPC sections, rules, appendices, Limitation Act sections, and all 137 schedule articles.
+  - Instant full-text search indexing CPC sections, rules, appendices, Limitation Act sections, all 137 limitation schedule articles, and all Specific Relief Act provisions.
 - **Bookmarks and Notes**:
-  - Per-provision bookmarks and personal notes stored locally for both CPC and Limitation Act provisions.
+  - Per-provision bookmarks and personal notes stored locally for CPC, Limitation Act, and Specific Relief Act provisions.
 - **State Amendment Toggle (CPC)**:
   - View selector on every CPC Section/Rule across 11 states, deterministically split on source state headers.
 - **Deadline & Limitation Tracker**:

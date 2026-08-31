@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}The Specific Relief Act, 1963 - Sections - LexOffline{% endblock %}
+
+{% block content %}
+<div class="header-section" style="margin-bottom: 1.5rem;">
+    <h1>The Specific Relief Act, 1963</h1>
+    <p class="subtitle">Act No. 47 of 1963 &bull; Incorporating all amendments up to the Specific Relief (Amendment) Act, 2018 (Act 18 of 2018, w.e.f. 01-10-2018)</p>
+</div>
+
+<div class="provision-list">
+    {% for part_name, sections in parts.items() %}
+    <details class="part-group" open style="margin-bottom: 1.25rem;">
+        <summary style="cursor: pointer; padding: 0.5rem; background: #edf2f7; border-radius: 6px; font-weight: bold; color: #1a365d;">
+            <h2 style="display: inline; font-size: 1.15rem; margin-left: 0.5rem;">{{ part_name }}</h2>
+        </summary>
+        <ul class="item-list" style="list-style: none; padding-left: 0.5rem; margin-top: 0.5rem;">
+            {% for section in sections %}
+            <li style="padding: 0.4rem 0; border-bottom: 1px solid #f0f4f8;">
+                <a href="/sra/section/{{ section.id }}" style="text-decoration: none; color: #2b6cb0; display: flex; gap: 0.75rem; align-items: baseline;">
+                    <span class="item-no" style="font-weight: bold; min-width: 110px; color: #1a365d;">
+                        {% if section.section_no == 'Schedule' %}The Schedule{% else %}Section {{ section.section_no }}.{% endif %}
+                    </span>
+                    <span class="item-title" style="color: #2d3748;">{{ section.title }}</span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </details>
+    {% endfor %}
+</div>
+{% endblock %}

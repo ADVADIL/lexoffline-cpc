@@ -182,6 +182,22 @@ class ExplorerTab(QWidget):
                     it.setData(0, Qt.UserRole, ("limitation_article", a["id"]))
                     p_item.addChild(it)
 
+        # === 3. THE SPECIFIC RELIEF ACT, 1963 ===
+        sra_root = QTreeWidgetItem(["📜 The Specific Relief Act, 1963"])
+        sra_root.setFont(0, bold_font)
+        self.tree.addTopLevelItem(sra_root)
+
+        sra_parts = self.db.sra_sections_by_part()
+        for part_name, rows in sra_parts.items():
+            part_item = QTreeWidgetItem([part_name])
+            sra_root.addChild(part_item)
+            for r in rows:
+                sec_no = r["section_no"]
+                label = "The Schedule" if sec_no == "Schedule" else f"S.{sec_no}"
+                it = QTreeWidgetItem([f"{label} — {r['title']}"])
+                it.setData(0, Qt.UserRole, ("sra_section", r["id"]))
+                part_item.addChild(it)
+
         cpc_root.setExpanded(True)
 
     def _on_tree_click(self, item, _col):
@@ -233,6 +249,14 @@ class ExplorerTab(QWidget):
                    f"<b>Connected CPC Provisions:</b> {html_escape(row['cpc_ref'] or 'None explicitly indexed')}"
             state_blob = ""
             is_limitation = True
+        elif kind == "sra_section":
+            row = self.db.get_sra_section(ref_id)
+            sec_no = row['section_no']
+            label = "The Schedule" if sec_no == "Schedule" else f"Section {sec_no}"
+            title = f"Specific Relief Act 1963 — {label}: {row['title']} [{row['part']}]"
+            body = row["text"]
+            state_blob = ""
+            is_limitation = False
         else:
             return
         self._show(kind, ref_id, title, body, state_blob, is_limitation)
@@ -695,7 +719,12 @@ class ChecklistsTab(QWidget):
         ref_text = cp["ref"]
         if "Section" in ref_text:
             s_no = ref_text.replace("Section", "").strip().split()[0]
-            if cp.get("kind") == "limitation_section":
+            if cp.get("kind") == "sra_section" or "Specific Relief" in cp.get("title", "") or "SRA" in ref_text:
+                row = self.db.get_sra_section_by_no(s_no)
+                if row:
+                    self.on_jump("sra_section", row["id"])
+                    return
+            elif cp.get("kind") == "limitation_section":
                 row = self.db.get_limitation_section_by_no(s_no)
                 if row:
                     self.on_jump("limitation_section", row["id"])
@@ -850,7 +879,12 @@ class DraftingTemplatesTab(QWidget):
         ref_text = cp["ref"]
         if "Section" in ref_text:
             s_no = ref_text.replace("Section", "").strip().split()[0]
-            if cp.get("kind") == "limitation_section":
+            if cp.get("kind") == "sra_section" or "Specific Relief" in cp.get("title", "") or "SRA" in ref_text:
+                row = self.db.get_sra_section_by_no(s_no)
+                if row:
+                    self.on_jump("sra_section", row["id"])
+                    return
+            elif cp.get("kind") == "limitation_section":
                 row = self.db.get_limitation_section_by_no(s_no)
                 if row:
                     self.on_jump("limitation_section", row["id"])
