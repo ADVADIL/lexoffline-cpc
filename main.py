@@ -9,8 +9,8 @@ import sys
 import os
 from datetime import date
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QFont, QGuiApplication
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QTreeWidget, QTreeWidgetItem, QTextBrowser, QLineEdit, QLabel,
@@ -25,6 +25,7 @@ from state_amend import KNOWN_STATES, states_present, text_for_state
 import deadlines as dl
 import limitation_data as ld
 import checklists_data as cd
+import templates_data as tdata
 
 
 def html_escape(s):
@@ -690,7 +691,153 @@ class ChecklistsTab(QWidget):
 
     def _jump_to_provision(self, cp):
         ref_text = cp["ref"]
-        # Try to resolve to kind and id
+        if "Section" in ref_text:
+            s_no = ref_text.replace("Section", "").strip().split()[0]
+            if cp.get("kind") == "limitation_section":
+                row = self.db.get_limitation_section_by_no(s_no)
+                if row:
+                    self.on_jump("limitation_section", row["id"])
+                    return
+            else:
+                row = self.db.get_section_by_no(s_no)
+                if row:
+                    self.on_jump("section", row["id"])
+                    return
+        elif "Article" in ref_text:
+            a_no = ref_text.replace("Article", "").strip().split("(")[0].strip()
+            row = self.db.find_article_by_no(a_no)
+            if row:
+                self.on_jump("limitation_article", row["id"])
+                return
+        elif "Order" in ref_text and "Rule" in ref_text:
+            parts = ref_text.replace("Order", "").split("Rule")
+            o_no = parts[0].strip()
+            r_no = parts[1].strip().split("(")[0].strip()
+            row = self.db.find_rule_in_order(o_no, r_no)
+            if row:
+                self.on_jump("rule", row["id"])
+                return
+        elif "Order" in ref_text:
+            o_no = ref_text.replace("Order", "").strip()
+            row = self.db.find_order_by_no(o_no)
+            if row:
+                self.on_jump("order", row["id"])
+                return
+
+
+class DraftingTemplatesTab(QWidget):
+    """Court-ready drafting templates & fillable form library."""
+
+    def __init__(self, db: ActDatabase, on_jump):
+        super().__init__()
+        self.db = db
+        self.on_jump = on_jump
+
+        layout = QHBoxLayout(self)
+        splitter = QSplitter(Qt.Horizontal)
+        layout.addWidget(splitter)
+
+        # Left panel: category filter + template list
+        left = QWidget()
+        left_layout = QVBoxLayout(left)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.cat_combo = QComboBox()
+        self.cat_combo.addItem("All Categories", None)
+        for cat in tdata.list_template_categories():
+            self.cat_combo.addItem(cat, cat)
+        self.cat_combo.currentIndexChanged.connect(self._populate_list)
+        left_layout.addWidget(self.cat_combo)
+
+        self.list_widget = QListWidget()
+        self.list_widget.itemClicked.connect(self._on_item_clicked)
+        left_layout.addWidget(self.list_widget, stretch=1)
+        splitter.addWidget(left)
+
+        # Right panel: template viewer & editor
+        right = QWidget()
+        rlayout = QVBoxLayout(right)
+
+        # Top bar with title and copy button
+        top_bar = QHBoxLayout()
+        self.title_label = QLabel("Select a template")
+        self.title_label.setStyleSheet("font-weight: 600; font-size: 13pt; color: #1a365d;")
+        self.title_label.setWordWrap(True)
+        top_bar.addWidget(self.title_label, stretch=1)
+
+        self.copy_btn = QPushButton("📋 Copy to Clipboard")
+        self.copy_btn.setStyleSheet("font-weight: bold; padding: 6px 14px; background: #2b6cb0; color: white;")
+        self.copy_btn.clicked.connect(self._copy_to_clipboard)
+        top_bar.addWidget(self.copy_btn)
+        rlayout.addLayout(top_bar)
+
+        self.notes_label = QLabel("")
+        self.notes_label.setStyleSheet("color: #4a5568; background: #f7fafc; border-left: 3px solid #3182ce; padding: 6px;")
+        self.notes_label.setWordWrap(True)
+        rlayout.addWidget(self.notes_label)
+
+        # Editor
+        self.editor = QPlainTextEdit()
+        font = QFont("Courier New", 10)
+        self.editor.setFont(font)
+        rlayout.addWidget(self.editor, stretch=1)
+
+        # Connected provisions
+        self.conn_row = QHBoxLayout()
+        self.conn_widget = QWidget()
+        self.conn_widget.setLayout(self.conn_row)
+        rlayout.addWidget(self.conn_widget)
+
+        splitter.addWidget(right)
+        splitter.setSizes([320, 680])
+        self._populate_list()
+
+        if self.list_widget.count() > 0:
+            self.list_widget.setCurrentRow(0)
+            self._on_item_clicked(self.list_widget.item(0))
+
+    def _populate_list(self):
+        self.list_widget.clear()
+        selected_cat = self.cat_combo.currentData()
+        items = tdata.list_templates(category=selected_cat)
+        for t in items:
+            it = QListWidgetItem(f"{t.title}\n[{t.provision}]")
+            it.setData(Qt.UserRole, t.id)
+            self.list_widget.addItem(it)
+
+    def _on_item_clicked(self, item):
+        tid = item.data(Qt.UserRole)
+        t = tdata.get_template(tid)
+        if not t:
+            return
+
+        self.title_label.setText(f"{t.title} [{t.provision}]")
+        self.notes_label.setText(f"<b>Summary:</b> {t.summary}<br><b>Practice Note:</b> {t.practice_notes}")
+        self.editor.setPlainText(t.template_text)
+
+        while self.conn_row.count():
+            child = self.conn_row.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+
+        self.conn_row.addWidget(QLabel("<b>Connected:</b>"))
+        for cp in t.connected_provisions:
+            btn = QPushButton(cp["ref"])
+            btn.setToolTip(cp.get("title", ""))
+            btn.clicked.connect(lambda checked=False, target=cp: self._jump_to_provision(target))
+            self.conn_row.addWidget(btn)
+        self.conn_row.addStretch(1)
+
+    def _copy_to_clipboard(self):
+        text = self.editor.toPlainText()
+        if text:
+            QGuiApplication.clipboard().setText(text)
+            orig_text = self.copy_btn.text()
+            self.copy_btn.setText("✓ Copied to Clipboard!")
+            QTimer.singleShot(2000, lambda: self.copy_btn.setText(orig_text))
+
+    def _jump_to_provision(self, cp):
+        ref_text = cp["ref"]
         if "Section" in ref_text:
             s_no = ref_text.replace("Section", "").strip().split()[0]
             if cp.get("kind") == "limitation_section":
@@ -791,6 +938,9 @@ class MainWindow(QMainWindow):
 
         self.checklists_tab = ChecklistsTab(self.db, self._jump)
         tabs.addTab(self.checklists_tab, "Practice Checklists")
+
+        self.templates_tab = DraftingTemplatesTab(self.db, self._jump)
+        tabs.addTab(self.templates_tab, "Drafting Templates")
 
         self.search_tab = SearchTab(self.db, self._jump)
         tabs.addTab(self.search_tab, "Search")

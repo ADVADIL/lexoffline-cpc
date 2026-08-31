@@ -316,8 +316,72 @@ def checklist_detail(checklist_id):
                            connected_links=resolved_links)
 
 
+import templates_data as tdata
+
+# --- Drafting Templates ---
+
+@app.route('/templates')
+def drafting_templates():
+    selected_cat = request.args.get('category', '')
+    categories = tdata.list_template_categories()
+    items = tdata.list_templates(category=selected_cat if selected_cat else None)
+    return render_template('templates_index.html',
+                           categories=categories,
+                           selected_category=selected_cat,
+                           templates=items)
+
+
+@app.route('/template/<template_id>')
+def template_detail(template_id):
+    t = tdata.get_template(template_id)
+    if not t:
+        abort(404)
+    db = get_db()
+
+    # Resolve connected provisions to web URLs
+    resolved_links = []
+    for cp in t.connected_provisions:
+        ref_text = cp["ref"]
+        url = None
+        if "Section" in ref_text:
+            s_no = ref_text.replace("Section", "").strip().split()[0]
+            if cp.get("kind") == "limitation_section":
+                row = db.get_limitation_section_by_no(s_no)
+                if row:
+                    url = f"/limitation/section/{row['id']}"
+            else:
+                row = db.get_section_by_no(s_no)
+                if row:
+                    url = f"/cpc/section/{row['id']}"
+        elif "Article" in ref_text:
+            a_no = ref_text.replace("Article", "").strip().split("(")[0].strip()
+            row = db.find_article_by_no(a_no)
+            if row:
+                url = f"/limitation/article/{row['id']}"
+        elif "Order" in ref_text and "Rule" in ref_text:
+            parts = ref_text.replace("Order", "").split("Rule")
+            o_no = parts[0].strip()
+            r_no = parts[1].strip().split("(")[0].strip()
+            row = db.find_rule_in_order(o_no, r_no)
+            if row:
+                url = f"/cpc/rule/{row['id']}"
+        elif "Order" in ref_text:
+            url = "/cpc/orders"
+
+        resolved_links.append({
+            "ref": cp["ref"],
+            "title": cp.get("title", ""),
+            "url": url
+        })
+
+    return render_template('template_detail.html',
+                           template=t,
+                           connected_links=resolved_links)
+
+
 
 import limitation_data as ld
+
 
 # --- Deadline Calculator ---
 

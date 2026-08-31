@@ -168,10 +168,44 @@ def test_checklist_404_invalid():
     assert resp.status_code == 404
 
 
+def test_templates_index():
+    resp = _client().get('/templates')
+    assert resp.status_code == 200
+    assert b'Court-Ready Drafting Templates' in resp.data
+    assert b'Caveat Petition' in resp.data
+
+
+def test_templates_category_filter():
+    resp = _client().get('/templates?category=Execution+Proceedings')
+    assert resp.status_code == 200
+    assert b'Tabular Execution Petition' in resp.data
+
+
+def test_template_detail_caveat():
+    resp = _client().get('/template/caveat_sec_148a')
+    assert resp.status_code == 200
+    assert b'Caveat Petition' in resp.data
+    assert b'SECTION 148A' in resp.data
+    assert b'VERIFICATION AFFIDAVIT' in resp.data
+
+
+def test_template_detail_execution_tabular():
+    resp = _client().get('/template/execution_o21_tabular')
+    assert resp.status_code == 200
+    assert b'COLUMN NO.' in resp.data
+    assert b'Order XXI Rule 11' in resp.data
+
+
+def test_template_404_invalid():
+    resp = _client().get('/template/non_existent_template')
+    assert resp.status_code == 404
+
+
 if __name__ == '__main__':
     tests = [v for k, v in globals().items() if k.startswith('test_')]
     for t in tests:
         t()
         print(f'  OK  {t.__name__}')
     print(f'\n>>> ALL {len(tests)} WEB TESTS PASSED! <<<')
+
 

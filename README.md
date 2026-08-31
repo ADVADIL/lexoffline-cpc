@@ -81,23 +81,35 @@ Open `http://localhost:5000` in your browser.
     - **Section 148A**: Caveat Practice (service obligations, 90-day expiry rule).
     - **Section 100**: Second Appeal (Substantial Question of Law test, *Sir Chunilal Mehta* formulation rules, Sections 100A/102 bars).
     - **Section 115**: Civil Revision (3 jurisdictional error tests, 1999 Proviso final-disposition bar, Art. 131 90-day limitation).
-  - Features interactive checkboxes with local browser persistence on web, clickable provision links jumping straight into the Act Explorer, and common pitfall warnings.
+- **Court-Ready Drafting Templates**:
+  - 8 standard court-tested civil drafts with bracketed substitution placeholders:
+    - **Caveat Petition (Section 148A CPC)** + Verification Affidavit + RPAD Notice.
+    - **Temporary Injunction Application (Order XXXIX Rules 1 & 2 CPC)** + Supporting Affidavit + Rule 3 Urgency grounds.
+    - **Setting Aside Ex-Parte Decree (Order IX Rule 13 CPC)** + Section 5 Limitation Condonation Application & Affidavit.
+    - **Tabular Execution Petition (Order XXI Rule 11(2) CPC)** (mandatory 10-column civil execution format).
+    - **Substitution of Legal Representatives (Order XXII Rule 3/4 CPC)** + Surviving legal heirs schedule + Affidavit.
+    - **Statutory Notice to Government (Section 80 CPC)** (2-month mandatory pre-suit notice).
+    - **Plaint General Skeleton (Order VII CPC)** (chronological facts, cause of action, valuation, jurisdiction, prayer, verification).
+    - **Written Statement General Skeleton (Order VIII CPC)** (preliminary objections, specific para-wise denials, verification).
+  - Features 1-click clipboard copy on desktop and web, in-app draft editor, downloadable `.txt` files, and connected statutory cross-links.
 - **Web Companion (`web/`)**:
   - Lightweight, server-rendered Flask web app sharing the exact same underlying SQLite database and deterministic logic.
-  - Accessible from chambers, mobile, or home for quick statutory lookups and checklist verification.
+  - Accessible from chambers, mobile, or home for quick statutory lookups, checklists, and drafting templates.
 
 ## Architecture
 
 - `db.py` — SQLite access layer (`ActDatabase`) querying `cpc_1908.db`.
 - `limitation_data.py` — Structured statutory dataset for The Limitation Act, 1963 (Sections 1–32 + Schedule Articles 1–137).
 - `checklists_data.py` — Structured courtroom practice checklists, statutory grounds, and landmark precedents.
+- `templates_data.py` — Structured court-ready petition templates, statutory notices, and execution formats.
 - `deadlines.py` — Fixed CPC deadline rules, Limitation Act schedule rules, and Section 12 exclusion arithmetic.
 - `xref.py` — Deterministic in-text cross-reference extraction and database resolution.
 - `state_amend.py` — Deterministic state-amendment blob splitter.
-- `main.py` — PySide6 desktop interface (Explorer, Practice Checklists, Search, Bookmarks, Deadline & Limitation Tracker).
+- `main.py` — PySide6 desktop interface (Explorer, Practice Checklists, Drafting Templates, Search, Bookmarks, Deadline & Limitation Tracker).
 - `web/` — Flask web companion application (`app.py`, templates, responsive CSS, and tests).
 - `build_cpc_db.py` — Ingestion and database compilation script.
-- `tests/` — Desktop regression test suite covering `test_checklists.py`, `test_limitation.py`, `test_deadlines.py`, `test_state_amend.py`, and `test_xref.py` (33 tests).
-- `web/tests/` — Web test suite covering all 25 web routes, checklists, and calculator endpoints.
+- `tests/` — Desktop regression test suite covering `test_templates.py`, `test_checklists.py`, `test_limitation.py`, `test_deadlines.py`, `test_state_amend.py`, and `test_xref.py` (38 tests).
+- `web/tests/` — Web test suite covering all 30 web routes, templates, checklists, and calculator endpoints.
+
 
 
