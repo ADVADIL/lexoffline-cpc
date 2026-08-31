@@ -11,6 +11,9 @@ on:
   # release, to test the build itself.
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
