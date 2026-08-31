@@ -27,7 +27,15 @@ Windows will show a blue "Windows protected your PC" SmartScreen warning
 the first time you run it. This is normal for unsigned software and does
 not mean anything is wrong — click **"More info"**, then **"Run anyway"**.
 
-**Linux users:** if the app builds but the window doesn't appear, you may
+**Mac users — the equivalent warning on macOS:** unzip the download, drag
+`LexOfflineCPC.app` to your Applications folder, then macOS will likely
+say it "cannot be opened because the developer cannot be verified." This
+is Gatekeeper, the same kind of unsigned-software warning as Windows
+SmartScreen — **right-click (or Control-click) the app → Open**, then
+confirm **"Open"** in the dialog that appears. You only need to do this
+once; after that it opens normally.
+
+**Linux users:** if the app doesn't open a window when you run it, you may
 be missing `libxcb-cursor0` — install it with your package manager
 (`sudo apt install libxcb-cursor0` on Debian/Ubuntu).
 
