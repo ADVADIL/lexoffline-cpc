@@ -19,7 +19,17 @@ def test_single_state_section():
 
 
 def test_multi_state_section():
-    assert set(states_present(_blob("59"))) == {
+    # This data genuinely belongs to Section 60 ("Property liable to
+    # attachment and sale in execution of decree") — the amendment text
+    # itself says "In clause (g) of the Proviso to sub-section (1) of
+    # section 60...". It was previously stored under Section 59 due to a
+    # parser bug: Section 60's own heading line was corrupted in the
+    # source ("860. Property liable..." instead of "60."), so nothing
+    # marked where Section 59 ended and 60 began, and Section 60's whole
+    # body — including this trailing state-amendments block — got folded
+    # into Section 59's text. Fixed at the source (build_cpc_db.py's
+    # KNOWN_LINE_CORRECTIONS); this test now checks the corrected home.
+    assert set(states_present(_blob("60"))) == {
         "Himachal Pradesh", "Kerala", "Rajasthan", "Tamil Nadu", "Uttar Pradesh",
     }
 
