@@ -54,11 +54,27 @@ class ExplorerTab(QWidget):
         splitter = QSplitter(Qt.Horizontal)
         layout.addWidget(splitter)
 
-        # --- left: tree ---
+        # --- left: tree & quick jump bar ---
+        left_widget = QWidget()
+        left_layout = QVBoxLayout(left_widget)
+        left_layout.setContentsMargins(0, 0, 0, 0)
+
+        jump_row = QHBoxLayout()
+        self.jump_input = QLineEdit()
+        self.jump_input.setPlaceholderText("Quick jump: e.g. O.39 R.1, S.100, Art.54, SRA 16")
+        self.jump_input.returnPressed.connect(self._on_quick_jump)
+        jump_btn = QPushButton("Go")
+        jump_btn.setStyleSheet("font-weight: bold; padding: 4px 10px; background: #2b6cb0; color: white;")
+        jump_btn.clicked.connect(self._on_quick_jump)
+        jump_row.addWidget(self.jump_input, stretch=1)
+        jump_row.addWidget(jump_btn)
+        left_layout.addLayout(jump_row)
+
         self.tree = QTreeWidget()
         self.tree.setHeaderLabels(["Acts & Provisions"])
         self.tree.itemClicked.connect(self._on_tree_click)
-        splitter.addWidget(self.tree)
+        left_layout.addWidget(self.tree, stretch=1)
+        splitter.addWidget(left_widget)
         self._populate_tree()
 
         # --- right: viewer ---
@@ -400,6 +416,15 @@ class ExplorerTab(QWidget):
             return
         kind, ref_id = self.current
         self.db.save_note(kind, ref_id, self.notes_box.toPlainText())
+
+    def _on_quick_jump(self):
+        text = self.jump_input.text().strip()
+        if not text:
+            return
+        results = self.db.search(text, limit=1)
+        if results:
+            top = results[0]
+            self.jump_to(top["kind"], top["ref_id"])
 
     def jump_to(self, kind, ref_id):
         self._load_and_show(kind, ref_id)
@@ -1325,6 +1350,30 @@ class CompositeDrafterTab(QWidget):
             mc_layout.addWidget(lbl)
         self.vlayout.addWidget(mc_box)
 
+        # Parameters Customizer Box
+        param_box = QGroupBox("✏️ Customize Case Particulars (Auto-Substitutes into Pleading)")
+        param_box.setStyleSheet("QGroupBox { font-weight: bold; color: #1a365d; }")
+        form = QFormLayout(param_box)
+        self.param_inputs = {}
+
+        for k, v in p.default_parameters.items():
+            field_label = k.replace("_", " ").title() + ":"
+            if "SCHEDULE" in k or "DESCRIPTION" in k or "EVIDENCE" in k:
+                inp = QPlainTextEdit()
+                inp.setPlainText(str(v))
+                inp.setMaximumHeight(80)
+            else:
+                inp = QLineEdit()
+                inp.setText(str(v))
+            self.param_inputs[k] = inp
+            form.addRow(field_label, inp)
+
+        gen_btn = QPushButton("⚡ Generate Customized Draft")
+        gen_btn.setStyleSheet("font-weight: bold; padding: 6px 14px; background: #2b6cb0; color: white;")
+        gen_btn.clicked.connect(self._apply_custom_params)
+        form.addRow("", gen_btn)
+        self.vlayout.addWidget(param_box)
+
         # Action Buttons
         btn_layout = QHBoxLayout()
         copy_btn = QPushButton("📋 Copy Generated Draft")
@@ -1340,6 +1389,18 @@ class CompositeDrafterTab(QWidget):
         self.draft_editor.setPlainText(p.generate())
         self.draft_editor.setMinimumHeight(450)
         self.vlayout.addWidget(self.draft_editor)
+
+    def _apply_custom_params(self):
+        if not self.current_pleading:
+            return
+        params = {}
+        for k, inp in self.param_inputs.items():
+            if isinstance(inp, QPlainTextEdit):
+                params[k] = inp.toPlainText()
+            else:
+                params[k] = inp.text()
+        custom_draft = self.current_pleading.generate(params)
+        self.draft_editor.setPlainText(custom_draft)
 
     def _copy_draft(self):
         if hasattr(self, 'draft_editor'):

@@ -122,23 +122,135 @@ class ActDatabase:
         return self.conn.execute("SELECT * FROM appendices WHERE id=?", (appendix_id,)).fetchone()
 
     # ---------- search ----------
+    @staticmethod
+    def _int_to_roman(n: int) -> str:
+        val = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]
+        syb = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"]
+        roman = ""
+        for i in range(len(val)):
+            while n >= val[i]:
+                roman += syb[i]
+                n -= val[i]
+        return roman
+
+    def _parse_advocate_query(self, query: str):
+        import re
+        pinned = []
+        q = query.strip()
+
+        # 1. Order and Rule: e.g. "Order 39 Rule 1", "O.39 R.1", "O 39 R 1", "Order XXXIX Rule 1"
+        m_or = re.search(r'(?i)\b(?:order|o)\.?\s*([ivxldcm]+|\d+)\s*(?:rule|r)\.?\s*(\d+[a-z]?)', q)
+        if m_or:
+            raw_order, rule_no = m_or.group(1), m_or.group(2)
+            order_roman = raw_order.upper() if re.match(r'^[ivxldcm]+$', raw_order, re.I) else self._int_to_roman(int(raw_order))
+            rule_row = self.conn.execute(
+                """SELECT r.id, r.rule_no, r.title, o.order_no 
+                   FROM rules r JOIN orders o ON r.order_id=o.id 
+                   WHERE o.order_no=? AND r.rule_no=? LIMIT 1""",
+                (order_roman, rule_no)
+            ).fetchone()
+            if rule_row:
+                pinned.append({
+                    "kind": "rule",
+                    "ref_id": rule_row["id"],
+                    "label": f"Order {rule_row['order_no']}, Rule {rule_row['rule_no']}. {rule_row['title']}",
+                    "snip": f"Direct Citation Match: Order {rule_row['order_no']} Rule {rule_row['rule_no']}"
+                })
+
+        # 2. Section: e.g. "Section 16(c)", "16(c)", "Section 100", "S.100", "SRA Section 16"
+        m_sec = re.search(r'(?i)\b(?:sra\s*)?(?:section|sec|s)\.?\s*(\d+[a-z]?)(?:\s*\(([a-z0-9]+)\))?', q)
+        if not m_sec and re.match(r'^\d+[a-z]?(?:\s*\([a-z0-9]+\))?$', q, re.I):
+            m_sec = re.search(r'^(\d+[a-z]?)(?:\s*\(([a-z0-9]+)\))?', q)
+
+        if m_sec:
+            s_no = m_sec.group(1)
+            if "sra" in q.lower():
+                sra_row = self.conn.execute("SELECT id, section_no, title FROM sra_sections WHERE section_no=? LIMIT 1", (s_no,)).fetchone()
+                if sra_row:
+                    pinned.append({
+                        "kind": "sra_section",
+                        "ref_id": sra_row["id"],
+                        "label": f"SRA Section {sra_row['section_no']}. {sra_row['title']}",
+                        "snip": f"Specific Relief Act, 1963 — Section {sra_row['section_no']}"
+                    })
+            else:
+                sec_row = self.conn.execute("SELECT id, section_no, title FROM sections WHERE section_no=? LIMIT 1", (s_no,)).fetchone()
+                if sec_row:
+                    pinned.append({
+                        "kind": "section",
+                        "ref_id": sec_row["id"],
+                        "label": f"Section {sec_row['section_no']}. {sec_row['title']}",
+                        "snip": f"Code of Civil Procedure, 1908 — Section {sec_row['section_no']}"
+                    })
+                sra_row = self.conn.execute("SELECT id, section_no, title FROM sra_sections WHERE section_no=? LIMIT 1", (s_no,)).fetchone()
+                if sra_row:
+                    pinned.append({
+                        "kind": "sra_section",
+                        "ref_id": sra_row["id"],
+                        "label": f"SRA Section {sra_row['section_no']}. {sra_row['title']}",
+                        "snip": f"Specific Relief Act, 1963 — Section {sra_row['section_no']}"
+                    })
+
+        # 3. Article: e.g. "Article 54", "Art. 54", "Art 136"
+        m_art = re.search(r'(?i)\b(?:article|art)\.?\s*(\d+)', q)
+        if m_art:
+            art_no = m_art.group(1)
+            art_row = self.conn.execute("SELECT id, article_no, period, description FROM limitation_articles WHERE article_no=? LIMIT 1", (art_no,)).fetchone()
+            if art_row:
+                pinned.append({
+                    "kind": "limitation_article",
+                    "ref_id": art_row["id"],
+                    "label": f"Limitation Article {art_row['article_no']} ({art_row['period']})",
+                    "snip": f"{art_row['description'][:120]}"
+                })
+
+        return pinned
+
     def search(self, query, limit=60):
-        if not query.strip():
+        import re
+        q = query.strip()
+        if not q:
             return []
-        try:
-            return self.conn.execute(
-                """SELECT kind, ref_id, label,
-                          snippet(search_index, 3, '[', ']', ' ... ', 12) AS snip
-                   FROM search_index WHERE search_index MATCH ? LIMIT ?""",
-                (query + "*", limit),
-            ).fetchall()
-        except sqlite3.OperationalError:
-            like = f"%{query}%"
-            return self.conn.execute(
+
+        pinned = self._parse_advocate_query(q)
+        pinned_keys = {(p["kind"], p["ref_id"]) for p in pinned}
+
+        fts_results = []
+        # Clean query tokens for FTS5: strip parentheses, quotes, punctuation
+        tokens = [re.sub(r'[^a-zA-Z0-9]', '', t) for t in re.split(r'[\s(),;:]+', q) if t]
+        tokens = [t for t in tokens if t]
+
+        if tokens:
+            fts_q = ' '.join(f'"{t}"*' for t in tokens)
+            try:
+                rows = self.conn.execute(
+                    """SELECT kind, ref_id, label,
+                              snippet(search_index, 3, '[', ']', ' ... ', 12) AS snip
+                       FROM search_index WHERE search_index MATCH ? LIMIT ?""",
+                    (fts_q, limit),
+                ).fetchall()
+                fts_results = [dict(r) for r in rows]
+            except sqlite3.OperationalError:
+                pass
+
+        if not fts_results:
+            like = f"%{q}%"
+            rows = self.conn.execute(
                 """SELECT kind, ref_id, label, substr(body,1,150) AS snip
                    FROM search_index WHERE label LIKE ? OR body LIKE ? LIMIT ?""",
                 (like, like, limit),
             ).fetchall()
+            fts_results = [dict(r) for r in rows]
+
+        # Merge pinned items at top without duplicate
+        combined = list(pinned)
+        for r in fts_results:
+            if (r["kind"], r["ref_id"]) not in pinned_keys:
+                combined.append(r)
+                if len(combined) >= limit:
+                    break
+
+        return combined
 
     # ---------- bookmarks ----------
     def is_bookmarked(self, kind, ref_id):

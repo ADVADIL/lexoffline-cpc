@@ -79,13 +79,21 @@ Open `http://localhost:5000` in your browser.
   - **Cancellation of Void / Voidable Instruments (Sections 31 & 33 SRA)**: Executant vs non-executant distinction (*Suhrid Singh v. Randhir Singh*), ad valorem court fee rules, reasonable apprehension of serious injury, and Section 31(2) mandatory Sub-Registrar notification.
   - **Summary Possessory Suits within 6 Months (Section 6 SRA vs Section 5)**: Prior peaceful juridical possession proof, absolute exclusion of title defense (*Lallu Yeshwant Singh*), strict 6-month limitation bar, bar on suing government, and finality of decree (no appeal/review).
   - **Perpetual & Mandatory Injunctions & Section 41 Statutory Bars**: 10-clause statutory prohibitions audit (restraining judicial proceedings, criminal matters, determinable contracts, equally efficacious remedies under 41(h), and infrastructure projects under 41(ha)).
-- **⚡ Multi-Statute Composite Draft Builder**:
-  - Dynamically synthesizes procedural (CPC), substantive (SRA, TPA, Registration Act), temporal (Limitation Act), and fiscal (State Court Fees Act) provisions into harmonized, court-ready composite legal drafts:
-    - **Specific Performance Composite Plaint**: CPC (Sec 26, O.7 R.1) + SRA (Sec 10, 16(c), 20, 22) + Limitation (Art. 54) + TPA (Sec 55(6)(b) buyer charge) + Ad Valorem Court Fees.
-    - **Declaration of Title, Possession & Mesne Profits Plaint**: CPC (O.7 R.1, O.20 R.12) + SRA (Sec 5, 34 Proviso, 38) + Limitation (Art. 58 & 65) + Court Fees.
-    - **Cancellation of Fraudulent Sale Deed Plaint**: CPC (O.7 R.1) + SRA (Sec 31, 32, 33) + Registration Act / Sec 31(2) decree transmission + Limitation (Art. 59 from discovery of fraud).
-    - **Temporary Injunction Composite Application**: CPC (O.39 R.1 & 2, Sec 151) + SRA (Sec 36, 37, 38, Sec 41 statutory bar audit, Sec 20A / 41(ha) infrastructure non-interference).
-  - Features real-time parameter customization (Court name, parties, property schedule, consideration, dates) with 1-click **Copy to Clipboard** and **Download .txt** export.
+- **⚡ Multi-Statute Composite Draft Builder (8 Complete Harmonized Pleadings)**:
+  - Dynamically synthesizes procedural (CPC), substantive (SRA, TPA, Registration Act, Commercial Courts Act), temporal (Limitation Act), and fiscal (State Court Fees Act) provisions into harmonized, court-ready composite legal drafts:
+    - **1. Specific Performance Composite Plaint**: CPC (Sec 26, O.7 R.1) + SRA (Sec 10, 16(c), 20, 22) + Limitation (Art. 54) + TPA (Sec 55(6)(b) buyer charge) + Ad Valorem Court Fees.
+    - **2. Declaration of Title, Possession & Mesne Profits Plaint**: CPC (O.7 R.1, O.20 R.12) + SRA (Sec 5, 34 Proviso, 38) + Limitation (Art. 58 & 65) + Court Fees.
+    - **3. Cancellation of Fraudulent Sale Deed Plaint**: CPC (O.7 R.1) + SRA (Sec 31, 32, 33) + Registration Act / Sec 31(2) decree transmission + Limitation (Art. 59 from discovery of fraud).
+    - **4. Temporary Injunction Composite Application**: CPC (O.39 R.1 & 2, Sec 151) + SRA (Sec 36, 37, 38, Sec 41 statutory bar audit, Sec 20A / 41(ha) infrastructure non-interference).
+    - **5. Summary Possessory Suit (Section 6 SRA)**: SRA (Sec 6 summary recovery) + CPC (Sec 26, O.7) + Limitation (strict 6-month statutory limit under Sec 6(2)(a)) + Title excluded (*Lallu Yeshwant Singh*).
+    - **6. Commercial Suit Plaint with Statement of Truth**: Commercial Courts Act (Sec 2(1)(c), Sec 12A PIM *Patil Automation*) + CPC (Order VI Rule 15A Statement of Truth, Order XI disclosure) + SRA.
+    - **7. Rescission of Contract Post-Decree (Section 28 SRA)**: SRA (Sec 28(1) & (2) vendor remedy) + CPC (Sec 151 inherent powers, O.21 R.34 stay) + Preliminary decree doctrine (*Ramankutty Guptan*).
+    - **8. Condonation of Delay Composite Application**: Limitation Act (Sec 5 substantive condonation) + CPC (Sec 151, O.41 R.3A, O.9 R.13, O.22 R.9) + *Katiji* doctrine of substantial justice.
+  - **Chamber & Web Customization**: Features real-time parameter customization (Court name, parties, multi-line property schedule with boundaries, consideration, dates) both in the Web app and offline inside the PySide6 Desktop GUI with 1-click **Copy to Clipboard** and **Download .txt** export.
+- **Intelligent Advocate Citation Search Engine & Quick-Jump**:
+  - Auto-translates Arabic order numerals (`Order 39 Rule 1`, `O.39 R.1`, `O7 R11`) into Roman numerals (`Order XXXIX Rule 1`) and pins the exact provision to the top.
+  - Cleans citation punctuation and parentheses so citations like `Section 16(c)`, `16(c)`, `SRA 16`, `Article 54`, `S.100` search cleanly without FTS syntax errors.
+  - **Quick Provision Jump Bar**: Integrated directly above the Desktop Act Explorer tree for split-second courtroom navigation.
 - **Courtroom Practice Checklists (21 Authoritative Statutory Compliance Engines)**:
   - **Trial Court Practice & Pleadings**:
     - **Plaint Institution & Registry Scrutiny (Section 26 & Order VII Rules 1–18 CPC)**: Proper description, cause of action bundle, valuation slip, court fees calculation, boundaries, and Rule 14 document list.

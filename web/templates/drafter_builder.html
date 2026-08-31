@@ -54,13 +54,17 @@
     <summary style="cursor: pointer; font-weight: bold; color: #1a365d; font-size: 1.05rem;">
         ✏️ Customize Case Particulars (Auto-Substitutes into Pleading)
     </summary>
-    <form method="get" action="/drafter/{{ pleading.id }}" style="margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+    <form method="post" action="/drafter/{{ pleading.id }}" style="margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
         {% for key, val in current_params.items() %}
-        <div>
+        <div style="{% if 'SCHEDULE' in key or 'DESCRIPTION' in key %}grid-column: 1 / -1;{% endif %}">
             <label style="display: block; font-size: 0.82rem; font-weight: bold; color: #4a5568; margin-bottom: 0.25rem;">
                 {{ key|replace('_', ' ') }}
             </label>
+            {% if 'SCHEDULE' in key or 'DESCRIPTION' in key %}
+            <textarea name="{{ key }}" rows="4" style="width: 100%; padding: 7px 10px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.9rem; font-family: monospace; box-sizing: border-box;">{{ val }}</textarea>
+            {% else %}
             <input type="text" name="{{ key }}" value="{{ val }}" style="width: 100%; padding: 7px 10px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.9rem; box-sizing: border-box;">
+            {% endif %}
         </div>
         {% endfor %}
         <div style="grid-column: 1 / -1; margin-top: 0.5rem;">

@@ -388,8 +388,289 @@ SCHEDULE OF IMMOVABLE PROPERTY
 Place: [CITY]
 Date: [DATE]
                                                         ADVOCATE FOR APPLICANT"""
+    ),
+    # -------------------------------------------------------------------------
+    # 5. SUMMARY POSSESSION COMPOSITE PLAINT (SECTION 6 SRA)
+    # -------------------------------------------------------------------------
+    CompositePleading(
+        id="composite_summary_possession",
+        title="Composite Plaint for Summary Possession (Section 6 SRA)",
+        remedy_type="Summary Possessory Restitution (Title Excluded)",
+        statutory_header="PLAINT UNDER SECTION 6 OF THE SPECIFIC RELIEF ACT, 1963 READ WITH SECTION 26 AND ORDER VII RULES 1 & 2 OF THE CODE OF CIVIL PROCEDURE, 1908",
+        summary="Composite possessory plaint harmonizing Section 6 SRA summary procedure, Order VII CPC plaint presentation, strict 6-month limitation bar under Section 6(2)(a), and finality of decree under Section 6(3). Proprietary title is strictly excluded.",
+        statutes_merged=[
+            StatutoryComponent("The Specific Relief Act, 1963", "Section 6", "Summary recovery by person dispossessed without consent otherwise than in due course of law. Section 6(2)(a) 6-month bar, Section 6(2)(b) bar on suing government, Section 6(3) bar on appeals/reviews."),
+            StatutoryComponent("Code of Civil Procedure, 1908", "Section 26 & Order VII Rules 1-3", "Plaint verification, immovable property schedule with boundaries, and Section 115 Civil Revision (sole remedy against decree)."),
+            StatutoryComponent("The Limitation Act, 1963", "Section 6(2)(a) SRA Special Limitation", "Absolute 6-month limitation from date of dispossession. Article 64/65 applies only if regular title suit is filed under Section 5 SRA."),
+            StatutoryComponent("State Court Fees Act", "Half / Summary Rate", "Fixed or summary rate prescribed for possessory suits.")
+        ],
+        mandatory_clauses=[
+            {"clause": "Prior Juridical Physical Possession", "requirement": "Averment of peaceful, continuous physical possession immediately prior to dispossession, backed by municipal/utility receipts."},
+            {"clause": "Dispossession Without Consent", "requirement": "Specific date, time, and unlawful high-handed manner of dispossession without due process of law."},
+            {"clause": "Strict 6-Month Statutory Limit", "requirement": "Plea affirming suit is filed within 6 months from the date of dispossession under Section 6(2)(a)."},
+            {"clause": "Exclusion of Proprietary Title", "requirement": "Confining averments to prior possession and dispossession; no title declaration sought under Section 6(4)."}
+        ],
+        default_parameters={
+            "COURT_NAME": "COURT OF THE [SENIOR CIVIL JUDGE / CIVIL JUDGE] AT [CITY]",
+            "SUIT_NO": "O.S. NO. ________ OF 202[ ]",
+            "PLAINTIFF_NAME": "[PLAINTIFF FULL NAME], residing at [ADDRESS]",
+            "DEFENDANT_NAME": "[DEFENDANT FULL NAME], residing at [ADDRESS]",
+            "DISPOSSESSION_DATE": "[EXACT DATE OF UNLAWFUL DISPOSSESSION]",
+            "POSSESSION_EVIDENCE": "[ELECTRICITY BILLS / TAX RECEIPTS / PHOTOGRAPHS DATED ...]",
+            "PROPERTY_SCHEDULE": "[FULL PROPERTY DETAILS AND BOUNDARIES]",
+            "COURT_FEE_PAID": "Rs. [COURT FEE AMOUNT]/-"
+        },
+        template_text="""IN THE [COURT_NAME]
+[SUIT_NO]
+
+IN THE MATTER OF:
+[PLAINTIFF_NAME]                                                          ... PLAINTIFF
+VERSUS
+[DEFENDANT_NAME]                                                          ... DEFENDANT
+
+COMPOSITE PLAINT FOR SUMMARY RESTORATION OF POSSESSION UNDER SECTION 6 OF THE SPECIFIC RELIEF ACT, 1963 READ WITH SECTION 26 AND ORDER VII RULES 1 & 2 OF CPC, 1908
+(PROPRIETARY TITLE STRICTLY EXCLUDED UNDER SECTION 6(1) & (4) SRA)
+
+The Plaintiff above-named respectfully submits as follows:
+
+1. PRIOR PEACEFUL PHYSICAL POSSESSION:
+That immediately prior to the act of unlawful dispossession complained of herein, the Plaintiff was in actual, continuous, uninterrupted, and peaceful juridical possession of the immovable property described in the Schedule hereunder (the "Suit Property"). In proof of continuous prior physical possession, the Plaintiff craves leave to rely upon [POSSESSION_EVIDENCE].
+
+2. UNLAWFUL DISPOSSESSION WITHOUT CONSENT (CAUSE OF ACTION):
+That on [DISPOSSESSION_DATE], the Defendant along with henchmen forcefully and violently trespassed into the Suit Property, broke open the locks, and dispossessed the Plaintiff WITHOUT CONSENT and OTHERWISE THAN IN DUE COURSE OF LAW.
+
+3. STRICT COMPLIANCE WITH SECTION 6(2) STATUTORY JURISDICTION:
+(a) The present suit is instituted strictly within SIX MONTHS from [DISPOSSESSION_DATE], in strict compliance with Section 6(2)(a) of the Specific Relief Act, 1963;
+(b) The Defendant is a private person and NOT the Government, satisfying Section 6(2)(b) SRA.
+
+4. EXCLUSION OF TITLE UNDER SECTION 6:
+That as settled by the Supreme Court in Lallu Yeshwant Singh v. Rao Jagdish Singh (1968) 2 SCR 203, even the rightful owner cannot take the law into his own hands. The Plaintiff is entitled to immediate restoration of possession irrespective of title questions.
+
+PRAYER:
+Wherefore the Plaintiff prays for a judgment and decree:
+(a) Directing the Defendant to quit, vacate, and restore actual physical possession of the Suit Schedule Property to the Plaintiff under Section 6(1) of the Specific Relief Act, 1963;
+(b) Directing the jurisdictional Police to provide assistance to execute the decree; and
+(c) Awarding full costs of this suit.
+
+SCHEDULE OF IMMOVABLE PROPERTY
+[PROPERTY_SCHEDULE]
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR PLAINTIFF"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 6. COMMERCIAL SUIT COMPOSITE PLAINT WITH STATEMENT OF TRUTH
+    # -------------------------------------------------------------------------
+    CompositePleading(
+        id="composite_commercial_suit",
+        title="Composite Plaint in Commercial Suit with Statement of Truth & Mediation",
+        remedy_type="Commercial Dispute Adjudication & Recovery",
+        statutory_header="PLAINT UNDER SECTION 26 AND ORDER VII OF CPC READ WITH COMMERCIAL COURTS ACT, 2015 (SECTIONS 2(1)(c), 12A & 15), ORDER VI RULE 15A CPC (STATEMENT OF TRUTH) AND SRA 1963",
+        summary="Composite commercial suit plaint integrating commercial dispute classification under Section 2(1)(c), Section 12A mandatory Pre-Institution Mediation compliance, Order VI Rule 15A Statement of Truth, Order XI Rule 1 document disclosure, and Specific Relief Act contractual remedies.",
+        statutes_merged=[
+            StatutoryComponent("Commercial Courts Act, 2015", "Sections 2(1)(c), 12A & 15", "Commercial dispute classification, Specified Value threshold exceeding Rs. 3,00,000, and mandatory Section 12A Pre-Institution Mediation Non-Starter Report compliance (Patil Automation)."),
+            StatutoryComponent("Code of Civil Procedure, 1908 (as amended for Commercial Courts)", "Order VI Rule 15A & Order XI", "Mandatory Statement of Truth affidavit under Order VI Rule 15A, strict document disclosure under Order XI, and summary judgment provisions under Order XIII-A."),
+            StatutoryComponent("The Specific Relief Act, 1963", "Sections 10, 14A & 20", "Commercial contract enforcement, Section 14A expert engagement, and Section 20 substituted performance expenses."),
+            StatutoryComponent("The Limitation Act, 1963", "Articles 54 / 55 / 113", "Applicable limitation period for contractual breach.")
+        ],
+        mandatory_clauses=[
+            {"clause": "Section 2(1)(c) Commercial Dispute Averment", "requirement": "Explicit pleading categorizing dispute under specific sub-clause of Section 2(1)(c) (e.g. mercantile transactions, export/import, construction)."},
+            {"clause": "Specified Value Threshold (Sec 2(1)(i))", "requirement": "Valuation slip demonstrating Specified Value exceeds statutory threshold (Rs. 3,00,000/-)."},
+            {"clause": "Section 12A Pre-Institution Mediation Compliance", "requirement": "Production of DLSA Non-Starter Report or specific pleading of urgent interim relief exempting mediation."},
+            {"clause": "Order VI Rule 15A Statement of Truth", "requirement": "FATAL MANDATE: Verification MUST be in the form of a statutory Statement of Truth on solemn affirmation."}
+        ],
+        default_parameters={
+            "COURT_NAME": "COURT OF THE DESIGNATED COMMERCIAL JUDGE / DISTRICT JUDGE AT [CITY]",
+            "SUIT_NO": "COMMERCIAL O.S. NO. ________ OF 202[ ]",
+            "PLAINTIFF_NAME": "[PLAINTIFF COMMERCIAL ENTITY / COMPANY NAME], represented by [AUTHORIZED SIGNATORY]",
+            "DEFENDANT_NAME": "[DEFENDANT COMPANY / ENTITY NAME], having registered office at [ADDRESS]",
+            "DISPUTE_SUB_CLAUSE": "Section 2(1)(c)(i) — Ordinary transactions of merchants, financiers and traders",
+            "SPECIFIED_VALUE": "Rs. [SPECIFIED VALUE EXCEEDING RS. 3 LAKHS]/-",
+            "PIM_DETAILS": "Non-Starter Report issued by [DLSA LOCATION] dated [DATE OF NON-STARTER REPORT]",
+            "INVOICE_DETAILS": "Tax Invoices Nos. [ ] dated [ ] amounting to Rs. [ ]/-",
+            "INTEREST_RATE": "18% per annum (Commercial rate)",
+            "PROPERTY_SCHEDULE": "[DESCRIPTION OF CONTRACTED COMMERCIAL GOODS / MACHINERY / WORK]"
+        },
+        template_text="""IN THE [COURT_NAME]
+[SUIT_NO]
+
+IN THE MATTER OF:
+[PLAINTIFF_NAME]                                                          ... PLAINTIFF
+VERSUS
+[DEFENDANT_NAME]                                                          ... DEFENDANT
+
+COMPOSITE PLAINT IN COMMERCIAL SUIT FOR RECOVERY OF MONEY / CONTRACTUAL PERFORMANCE
+(UNDER SECTION 26 & ORDER VII OF CPC READ WITH COMMERCIAL COURTS ACT, 2015, ORDER VI RULE 15A & ORDER XI CPC, AND SPECIFIC RELIEF ACT, 1963)
+
+The Plaintiff above-named respectfully submits as follows:
+
+1. COMMERCIAL DISPUTE CLASSIFICATION:
+That the subject matter of the present suit constitutes a "Commercial Dispute" within the meaning of [DISPUTE_SUB_CLAUSE] of the Commercial Courts Act, 2015, arising out of mercantile contractual transactions between the parties.
+
+2. SPECIFIED VALUE UNDER SECTION 2(1)(i) & SECTION 12:
+That the Specified Value of the subject matter in dispute is [SPECIFIED_VALUE], which exceeds the statutory threshold of Rs. 3,00,000/- as mandated by Section 2(1)(i) and Section 12 of the Commercial Courts Act, 2015.
+
+3. MANDATORY SECTION 12A MEDIATION COMPLIANCE:
+That in strict compliance with the statutory mandate of Section 12A of the Commercial Courts Act, 2015 and the law laid down by the Supreme Court in Patil Automation (2022) 10 SCC 1, the Plaintiff initiated Pre-Institution Mediation before the District Legal Services Authority. The mediation resulted in a [PIM_DETAILS], produced herewith as Document No. 1.
+
+4. TRANSACTION DETAILS & UNLAWFUL BREACH:
+That the Plaintiff supplied goods / executed contractual works under [INVOICE_DETAILS]. The Defendant accepted delivery without protest but defaulted in payment, committing breach of contract.
+
+5. INTEREST UNDER SECTION 34 CPC & MSMED ACT:
+The Plaintiff is entitled to commercial interest at [INTEREST_RATE] from the date of invoice until realisation.
+
+PRAYER:
+Wherefore the Plaintiff prays for a judgment and decree:
+(a) Directing the Defendant to pay to the Plaintiff the sum of [SPECIFIED_VALUE] together with commercial interest at [INTEREST_RATE];
+(b) Awarding actual commercial costs under Section 35 CPC; and
+(c) Granting such other reliefs as deemed fit and proper.
+
+STATEMENT OF TRUTH (ORDER VI RULE 15A CPC)
+I, [AUTHORIZED SIGNATORY NAME], the Authorized Signatory of the Plaintiff Company, do solemnly affirm and state as follows:
+1. I am duly authorized to depose on behalf of the Plaintiff and am conversant with the facts of the case.
+2. I say that the statements made in paragraphs 1 to 5 of the plaint are true to my knowledge and belief.
+3. I say that all documents in the power, possession, control or custody of the Plaintiff pertaining to the dispute have been disclosed and copies annexed, and the Plaintiff does not have any other documents.
+4. I say that the above contents are true and correct, no part of it is false and nothing material has been concealed.
+
+DEPONENT
+
+VERIFICATION
+Verified at [CITY] on this [DATE] that the contents of the above Statement of Truth are true and correct.
+
+DEPONENT"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 7. RESCISSION OF AGREEMENT POST-DECREE (SECTION 28 SRA)
+    # -------------------------------------------------------------------------
+    CompositePleading(
+        id="composite_rescission_sec28",
+        title="Composite Application to Rescind Agreement Post-Decree (Section 28 SRA)",
+        remedy_type="Post-Decree Contractual Rescission & Restoration",
+        statutory_header="APPLICATION UNDER SECTION 28(1) & (2) OF THE SPECIFIC RELIEF ACT, 1963 READ WITH SECTION 151 AND ORDER XXI RULE 34 OF CPC, 1908",
+        summary="Vendor's composite post-decree application in the same suit under Section 28 SRA to rescind the agreement of sale, forfeit earnest money, and recover possession where the decree-holder purchaser defaults in paying the balance consideration within the decreed period.",
+        statutes_merged=[
+            StatutoryComponent("The Specific Relief Act, 1963", "Section 28(1) & (2)", "Court retains control over contract post-decree (preliminary decree doctrine under Ramankutty Guptan). Vendor applies in same suit for rescission (Sec 28(1)), restoration of possession (Sec 28(2)(a)), and rents/profits (Sec 28(2)(b))."),
+            StatutoryComponent("Code of Civil Procedure, 1908", "Section 151 & Order XXI Rule 34", "Inherent procedural powers to enforce compliance and stay execution of conveyance under Order XXI Rule 34.")
+        ],
+        mandatory_clauses=[
+            {"clause": "Decree Mandate & Timeframe", "requirement": "Specify the exact deadline fixed in the specific performance decree for deposit of balance money."},
+            {"clause": "Purchaser's Wilful Default", "requirement": "Averment that the purchaser failed to deposit within the stipulated or extended time, without seeking extension."},
+            {"clause": "Section 28 Inherent Suit Jurisdiction", "requirement": "Invoking court's jurisdiction in the SAME suit without needing a separate suit (Ramankutty Guptan v. Avara)."},
+            {"clause": "Restoration of Possession & Forfeiture", "requirement": "Specific prayer to restore possession and forfeit earnest deposit under Section 28(2)."}
+        ],
+        default_parameters={
+            "COURT_NAME": "COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]",
+            "SUIT_NO": "I.A. NO. _____ OF 202[ ] IN O.S. NO. _____ OF 202[ ]",
+            "APPLICANT_NAME": "[DEFENDANT / JUDGMENT DEBTOR VENDOR NAME]",
+            "RESPONDENT_NAME": "[PLAINTIFF / DECREE HOLDER PURCHASER NAME]",
+            "DECREE_DATE": "[DATE OF SPECIFIC PERFORMANCE DECREE]",
+            "BALANCE_AMOUNT": "Rs. [BALANCE CONSIDERATION ORDERED TO BE DEPOSITED]/-",
+            "STIPULATED_EXPIRY_DATE": "[EXPIRY DATE OF COURT-ORDERED DEPOSIT PERIOD]",
+            "PROPERTY_SCHEDULE": "[FULL PROPERTY DETAILS AND BOUNDARIES]"
+        },
+        template_text="""IN THE [COURT_NAME]
+[SUIT_NO]
+
+IN THE MATTER OF:
+[APPLICANT_NAME]                                                          ... APPLICANT / DEFENDANT
+VERSUS
+[RESPONDENT_NAME]                                                         ... RESPONDENT / PLAINTIFF
+
+COMPOSITE APPLICATION UNDER SECTION 28(1) & (2) OF THE SPECIFIC RELIEF ACT, 1963 READ WITH SECTION 151 OF CPC, 1908 TO RESCIND THE AGREEMENT OF SALE DATED [DATE] FOR WILFUL DEFAULT IN DEPOSITING BALANCE PURCHASE MONEY
+
+The Applicant / Defendant respectfully submits as follows:
+
+1. THE DECREE AND MANDATORY TIMELINE:
+That this Hon'ble Court passed a decree dated [DECREE_DATE] for specific performance, directing the Respondent / Plaintiff to deposit the balance purchase money of [BALANCE_AMOUNT] into Court within [NUMBER] days, i.e., on or before [STIPULATED_EXPIRY_DATE].
+
+2. WILFUL DEFAULT AND NON-DEPOSIT:
+That the period fixed by the decree expired on [STIPULATED_EXPIRY_DATE]. The Respondent has wilfully failed, neglected, and defaulted in depositing the balance purchase money, nor has the Respondent obtained any extension of time.
+
+3. RETENTION OF JURISDICTION UNDER SECTION 28 SRA:
+That as settled by the Supreme Court in Ramankutty Guptan v. Avara (1994) 2 SCC 642, the trial court does not become functus officio; the decree is in the nature of a preliminary decree. Under Section 28(1) of the Specific Relief Act, 1963, the vendor is entitled to apply in the very same suit to have the contract rescinded.
+
+PRAYER:
+Wherefore the Applicant prays that this Hon'ble Court may be pleased to:
+(a) Pass an order under Section 28(1) SRA rescinding the Agreement of Sale dated [DATE] altogether;
+(b) Direct the Respondent to restore vacant physical possession of the Suit Property under Section 28(2)(a) SRA;
+(c) Order forfeiture of the earnest money deposit; and
+(d) Pass such further orders as deemed fit and proper.
+
+SCHEDULE OF IMMOVABLE PROPERTY
+[PROPERTY_SCHEDULE]
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT"""
+    ),
+
+    # -------------------------------------------------------------------------
+    # 8. CONDONATION OF DELAY COMPOSITE APPLICATION (SECTION 5 LIMITATION ACT)
+    # -------------------------------------------------------------------------
+    CompositePleading(
+        id="composite_condonation_delay",
+        title="Composite Application for Condonation of Delay (Section 5 Limitation Act)",
+        remedy_type="Temporal Bar Exemption & Substantive Restoration",
+        statutory_header="APPLICATION UNDER SECTION 5 OF THE LIMITATION ACT, 1963 READ WITH SECTION 151 OF THE CODE OF CIVIL PROCEDURE, 1908",
+        summary="Composite application harmonizing substantive condonation under Section 5 of the Limitation Act, 1963, inherent powers under Section 151 CPC, and the procedural requirements of Order XLI Rule 3A / Order IX Rule 13 / Order XXII Rule 9 CPC with day-to-day sufficient cause explanation.",
+        statutes_merged=[
+            StatutoryComponent("The Limitation Act, 1963", "Section 5", "Substantive power of Court to admit any appeal or application after prescribed period upon showing 'sufficient cause' (Collector Land Acquisition v. Katiji)."),
+            StatutoryComponent("Code of Civil Procedure, 1908", "Section 151 & Order XLI Rule 3A", "Mandatory procedural requirement that any time-barred appeal/application MUST be accompanied by an application for condonation of delay explaining the delay with supporting affidavit.")
+        ],
+        mandatory_clauses=[
+            {"clause": "Number of Days of Delay", "requirement": "Exact mathematical computation of total delay days beyond the prescribed limitation period."},
+            {"clause": "Day-to-Day Sufficient Cause", "requirement": "Pleading plausible, bona fide, and reasonable explanation for delay (illness, lack of notice, file movement) without gross negligence."},
+            {"clause": "Katiji Doctrine of Substantial Justice", "requirement": "Citing Supreme Court principle that technical considerations should yield to substantial justice."}
+        ],
+        default_parameters={
+            "COURT_NAME": "COURT OF THE [DISTRICT JUDGE / HIGH COURT] AT [CITY]",
+            "SUIT_NO": "I.A. NO. _____ OF 202[ ] IN [R.F.A. / APPEAL / APPLICATION NO.]",
+            "APPLICANT_NAME": "[APPLICANT FULL NAME], residing at [ADDRESS]",
+            "RESPONDENT_NAME": "[RESPONDENT FULL NAME], residing at [ADDRESS]",
+            "DAYS_OF_DELAY": "[NUMBER OF DAYS, E.G. 47] DAYS",
+            "CAUSE_OF_DELAY": "[SPECIFIC REASON: E.G. SEVERE JAUNDICE / CERTIFIED COPY APPLICATION DELAY / COVID RESTRICTIONS]",
+            "ACCOMPANYING_PROCEEDING": "[REGULAR FIRST APPEAL UNDER SECTION 96 / APPLICATION UNDER ORDER IX RULE 13]"
+        },
+        template_text="""IN THE [COURT_NAME]
+[SUIT_NO]
+
+IN THE MATTER OF:
+[APPLICANT_NAME]                                                          ... APPLICANT
+VERSUS
+[RESPONDENT_NAME]                                                         ... RESPONDENT
+
+COMPOSITE APPLICATION UNDER SECTION 5 OF THE LIMITATION ACT, 1963 READ WITH SECTION 151 OF THE CODE OF CIVIL PROCEDURE, 1908 FOR CONDONATION OF DELAY OF [DAYS_OF_DELAY]
+
+The Applicant respectfully submits as follows:
+
+1. ACCOMPANYING PROCEEDING:
+That the Applicant has filed the accompanying [ACCOMPANYING_PROCEEDING] challenging the judgment and decree / order dated [DATE]. The grounds stated in the accompanying appeal may be read as part and parcel of this Application.
+
+2. DELAY DETAILS:
+That the prescribed period of limitation for filing the accompanying proceeding expired on [EXPIRY_DATE]. The present proceeding is instituted on [DATE OF FILING] with a delay of [DAYS_OF_DELAY].
+
+3. SUFFICIENT CAUSE (DAY-TO-DAY EXPLANATION):
+That the delay of [DAYS_OF_DELAY] was neither intentional nor deliberate, but occasioned due to circumstances beyond the Applicant's control, namely [CAUSE_OF_DELAY]. The Applicant was prevented by sufficient cause from filing within the statutory period.
+
+4. DOCTRINE OF SUBSTANTIAL JUSTICE:
+That as settled by the Hon'ble Supreme Court in Collector Land Acquisition, Anantnag v. Mst. Katiji (1987) 2 SCC 107, every day's delay must be explained in a rational, common-sense manner, and technical considerations should not be allowed to defeat substantial justice.
+
+PRAYER:
+Wherefore the Applicant prays that this Hon'ble Court may be pleased to:
+(a) Condone the delay of [DAYS_OF_DELAY] in filing the accompanying [ACCOMPANYING_PROCEEDING]; and
+(b) Pass such further orders as this Hon'ble Court deems fit and proper.
+
+Place: [CITY]
+Date: [DATE]
+                                                        ADVOCATE FOR APPLICANT"""
     )
 ]
+
+
+
 
 
 def list_composite_pleadings() -> List[CompositePleading]:

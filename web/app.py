@@ -326,15 +326,16 @@ def drafter_index():
     return render_template('drafter_index.html', pleadings=pleadings)
 
 
-@app.route('/drafter/<draft_id>')
+@app.route('/drafter/<draft_id>', methods=['GET', 'POST'])
 def drafter_builder(draft_id):
     pleading = cdraft.get_composite_pleading(draft_id)
     if not pleading:
         abort(404)
     current_params = dict(pleading.default_parameters)
+    source = request.form if request.method == 'POST' else request.args
     for k in current_params.keys():
-        if k in request.args:
-            current_params[k] = request.args.get(k)
+        if k in source and source.get(k):
+            current_params[k] = source.get(k)
     generated_text = pleading.generate(current_params)
     return render_template('drafter_builder.html',
                            pleading=pleading,

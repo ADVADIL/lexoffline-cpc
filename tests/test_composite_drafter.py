@@ -12,12 +12,16 @@ import composite_drafter as cdraft
 
 def test_composite_pleadings_count():
     pleadings = cdraft.list_composite_pleadings()
-    assert len(pleadings) >= 4
+    assert len(pleadings) == 8
     ids = [p.id for p in pleadings]
     assert "composite_specific_performance" in ids
     assert "composite_declaration_possession" in ids
     assert "composite_cancellation_deed" in ids
     assert "composite_temp_injunction" in ids
+    assert "composite_summary_possession" in ids
+    assert "composite_commercial_suit" in ids
+    assert "composite_rescission_sec28" in ids
+    assert "composite_condonation_delay" in ids
 
 
 def test_specific_performance_statutory_merger():
