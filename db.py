@@ -1,7 +1,22 @@
 import sqlite3
 import os
+import sys
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cpc_1908.db")
+
+def _resource_dir():
+    """Directory to look for bundled resources (the database) in — the
+    PyInstaller-extraction directory when running as a frozen executable,
+    or this file's own directory when running from source. Using plain
+    __file__-based resolution unconditionally is a well-known PyInstaller
+    gotcha: it works fine in development but can silently fail to locate
+    bundled data once packaged, since a frozen app's modules don't always
+    resolve __file__ the same way source files do."""
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return sys._MEIPASS
+    return os.path.dirname(os.path.abspath(__file__))
+
+
+DB_PATH = os.path.join(_resource_dir(), "cpc_1908.db")
 
 
 class ActDatabase:

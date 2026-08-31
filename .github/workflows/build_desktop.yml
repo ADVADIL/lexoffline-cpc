@@ -1,0 +1,71 @@
+name: Build Desktop App
+
+# Runs automatically whenever a GitHub Release is published (e.g. tag v1.0.0).
+# Builds a standalone executable for Windows, macOS, and Linux and attaches
+# each one to that release as a downloadable asset — no local Windows/Mac
+# machine needed to produce them.
+on:
+  release:
+    types: [published]
+  # Also runnable by hand from the Actions tab, without publishing a
+  # release, to test the build itself.
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact_name: LexOfflineCPC.exe
+            asset_name: LexOfflineCPC_Windows.exe
+          - os: macos-latest
+            artifact_name: LexOfflineCPC
+            asset_name: LexOfflineCPC_Mac
+          - os: ubuntu-latest
+            artifact_name: LexOfflineCPC
+            asset_name: LexOfflineCPC_Linux
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # PySide6's Linux build needs libxcb-cursor at runtime — without this,
+      # the built executable would run fine on Windows/Mac but fail to open
+      # a window on many Linux systems (verified locally: PyInstaller builds
+      # successfully either way, but only warns about this at build time —
+      # it does not fail the build, so skipping this step would silently
+      # ship a Linux executable that can't actually launch its GUI).
+      - name: Install Linux GUI dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get update && sudo apt-get install -y libxcb-cursor0
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build executable
+        run: pyinstaller lexoffline.spec --noconfirm
+
+      - name: Rename output (Windows)
+        if: matrix.os == 'windows-latest'
+        run: mv dist/LexOfflineCPC.exe dist/${{ matrix.asset_name }}
+        shell: bash
+
+      - name: Rename output (macOS/Linux)
+        if: matrix.os != 'windows-latest'
+        run: mv dist/LexOfflineCPC dist/${{ matrix.asset_name }}
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/${{ matrix.asset_name }}
