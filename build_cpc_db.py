@@ -36,6 +36,30 @@ KNOWN_LINE_CORRECTIONS = {
     "4[ 313. Memorandum of evidence in unappealable cases.": "4[13. Memorandum of evidence in unappealable cases.",
     "13. Substance of examination to be written.": "3. Substance of examination to be written.",
     "37. Procedure at hearing.": "7. Procedure at hearing.",
+    # Section-level instance of the same stray-digit pattern, found while
+    # auditing the Limitation Act module's CPC cross-references — Article
+    # 92-96's citations to "Section 92" were failing because Section 92
+    # itself was silently absent from the parsed output.
+    "392. Public charities.": "92. Public charities.",
+    "335. Date and contents of decree.": "35. Date and contents of decree.",
+    # The following were found via a systematic document-wide scan for this
+    # same corruption signature (a stray digit prepended to the real rule
+    # number), cross-checked against the ToC for each exact title text —
+    # not guessed. Heavily concentrated in Orders XVIII and XX, which
+    # explains why those two orders were still missing many rules after
+    # the earlier, more piecemeal round of fixes.
+    "860. Property liable to attachment and sale in execution of decree.": "60. Property liable to attachment and sale in execution of decree.",
+    "310. Return of plaint.": "10. Return of plaint.",
+    "36. When deposition to be interpreted.": "6. When deposition to be interpreted.",
+    "37. Evidence under section 138.": "7. Evidence under section 138.",
+    "38. Memorandum when evidence not taken down by Judge.": "8. Memorandum when evidence not taken down by Judge.",
+    "1[29. When evidence may be taken in English.": "1[9. When evidence may be taken in English.",
+    "311. Questions objected to and allowed by Court.": "11. Questions objected to and allowed by Court.",
+    "315. Power to deal with evidence taken before another Judge.": "15. Power to deal with evidence taken before another Judge.",
+    "316. Power to examine witness immediately.": "16. Power to examine witness immediately.",
+    "13. Judgment to be signed.": "3. Judgment to be signed.",
+    "14. Judgments of Small Cause Courts.": "4. Judgments of Small Cause Courts.",
+    "15. Court to state its decision on each issue.": "5. Court to state its decision on each issue.",
 }
 
 # Shared heading-detection pattern for both section and rule numbers. The
@@ -44,7 +68,7 @@ KNOWN_LINE_CORRECTIONS = {
 # defined.') start with a curly/smart quotation mark instead — U+201C for
 # a double quote, U+2018 for a single quote — which would otherwise fail
 # to match and silently drop the provision.
-NUM_RX = re.compile(r"^(?:\d{1,2}\[)?(\d{1,3}[A-Z]{0,2})\.\s*((?:[A-Z\[\u201c\u2018]|\d\[).*)")
+NUM_RX = re.compile(r"^(?:\d{1,2}\[)?(\d{1,3}-?[A-Z]{0,2})\.\s*((?:[A-Z\[\u201c\u2018]|\d\[).*)")
 
 
 def clean_lines(lines):
@@ -124,6 +148,8 @@ def _heading_candidates(lines, start, end, num_rx):
         if not m:
             continue
         no, rest = m.group(1), m.group(2)
+        no = no.replace("-", "")  # normalize e.g. '46-I' to '46I', matching
+        # how every other letter-suffixed number in this document is styled
         if i in confirmed_footnote:
             continue
         if FOOTNOTE_CITATION_RX.search(rest) and (i - 1) in confirmed_footnote:
