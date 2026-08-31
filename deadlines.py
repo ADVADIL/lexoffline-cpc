@@ -7,6 +7,7 @@ AI, no estimation.
 from dataclasses import dataclass
 from datetime import date, timedelta
 from typing import Optional, List
+import re
 
 
 def add_years(d: date, years: int) -> date:
@@ -84,6 +85,89 @@ DEADLINE_RULES = [
 ]
 
 _BY_KEY = {r.key: r for r in DEADLINE_RULES}
+
+
+# ---------------------------------------------------------------------------
+# General-purpose calculator covering all 137 Schedule Articles, not just the
+# ~29 curated as named DeadlineRules above. The curated rules exist because
+# their provision cross-references (Order/Rule numbers) are worth spelling
+# out explicitly; this covers everything else so no article is a dead end —
+# an advocate can compute a deadline for any of the 137, not only the ones
+# that happened to get a named entry.
+_WORD_NUMBERS = {
+    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6,
+    "seven": 7, "eight": 8, "nine": 9, "ten": 10, "twelve": 12,
+    "thirty": 30, "sixty": 60, "ninety": 90,
+}
+
+
+def _parse_single_period(text: str):
+    """Parse a period phrase like 'Three years' or 'Thirty days' into
+    (amount, unit). Raises ValueError if the phrasing isn't recognised —
+    callers should treat that as 'cannot compute automatically', never
+    guess a number."""
+    words = text.strip().lower().replace(".", "").split()
+    if len(words) != 2:
+        raise ValueError(f"Unrecognised period phrasing: {text!r}")
+    amount_word, unit_word = words
+    if amount_word not in _WORD_NUMBERS:
+        raise ValueError(f"Unrecognised amount word: {amount_word!r}")
+    amount = _WORD_NUMBERS[amount_word]
+    if unit_word.startswith("year"):
+        unit = "years"
+    elif unit_word.startswith("day"):
+        unit = "days"
+    else:
+        raise ValueError(f"Unrecognised unit word: {unit_word!r}")
+    return amount, unit
+
+
+def parse_limitation_period(period_text: str):
+    """Parse a LIMITATION_ARTICLES period string into a list of
+    (label, amount, unit) tuples — usually one entry, but some Articles
+    prescribe alternative periods depending on which sub-clause applies
+    (e.g. Article 5: '(a) Ninety days\\n(b) Thirty days'), in which case
+    every option is returned rather than picking one, since which
+    sub-clause applies depends on case facts this function can't know."""
+    lines = [l.strip() for l in period_text.split("\n") if l.strip()]
+    results = []
+    for line in lines:
+        m = re.match(r"^(\([a-z]+\)(?:\([ivx]+\))?)\s*(.+)$", line)
+        if m:
+            label, rest = m.group(1), m.group(2)
+        else:
+            label, rest = "", line
+        amount, unit = _parse_single_period(rest)
+        results.append((label, amount, unit))
+    return results
+
+
+def compute_limitation_article(trigger_date: date, article: dict, excluded_days: int = 0) -> dict:
+    """Compute the due date(s) for any Schedule Article from
+    limitation_data.LIMITATION_ARTICLES, given its 'period' field. Returns
+    every option when the Article prescribes alternatives (see
+    parse_limitation_period) rather than silently picking one."""
+    parsed = parse_limitation_period(article["period"])
+    options = []
+    for label, amount, unit in parsed:
+        if unit == "years":
+            base_due = add_years(trigger_date, amount)
+        else:
+            base_due = trigger_date + timedelta(days=amount)
+        due = base_due + timedelta(days=excluded_days)
+        options.append({
+            "label": label,
+            "amount": amount,
+            "unit": unit,
+            "due_date": due,
+            "base_due_date": base_due,
+        })
+    return {
+        "article": article,
+        "trigger_date": trigger_date,
+        "excluded_days": excluded_days,
+        "options": options,
+    }
 
 
 def list_rules(category: Optional[str] = None) -> List[DeadlineRule]:

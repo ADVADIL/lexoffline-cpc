@@ -22,6 +22,7 @@ from db import ActDatabase
 from xref import extract_refs, resolve_refs
 from state_amend import KNOWN_STATES, states_present, text_for_state
 import deadlines as dl
+import limitation_data as ld
 
 
 def html_escape(s):
@@ -433,6 +434,7 @@ class DeadlineTrackerTab(QWidget):
         self.cat_combo.addItem("All Categories", None)
         for cat in dl.list_categories():
             self.cat_combo.addItem(cat, cat)
+        self.cat_combo.addItem("All 137 Limitation Act Articles (Schedule)", "__ALL_LIMITATION_ARTICLES__")
         self.cat_combo.currentIndexChanged.connect(self._on_category_changed)
         form.addRow("Category filter:", self.cat_combo)
 
@@ -487,6 +489,17 @@ class DeadlineTrackerTab(QWidget):
     def _populate_rules(self):
         self.rule_combo.clear()
         selected_cat = self.cat_combo.currentData()
+        if selected_cat == "__ALL_LIMITATION_ARTICLES__":
+            # The 30 named rules above cover the commonly-cited provisions
+            # with their full Order/Rule cross-references spelled out; this
+            # covers the remaining ~107 Schedule Articles too, so no
+            # Article is a dead end just because it didn't get a curated
+            # entry — every one of the 137 is computable, not just browsable.
+            for a in ld.LIMITATION_ARTICLES:
+                desc = a["description"].split("\n")[0][:70]
+                label = f"Art. {a['article_no']} — {desc} ({a['period'].splitlines()[0]}{'...' if len(a['period'].splitlines()) > 1 else ''})"
+                self.rule_combo.addItem(label, f"LIMART:{a['article_no']}")
+            return
         rules = dl.list_rules(category=selected_cat)
         for r in rules:
             self.rule_combo.addItem(f"{r.label}  [{r.provision}]", r.key)
@@ -501,6 +514,37 @@ class DeadlineTrackerTab(QWidget):
         qd = self.trigger_date.date()
         trigger = date(qd.year(), qd.month(), qd.day())
         excluded = self.exclusion_spin.value()
+
+        if isinstance(key, str) and key.startswith("LIMART:"):
+            article_no = key.split(":", 1)[1]
+            article = next((a for a in ld.LIMITATION_ARTICLES if a["article_no"] == article_no), None)
+            if not article:
+                return
+            result = dl.compute_limitation_article(trigger, article, excluded_days=excluded)
+            ex_note = f" (including +{excluded} days excluded u/s 12)" if excluded > 0 else ""
+            options = result["options"]
+            if len(options) == 1:
+                opt = options[0]
+                self.result_label.setText(
+                    f"Statutory Due Date: {opt['due_date'].strftime('%d %B %Y')}{ex_note}"
+                )
+            else:
+                lines = "<br>".join(
+                    f"{opt['label']} {opt['amount']} {opt['unit']} — <b>{opt['due_date'].strftime('%d %B %Y')}</b>"
+                    for opt in options
+                )
+                self.result_label.setText(
+                    f"This Article prescribes alternative periods depending on which "
+                    f"sub-clause applies to the facts of the case{ex_note}:<br>{lines}"
+                )
+            self.detail_label.setText(
+                f"<b>Article {article['article_no']}</b> ({article['division']}, {article['part']})<br>"
+                f"<b>Description:</b> {article['description']}<br>"
+                f"<b>Time begins:</b> {article['time_begins']}<br>"
+                f"<b>CPC cross-reference:</b> {article.get('cpc_ref') or '—'}"
+            )
+            return
+
         result = dl.compute(trigger, key, excluded_days=excluded)
         due = result["due_date"]
         rule = result["rule"]
