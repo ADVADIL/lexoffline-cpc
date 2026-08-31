@@ -322,11 +322,17 @@ import templates_data as tdata
 
 @app.route('/templates')
 def drafting_templates():
-    selected_cat = request.args.get('category', '')
+    selected_cat = request.args.get('category', '').strip()
+    all_items = tdata.list_templates()
+    from collections import Counter
+    cat_counts = Counter(t.category for t in all_items)
     categories = tdata.list_template_categories()
+    category_list = [{"name": cat, "count": cat_counts.get(cat, 0)} for cat in categories]
     items = tdata.list_templates(category=selected_cat if selected_cat else None)
     return render_template('templates_index.html',
                            categories=categories,
+                           category_list=category_list,
+                           total_count=len(all_items),
                            selected_category=selected_cat,
                            templates=items)
 

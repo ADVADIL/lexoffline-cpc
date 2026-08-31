@@ -724,12 +724,22 @@ class DraftingTemplatesTab(QWidget):
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
 
+        from collections import Counter
+        all_templates = tdata.list_templates()
+        cat_counts = Counter(t.category for t in all_templates)
+
         self.cat_combo = QComboBox()
-        self.cat_combo.addItem("All Categories", None)
+        self.cat_combo.addItem(f"All Formats ({len(all_templates)})", None)
         for cat in tdata.list_template_categories():
-            self.cat_combo.addItem(cat, cat)
+            count = cat_counts.get(cat, 0)
+            self.cat_combo.addItem(f"{cat} ({count})", cat)
         self.cat_combo.currentIndexChanged.connect(self._populate_list)
         left_layout.addWidget(self.cat_combo)
+
+        self.search_input = QLineEdit()
+        self.search_input.setPlaceholderText("🔍 Filter templates...")
+        self.search_input.textChanged.connect(self._populate_list)
+        left_layout.addWidget(self.search_input)
 
         self.list_widget = QListWidget()
         self.list_widget.itemClicked.connect(self._on_item_clicked)
@@ -777,8 +787,11 @@ class DraftingTemplatesTab(QWidget):
     def _populate_list(self):
         self.list_widget.clear()
         selected_cat = self.cat_combo.currentData()
+        q = self.search_input.text().lower().strip() if hasattr(self, 'search_input') else ""
         items = tdata.list_templates(category=selected_cat)
         for t in items:
+            if q and (q not in t.title.lower() and q not in t.provision.lower() and q not in t.summary.lower()):
+                continue
             it = QListWidgetItem(f"{t.title}\n[{t.provision}]")
             it.setData(Qt.UserRole, t.id)
             self.list_widget.addItem(it)
