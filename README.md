@@ -8,7 +8,30 @@ nothing is generated or inferred by a model.
 
 Source text: IndiaCode bare act, as on 10 January 2026.
 
-## Run it
+## Download (no Python required)
+
+Prebuilt executables for Windows, macOS, and Linux are attached to each
+[GitHub Release](../../releases) — download, double-click, no installation
+of Python or any dependency needed. Built automatically by GitHub Actions
+from this repo's own source on every release (see
+`.github/workflows/build_desktop.yml`), so what you download is exactly
+what's in this code.
+
+**Get it from GitHub Releases, not WhatsApp or email** — the file is
+around 65–90MB depending on platform, larger than most messaging apps
+allow as an attachment.
+
+**Windows users — an important, expected warning:** since this is a free,
+independently-built tool (not signed by a paid commercial certificate),
+Windows will show a blue "Windows protected your PC" SmartScreen warning
+the first time you run it. This is normal for unsigned software and does
+not mean anything is wrong — click **"More info"**, then **"Run anyway"**.
+
+**Linux users:** if the app builds but the window doesn't appear, you may
+be missing `libxcb-cursor0` — install it with your package manager
+(`sudo apt install libxcb-cursor0` on Debian/Ubuntu).
+
+## Run from source instead
 
 ```
 pip install -r requirements.txt
