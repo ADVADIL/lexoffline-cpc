@@ -300,6 +300,8 @@ def build_schema(conn):
     DROP TABLE IF EXISTS bookmarks;
     DROP TABLE IF EXISTS notes;
     DROP TABLE IF EXISTS search_index;
+    DROP TABLE IF EXISTS limitation_sections;
+    DROP TABLE IF EXISTS limitation_articles;
 
     CREATE TABLE sections (
         id INTEGER PRIMARY KEY,
@@ -327,6 +329,23 @@ def build_schema(conn):
         letter TEXT NOT NULL,
         text TEXT
     );
+    CREATE TABLE limitation_sections (
+        id INTEGER PRIMARY KEY,
+        section_no TEXT NOT NULL,
+        title TEXT NOT NULL,
+        part TEXT NOT NULL,
+        text TEXT NOT NULL
+    );
+    CREATE TABLE limitation_articles (
+        id INTEGER PRIMARY KEY,
+        article_no TEXT NOT NULL,
+        division TEXT NOT NULL,
+        part TEXT NOT NULL,
+        description TEXT NOT NULL,
+        period TEXT NOT NULL,
+        time_begins TEXT NOT NULL,
+        cpc_ref TEXT
+    );
     CREATE TABLE bookmarks (
         id INTEGER PRIMARY KEY,
         kind TEXT NOT NULL,
@@ -343,7 +362,7 @@ def build_schema(conn):
     );
 
     CREATE VIRTUAL TABLE search_index USING fts5(
-        kind, ref_id UNINDEXED, label, body, content=''
+        kind, ref_id UNINDEXED, label, body
     );
     """)
     conn.commit()
@@ -421,6 +440,36 @@ def main():
             "INSERT INTO search_index (kind, ref_id, label, body) VALUES (?,?,?,?)",
             ("appendix", aid, f"Appendix {a['letter']}", a["text"]),
         )
+
+    try:
+        import limitation_data as ld
+        for s in ld.LIMITATION_SECTIONS:
+            cur.execute(
+                "INSERT INTO limitation_sections (section_no, title, part, text) VALUES (?,?,?,?)",
+                (s["section_no"], s["title"], s["part"], s["text"]),
+            )
+            sid = cur.lastrowid
+            cur.execute(
+                "INSERT INTO search_index (kind, ref_id, label, body) VALUES (?,?,?,?)",
+                ("limitation_section", sid, f"Limitation Act S.{s['section_no']} — {s['title']}", f"{s['title']}\n{s['text']}"),
+            )
+
+        for a in ld.LIMITATION_ARTICLES:
+            cur.execute(
+                """INSERT INTO limitation_articles 
+                   (article_no, division, part, description, period, time_begins, cpc_ref)
+                   VALUES (?,?,?,?,?,?,?)""",
+                (a["article_no"], a["division"], a["part"], a["description"], a["period"], a["time_begins"], a["cpc_ref"]),
+            )
+            aid = cur.lastrowid
+            cur.execute(
+                "INSERT INTO search_index (kind, ref_id, label, body) VALUES (?,?,?,?)",
+                ("limitation_article", aid, f"Limitation Article {a['article_no']} ({a['period']})",
+                 f"{a['description']}\nPeriod: {a['period']}\nTime from which period begins: {a['time_begins']}\nCPC Reference: {a['cpc_ref'] or ''}"),
+            )
+        print(f"Populated {len(ld.LIMITATION_SECTIONS)} Limitation Act sections & {len(ld.LIMITATION_ARTICLES)} articles.")
+    except ImportError:
+        print("Note: limitation_data not found, skipping Limitation Act population.")
 
     conn.commit()
     conn.close()

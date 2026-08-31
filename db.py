@@ -151,5 +151,52 @@ class ActDatabase:
         )
         self.conn.commit()
 
+    # ---------- Limitation Act 1963 ----------
+    def limitation_sections_by_part(self):
+        rows = self.conn.execute(
+            "SELECT id, section_no, title, part FROM limitation_sections ORDER BY id"
+        ).fetchall()
+        parts = {}
+        for r in rows:
+            parts.setdefault(r["part"] or "OTHER", []).append(r)
+        return parts
+
+    def get_limitation_section(self, section_id):
+        return self.conn.execute(
+            "SELECT * FROM limitation_sections WHERE id=?", (section_id,)
+        ).fetchone()
+
+    def get_limitation_section_by_no(self, section_no):
+        return self.conn.execute(
+            "SELECT * FROM limitation_sections WHERE section_no=? ORDER BY id LIMIT 1", (str(section_no),)
+        ).fetchone()
+
+    def limitation_articles_by_division(self):
+        rows = self.conn.execute(
+            "SELECT id, article_no, division, part, description, period, time_begins, cpc_ref FROM limitation_articles ORDER BY id"
+        ).fetchall()
+        divs = {}
+        for r in rows:
+            div = r["division"] or "OTHER"
+            pt = r["part"] or "OTHER"
+            divs.setdefault(div, {}).setdefault(pt, []).append(r)
+        return divs
+
+    def get_limitation_article(self, article_id):
+        return self.conn.execute(
+            "SELECT * FROM limitation_articles WHERE id=?", (article_id,)
+        ).fetchone()
+
+    def find_article_by_no(self, article_no):
+        return self.conn.execute(
+            "SELECT * FROM limitation_articles WHERE article_no=? ORDER BY id LIMIT 1", (str(article_no),)
+        ).fetchone()
+
+    def find_articles_for_cpc(self, search_term):
+        like = f"%{search_term}%"
+        return self.conn.execute(
+            "SELECT * FROM limitation_articles WHERE cpc_ref LIKE ? ORDER BY id", (like,)
+        ).fetchall()
+
     def close(self):
         self.conn.close()
