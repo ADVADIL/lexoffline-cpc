@@ -122,7 +122,7 @@ EXECUTION_WORKFLOWS: List[ExecutionWorkflow] = [
                 actions_required=[
                     "Movables in possession of JD: Seizure by court bailiff under Rule 43.",
                     "Debts, shares, bank accounts: Prohibitory order under Rule 46 / 46A Garnishee notice.",
-                    "Salary of employee: Prohibitory order to employer under Rule 48 (1/3rd of surplus above Rs. 1,000 exempt).",
+                    "Salary of employee: Prohibitory order to employer under Rule 48 (Section 60(1)(i): first Rs. 1,000 and two-thirds of the remainder is exempt — only one-third of the remainder is attachable, or one-third of the entire salary for a maintenance decree).",
                     "Immovable Property: Prohibitory order under Rule 54 proclaimed by beat of drums and affixation at Collectorate and property."
                 ],
                 statutory_provisos=[

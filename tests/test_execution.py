@@ -66,6 +66,18 @@ def test_money_decree_stages_coverage():
     assert any("Setting Aside Sale" in t for t in stage_titles)
 
 
+def test_salary_attachment_fraction_matches_section_60():
+    # Section 60(1)(i) CPC: the first Rs. 1,000 AND two-thirds of the
+    # remainder is exempt from attachment — only one-third of the
+    # remainder is actually attachable. Getting this backwards would
+    # lead an advocate to seek attachment of double the lawful amount.
+    w = get_execution_workflow("money_decree")
+    attach_stage = next(s for s in w.stages if "Attachment of Judgment Debtor" in s.title)
+    salary_action = next(a for a in attach_stage.actions_required if "Salary" in a)
+    assert "two-thirds of the remainder is exempt" in salary_action
+    assert "1/3rd of surplus above Rs. 1,000 exempt" not in salary_action
+
+
 def test_possession_decree_coverage():
     w = get_execution_workflow("immovable_possession")
     assert any("Rule 35" in s.governing_rules for s in w.stages)
