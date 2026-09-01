@@ -160,7 +160,7 @@ Date: [DATE]
         practice_notes="Limitation under Article 123 is 30 days from date of decree, or where summons was not duly served, 30 days from date of KNOWLEDGE of the decree. Second proviso to Rule 13: Court shall not set aside decree merely on irregularity of service if satisfied defendant had notice in time.",
         connected_provisions=[
             {"kind": "rule", "ref": "Order IX Rule 13", "title": "Setting aside decree ex parte against defendant"},
-            {"kind": "section", "ref": "Section 5", "title": "Extension of prescribed period in certain cases (Limitation Act)"},
+            {"kind": "limitation_section", "ref": "Section 5", "title": "Extension of prescribed period in certain cases (Limitation Act)"},
             {"kind": "limitation_article", "ref": "Article 123", "title": "To set aside a decree passed ex parte (30 days)"}
         ],
         template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
@@ -652,7 +652,7 @@ Date: [DATE]
         practice_notes="Settled Supreme Court law (Dahiben v. Arvindbhai; Saleem Bhai v. State of Maharashtra): Court must look ONLY at the averments in the Plaint and documents annexed thereto. Defense in Written Statement or defendant's documents CANNOT be looked into. Plaint cannot be rejected in part (Madhav Prasad Aggarwal).",
         connected_provisions=[
             {"kind": "rule", "ref": "Order VII Rule 11", "title": "Rejection of plaint"},
-            {"kind": "section", "ref": "Section 3", "title": "Bar of limitation (Limitation Act)"}
+            {"kind": "limitation_section", "ref": "Section 3", "title": "Bar of limitation (Limitation Act)"}
         ],
         template_text="""IN THE COURT OF THE [SENIOR CIVIL JUDGE / DISTRICT JUDGE] AT [CITY]
 I.A. NO. _______ OF 202[ ]
@@ -806,8 +806,8 @@ Date: [DATE]
         summary="Exhaustive standalone application and supporting affidavit praying for condonation of delay in filing appeal, review, or interlocutory applications, establishing 'sufficient cause'.",
         practice_notes="Section 5 applies to appeals and applications, but EXPRESSLY DOES NOT APPLY to execution petitions under Order XXI. Delay must be explained with plausible, genuine reasons. Supreme Court in Collector Land Acquisition v. Katiji: 'Every day's delay must be explained does not mean a pedantic approach; justice on merits must prevail over technicalities.'",
         connected_provisions=[
-            {"kind": "section", "ref": "Section 5", "title": "Extension of prescribed period in certain cases"},
-            {"kind": "section", "ref": "Section 12", "title": "Exclusion of time in legal proceedings"}
+            {"kind": "limitation_section", "ref": "Section 5", "title": "Extension of prescribed period in certain cases"},
+            {"kind": "limitation_section", "ref": "Section 12", "title": "Exclusion of time in legal proceedings"}
         ],
         template_text="""IN THE COURT OF THE [DISTRICT JUDGE / HIGH COURT] AT [CITY]
 I.A. NO. _______ OF 202[ ]

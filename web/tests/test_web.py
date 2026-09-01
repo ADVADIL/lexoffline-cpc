@@ -212,6 +212,42 @@ def test_provision_link_resolver_leaves_out_of_corpus_refs_unresolved():
         assert result['url'] is None
 
 
+def test_no_limitation_act_references_mistagged_as_plain_cpc_section():
+    # CPC, the Limitation Act, and the SRA all have their own differently-
+    # worded Section 3, Section 5, Section 12, etc. A connected_provisions
+    # entry whose title is plainly about the Limitation Act (e.g.
+    # 'Extension of prescribed period', 'Bar of limitation', 'Exclusion of
+    # time') but tagged kind='section' would silently resolve to CPC's
+    # unrelated section of the same number instead of failing safely —
+    # confirmed live for Section 5 (CPC: revenue courts jurisdiction,
+    # Limitation Act: condonation of delay) and Section 3 (CPC: court
+    # subordination, Limitation Act: bar of limitation). Guards against
+    # this class of source-data mistagging recurring across checklists,
+    # templates, and execution workflows.
+    import checklists_data as cd
+    import templates_data as td
+    import execution_data as edata
+    import app as a
+
+    with a.app.app_context():
+        db = a.get_db()
+        lim_titles = {}
+        for row in db.conn.execute('SELECT section_no, title FROM limitation_sections'):
+            lim_titles[row['section_no']] = row['title'].lower()
+
+        mistagged = []
+        for items in (cd.list_checklists(), td.list_templates(), edata.list_execution_workflows()):
+            for item in items:
+                for cp in item.connected_provisions:
+                    if cp.get('kind') == 'section' and 'Section' in cp.get('ref', ''):
+                        s_no = cp['ref'].replace('Section', '').strip().split()[0].split('(')[0]
+                        title_lower = cp.get('title', '').lower()
+                        lim_title = lim_titles.get(s_no, '')
+                        if lim_title and any(w in title_lower for w in lim_title.split() if len(w) > 5):
+                            mistagged.append((item.id, cp['ref'], cp['title']))
+        assert mistagged == [], f"Found Limitation Act references mistagged as plain CPC sections: {mistagged}"
+
+
 def test_checklist_404_invalid():
     resp = _client().get('/checklist/non_existent_checklist')
     assert resp.status_code == 404

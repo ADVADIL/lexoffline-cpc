@@ -1299,7 +1299,7 @@ PRACTICE_CHECKLISTS: List[PracticeChecklist] = [
         ],
         connected_provisions=[
             {"kind": "rule", "ref": "Order IX Rule 13", "title": "Setting aside decree ex parte against defendant"},
-            {"kind": "section", "ref": "Section 5", "title": "Extension of prescribed period (Limitation Act)"},
+            {"kind": "limitation_section", "ref": "Section 5", "title": "Extension of prescribed period (Limitation Act)"},
             {"kind": "limitation_article", "ref": "Article 123", "title": "To set aside an ex-parte decree (30 days)"}
         ]
     ),
