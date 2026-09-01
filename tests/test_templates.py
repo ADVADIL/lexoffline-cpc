@@ -152,10 +152,28 @@ def test_compromise_and_restoration_templates():
     assert "Article 122" in t_rest.template_text
 
 
+def test_no_hardcoded_rates_outside_brackets():
+    # Every case-specific interest rate must be a [BRACKETED] field the
+    # advocate reviews per case, matching how every other case-specific
+    # figure in these templates is presented — not left as bare text
+    # that reads like fixed statutory boilerplate.
+    t = get_template("sra_sec20_notice")
+    assert "18% per annum" not in t.template_text
+    assert "[CLAIMED INTEREST RATE]% per annum" in t.template_text
+
+    # General scan: no template should contain a bare "N% per annum"
+    # rate that isn't part of a bracketed placeholder.
+    import re
+    for tpl in TEMPLATES:
+        for m in re.finditer(r'(?<!\])\s\d{1,2}% per annum', tpl.template_text):
+            raise AssertionError(f"{tpl.id}: found unbracketed rate {m.group(0)!r}")
+
+
 if __name__ == "__main__":
-    test_all_54_templates_present()
+    test_all_58_templates_present()
     test_template_structure_and_placeholders()
     test_get_template_by_id()
     test_list_templates_by_category()
     test_compromise_and_restoration_templates()
-    print(">>> ALL 54 TEMPLATE TESTS PASSED! <<<")
+    test_no_hardcoded_rates_outside_brackets()
+    print(">>> ALL 58 TEMPLATE TESTS PASSED! <<<")

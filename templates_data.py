@@ -2920,7 +2920,7 @@ PLEASE TAKE FURTHER NOTICE that in the event of your failure, refusal, or neglec
 
     (i) My Client shall immediately exercise the statutory option under Section 20(1) of the Specific Relief Act, 1963 to get the entire unperformed contract executed and completed through a third-party agency / contractor or through My Client's own agency;
     (ii) You shall be held strictly and exclusively liable to indemnify, reimburse, and pay to My Client all actual expenses, escalation costs, professional fees, and damages suffered and spent by My Client;
-    (iii) Legal proceedings shall be instituted against you before the competent Civil Court for recovery of the said expenditures together with commercial interest at 18% per annum and full costs of litigation entirely at your risk as to costs and consequences.
+    (iii) Legal proceedings shall be instituted against you before the competent Civil Court for recovery of the said expenditures together with commercial interest at [CLAIMED INTEREST RATE]% per annum and full costs of litigation entirely at your risk as to costs and consequences.
 
 A copy of this Statutory Notice is retained in my chamber for future legal production.
 
