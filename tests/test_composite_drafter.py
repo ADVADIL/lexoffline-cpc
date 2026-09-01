@@ -57,6 +57,15 @@ def test_specific_performance_statutory_merger():
     assert "Adv. Rajesh Kumar" in custom_text
     assert "Rs. 75,00,000/-" in custom_text
 
+    # Verification clause must not reference paragraphs beyond what the
+    # plaint actually contains, and the earnest-refund interest rate must
+    # be a settable parameter, not a hardcoded figure baked into the text.
+    assert "paragraphs 9 to 10" not in text
+    assert "18%" not in text
+    assert "[REFUND_INTEREST_RATE]" not in text  # must be substituted, not leaked
+    rate_text = p.generate({"REFUND_INTEREST_RATE": "9% per annum"})
+    assert "9% per annum" in rate_text
+
 
 def test_declaration_possession_proviso_compliance():
     p = cdraft.get_composite_pleading("composite_declaration_possession")
@@ -66,6 +75,7 @@ def test_declaration_possession_proviso_compliance():
     assert "Section 34 Proviso" in text
     assert "Order XX Rule 12" in text
     assert "Article 65" in text
+    assert "paragraphs 7 to 8" not in text  # verification must not reference non-existent paragraphs
 
 
 def test_cancellation_suhrid_singh_compliance():
@@ -75,6 +85,7 @@ def test_cancellation_suhrid_singh_compliance():
     assert "Suhrid Singh v. Randhir Singh" in text
     assert "Section 31(2)" in text
     assert "Article 59" in text
+    assert "paragraphs 8 to 9" not in text  # verification must not reference non-existent paragraphs
 
 
 if __name__ == '__main__':

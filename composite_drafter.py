@@ -58,7 +58,7 @@ COMPOSITE_PLEADINGS: List[CompositePleading] = [
             {"clause": "Post-2018 Mandatory Specific Performance Plea", "requirement": "Averment that under Section 10 SRA (as substituted by Act 18 of 2018), specific performance is a mandatory statutory entitlement."},
             {"clause": "Continuous Readiness & Willingness (Sec 16(c))", "requirement": "Plea of continuous financial capacity and mental willingness from contract date to trial, producing documentary proof of funds."},
             {"clause": "Mandatory Section 22(1)(a) Possession Prayer", "requirement": "FATAL MANDATE: Must explicitly pray for delivery of physical possession; otherwise court cannot decree possession."},
-            {"clause": "Mandatory Section 22(1)(b) Earnest Refund Prayer", "requirement": "Alternative prayer for refund of earnest deposit with 18% interest and statutory charge on suit property."},
+            {"clause": "Mandatory Section 22(1)(b) Earnest Refund Prayer", "requirement": "Alternative prayer for refund of earnest deposit with interest and statutory charge on suit property."},
             {"clause": "Article 54 Limitation Cause of Action Date", "requirement": "Specific averment of date fixed or date when defendant refused execution upon tender of balance money."}
         ],
         default_parameters={
@@ -75,7 +75,8 @@ COMPOSITE_PLEADINGS: List[CompositePleading] = [
             "REFUSAL_DATE": "[DATE OF DEFENDANT'S REPLY / REFUSAL]",
             "PROPERTY_SCHEDULE": "[FULL PROPERTY DESCRIPTION: SURVEY NO., EXTENT, TOWNSHIP, AND FOUR BOUNDARIES: NORTH, SOUTH, EAST, WEST]",
             "VALUATION_AMOUNT": "[TOTAL SALE CONSIDERATION VALUE]",
-            "COURT_FEE_PAID": "Rs. [AD VALOREM COURT FEE AMOUNT]/-"
+            "COURT_FEE_PAID": "Rs. [AD VALOREM COURT FEE AMOUNT]/-",
+            "REFUND_INTEREST_RATE": "[RATE CLAIMED, e.g. 12% per annum — set per case facts, not a fixed statutory rate]"
         },
         template_text="""IN THE [COURT_NAME]
 [SUIT_NO]
@@ -106,7 +107,7 @@ That before the target date of [TARGET_DATE], the Plaintiff called upon the Defe
 That under Section 10 of the Specific Relief Act, 1963 (as substituted by Act 18 of 2018), specific performance of a contract is a mandatory statutory entitlement and the Court shall enforce the same. The contract does not fall under any of the barred categories in Section 14 or Section 16, nor does it relate to any infrastructure project in the Schedule under Section 20A.
 
 6. MANDATORY PRAYERS UNDER SECTION 22 SRA & TPA CHARGE:
-That in strict compliance with Section 22(1)(a) & (2) of the Specific Relief Act, 1963, the Plaintiff specifically claims the relief of delivery of physical possession of the Suit Property. Furthermore, under Section 22(1)(b) SRA and Section 55(6)(b) of the Transfer of Property Act, 1882, the Plaintiff is entitled in the alternative to refund of the earnest money paid with interest at 18% per annum with a statutory charge on the Suit Property.
+That in strict compliance with Section 22(1)(a) & (2) of the Specific Relief Act, 1963, the Plaintiff specifically claims the relief of delivery of physical possession of the Suit Property. Furthermore, under Section 22(1)(b) SRA and Section 55(6)(b) of the Transfer of Property Act, 1882, the Plaintiff is entitled in the alternative to refund of the earnest money paid with interest at [REFUND_INTEREST_RATE] with a statutory charge on the Suit Property.
 
 7. LIMITATION PARAGRAPH (ARTICLE 54 LIMITATION ACT):
 That the suit is instituted on [DATE], which is well within 3 years from [TARGET_DATE] (the date fixed for performance) and from [REFUSAL_DATE] (the date when performance was refused), fully satisfying Article 54 of the Limitation Act, 1963.
@@ -118,7 +119,7 @@ PRAYER:
 Wherefore the Plaintiff respectfully prays that this Hon'ble Court may be pleased to pass a judgment and decree:
 (a) Directing the Defendant to execute and register a proper Deed of Sale conveying the Suit Schedule Property in favour of the Plaintiff after receiving the balance sale consideration of [BALANCE_PAYABLE], within a timeframe fixed by this Hon'ble Court, failing which this Hon'ble Court may appoint an officer of the Court to execute and register the sale deed on behalf of the Defendant under Order XXI Rule 34 CPC;
 (b) Directing the Defendant to deliver actual, physical, and vacant possession of the Suit Schedule Property to the Plaintiff under Section 22(1)(a) of the Specific Relief Act, 1963;
-(c) IN THE ALTERNATIVE: in the event this Hon'ble Court refuses specific performance, passing a decree under Section 22(1)(b) SRA directing the Defendant to refund the earnest deposit of [ADVANCE_PAID] together with interest at 18% per annum from date of payment until realisation, creating a statutory charge on the Suit Schedule Property under Section 55(6)(b) of the Transfer of Property Act, 1882;
+(c) IN THE ALTERNATIVE: in the event this Hon'ble Court refuses specific performance, passing a decree under Section 22(1)(b) SRA directing the Defendant to refund the earnest deposit of [ADVANCE_PAID] together with interest at [REFUND_INTEREST_RATE] from date of payment until realisation, creating a statutory charge on the Suit Schedule Property under Section 55(6)(b) of the Transfer of Property Act, 1882;
 (d) Awarding compensation/damages under Section 21 of the Specific Relief Act, 1963 for delayed performance;
 (e) Awarding full costs of this suit; and
 (f) Granting such further and other reliefs as this Hon'ble Court deems fit and proper.
@@ -131,7 +132,7 @@ Date: [DATE]
                                                         ADVOCATE FOR PLAINTIFF
 
 VERIFICATION
-I, [PLAINTIFF NAME], do hereby declare and verify that the contents of paragraphs 1 to 8 are true to my knowledge and paragraphs 9 to 10 are based on legal advice believed to be true.
+I, [PLAINTIFF NAME], do hereby declare and verify that the contents of paragraphs 1 to 8 above are true and correct to my own knowledge, information received, and legal advice which I believe to be true, and that nothing material has been concealed therefrom.
 Verified at [CITY] on this [DATE].
 
                                                         PLAINTIFF"""
@@ -218,7 +219,7 @@ Date: [DATE]
                                                         ADVOCATE FOR PLAINTIFF
 
 VERIFICATION
-I, [PLAINTIFF NAME], verify that the contents of paragraphs 1 to 6 are true to my knowledge and paragraphs 7 to 8 are based on legal advice.
+I, [PLAINTIFF NAME], verify that the contents of paragraphs 1 to 6 above are true and correct to my own knowledge, information received, and legal advice which I believe to be true, and that nothing material has been concealed therefrom.
 Verified at [CITY] on this [DATE].
 
                                                         PLAINTIFF"""
@@ -307,7 +308,7 @@ Date: [DATE]
                                                         ADVOCATE FOR PLAINTIFF
 
 VERIFICATION
-I, [PLAINTIFF NAME], verify that the contents of paragraphs 1 to 7 are true to my knowledge and paragraphs 8 to 9 are based on legal advice.
+I, [PLAINTIFF NAME], verify that the contents of paragraphs 1 to 7 above are true and correct to my own knowledge, information received, and legal advice which I believe to be true, and that nothing material has been concealed therefrom.
 Verified at [CITY] on this [DATE].
 
                                                         PLAINTIFF"""
