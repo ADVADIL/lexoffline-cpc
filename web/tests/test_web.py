@@ -176,6 +176,42 @@ def test_checklist_detail_commercial_suit():
     assert b'Patil Automation' in resp.data
 
 
+def test_provision_link_resolver_routes_sra_sections_correctly():
+    # Section 14A of the SRA must resolve to the SRA's own section, not
+    # silently to a CPC section (CPC has no Section 14A, but this guards
+    # against the routing bug regressing for a number CPC does have).
+    import app as a
+    with a.app.app_context():
+        db = a.get_db()
+        result = a.resolve_provision_link(
+            {'kind': 'sra_section', 'ref': 'Section 14A', 'title': 'x'}, db)
+        assert result['url'] == '/sra/section/15'
+
+
+def test_provision_link_resolver_strips_subclause_suffix():
+    # 'Section 2(11)' must link to the parent CPC Section 2, not fail to
+    # resolve because '2(11)' isn't a stored section number.
+    import app as a
+    with a.app.app_context():
+        db = a.get_db()
+        result = a.resolve_provision_link(
+            {'kind': 'section', 'ref': 'Section 2(11)', 'title': 'x'}, db)
+        assert result['url'] is not None
+        assert '/cpc/section/' in result['url']
+
+
+def test_provision_link_resolver_leaves_out_of_corpus_refs_unresolved():
+    # References to Acts this app doesn't ingest (Commercial Courts Act,
+    # Evidence Act) must correctly stay unresolved rather than being
+    # force-matched to an unrelated provision.
+    import app as a
+    with a.app.app_context():
+        db = a.get_db()
+        result = a.resolve_provision_link(
+            {'kind': 'section', 'ref': 'Section 65B', 'title': 'x'}, db)
+        assert result['url'] is None
+
+
 def test_checklist_404_invalid():
     resp = _client().get('/checklist/non_existent_checklist')
     assert resp.status_code == 404

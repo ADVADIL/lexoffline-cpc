@@ -48,6 +48,60 @@ def rows_to_dicts(rows):
     return [dict(r) for r in rows] if rows else []
 
 
+def resolve_provision_link(cp, db):
+    """Resolve a connected_provisions entry (as used by checklists, templates,
+    and execution workflows) to a web URL, or None if it can't be resolved
+    (either the reference is to an Act this app doesn't ingest — e.g. the
+    Commercial Courts Act, Evidence Act — or it names a Schedule/annexure
+    with no per-item page, both of which are expected misses, not bugs).
+
+    Handles sub-clause references like 'Section 2(11)' or 'Section 14(a)'
+    by stripping the trailing parenthetical and linking to the parent
+    section, since none of the ingested Acts store individual sub-clauses
+    as separate rows. Routes 'Section X' to the correct Act's table based
+    on `kind` (sra_section / limitation_section / plain CPC section) —
+    getting this wrong would silently show the wrong statute's Section X,
+    since CPC, the Limitation Act, and the SRA all have their own
+    differently-worded provisions at the same section numbers.
+    """
+    ref_text = cp["ref"]
+    kind = cp.get("kind")
+    url = None
+    if "Section" in ref_text:
+        # Strip any trailing sub-clause marker, e.g. "14(a)" -> "14",
+        # "2(11)" -> "2" — only full-section rows exist in the DB.
+        s_no = ref_text.replace("Section", "").strip().split()[0]
+        s_no = s_no.split("(")[0].strip()
+        if kind == "limitation_section":
+            row = db.get_limitation_section_by_no(s_no)
+            if row:
+                url = f"/limitation/section/{row['id']}"
+        elif kind == "sra_section":
+            row = db.get_sra_section_by_no(s_no)
+            if row:
+                url = f"/sra/section/{row['id']}"
+        else:
+            row = db.get_section_by_no(s_no)
+            if row:
+                url = f"/cpc/section/{row['id']}"
+    elif "Article" in ref_text:
+        a_no = ref_text.replace("Article", "").strip().split("(")[0].strip()
+        row = db.find_article_by_no(a_no)
+        if row:
+            url = f"/limitation/article/{row['id']}"
+    elif "Order" in ref_text and "Rule" in ref_text:
+        parts = ref_text.replace("Order", "").split("Rule")
+        o_no = parts[0].strip()
+        r_no = parts[1].strip().split("(")[0].strip()
+        row = db.find_rule_in_order(o_no, r_no)
+        if row:
+            url = f"/cpc/rule/{row['id']}"
+    elif "Order" in ref_text:
+        url = "/cpc/orders"
+
+    return {"ref": ref_text, "title": cp.get("title", ""), "url": url}
+
+
 # ---------- Routes ----------
 
 @app.route('/')
@@ -382,43 +436,7 @@ def checklist_detail(checklist_id):
     if not c:
         abort(404)
     db = get_db()
-
-    # Resolve connected provisions to web URLs
-    resolved_links = []
-    for cp in c.connected_provisions:
-        ref_text = cp["ref"]
-        url = None
-        if "Section" in ref_text:
-            s_no = ref_text.replace("Section", "").strip().split()[0]
-            if cp.get("kind") == "limitation_section":
-                row = db.get_limitation_section_by_no(s_no)
-                if row:
-                    url = f"/limitation/section/{row['id']}"
-            else:
-                row = db.get_section_by_no(s_no)
-                if row:
-                    url = f"/cpc/section/{row['id']}"
-        elif "Article" in ref_text:
-            a_no = ref_text.replace("Article", "").strip().split("(")[0].strip()
-            row = db.find_article_by_no(a_no)
-            if row:
-                url = f"/limitation/article/{row['id']}"
-        elif "Order" in ref_text and "Rule" in ref_text:
-            parts = ref_text.replace("Order", "").split("Rule")
-            o_no = parts[0].strip()
-            r_no = parts[1].strip().split("(")[0].strip()
-            row = db.find_rule_in_order(o_no, r_no)
-            if row:
-                url = f"/cpc/rule/{row['id']}"
-        elif "Order" in ref_text:
-            url = "/cpc/orders"
-
-        resolved_links.append({
-            "ref": cp["ref"],
-            "title": cp.get("title", ""),
-            "url": url
-        })
-
+    resolved_links = [resolve_provision_link(cp, db) for cp in c.connected_provisions]
     return render_template('checklist_detail.html',
                            checklist=c,
                            connected_links=resolved_links)
@@ -451,43 +469,7 @@ def template_detail(template_id):
     if not t:
         abort(404)
     db = get_db()
-
-    # Resolve connected provisions to web URLs
-    resolved_links = []
-    for cp in t.connected_provisions:
-        ref_text = cp["ref"]
-        url = None
-        if "Section" in ref_text:
-            s_no = ref_text.replace("Section", "").strip().split()[0]
-            if cp.get("kind") == "limitation_section":
-                row = db.get_limitation_section_by_no(s_no)
-                if row:
-                    url = f"/limitation/section/{row['id']}"
-            else:
-                row = db.get_section_by_no(s_no)
-                if row:
-                    url = f"/cpc/section/{row['id']}"
-        elif "Article" in ref_text:
-            a_no = ref_text.replace("Article", "").strip().split("(")[0].strip()
-            row = db.find_article_by_no(a_no)
-            if row:
-                url = f"/limitation/article/{row['id']}"
-        elif "Order" in ref_text and "Rule" in ref_text:
-            parts = ref_text.replace("Order", "").split("Rule")
-            o_no = parts[0].strip()
-            r_no = parts[1].strip().split("(")[0].strip()
-            row = db.find_rule_in_order(o_no, r_no)
-            if row:
-                url = f"/cpc/rule/{row['id']}"
-        elif "Order" in ref_text:
-            url = "/cpc/orders"
-
-        resolved_links.append({
-            "ref": cp["ref"],
-            "title": cp.get("title", ""),
-            "url": url
-        })
-
+    resolved_links = [resolve_provision_link(cp, db) for cp in t.connected_provisions]
     return render_template('template_detail.html',
                            template=t,
                            connected_links=resolved_links)
@@ -509,43 +491,7 @@ def execution_detail(workflow_id):
     if not w:
         abort(404)
     db = get_db()
-
-    # Resolve connected provisions to web URLs
-    resolved_links = []
-    for cp in w.connected_provisions:
-        ref_text = cp["ref"]
-        url = None
-        if "Section" in ref_text:
-            s_no = ref_text.replace("Section", "").strip().split()[0]
-            if cp.get("kind") == "limitation_section":
-                row = db.get_limitation_section_by_no(s_no)
-                if row:
-                    url = f"/limitation/section/{row['id']}"
-            else:
-                row = db.get_section_by_no(s_no)
-                if row:
-                    url = f"/cpc/section/{row['id']}"
-        elif "Article" in ref_text:
-            a_no = ref_text.replace("Article", "").strip().split("(")[0].strip()
-            row = db.find_article_by_no(a_no)
-            if row:
-                url = f"/limitation/article/{row['id']}"
-        elif "Order" in ref_text and "Rule" in ref_text:
-            parts = ref_text.replace("Order", "").split("Rule")
-            o_no = parts[0].strip()
-            r_no = parts[1].strip().split("(")[0].strip()
-            row = db.find_rule_in_order(o_no, r_no)
-            if row:
-                url = f"/cpc/rule/{row['id']}"
-        elif "Order" in ref_text:
-            url = "/cpc/orders"
-
-        resolved_links.append({
-            "ref": cp["ref"],
-            "title": cp.get("title", ""),
-            "url": url
-        })
-
+    resolved_links = [resolve_provision_link(cp, db) for cp in w.connected_provisions]
     return render_template('execution_detail.html',
                            workflow=w,
                            connected_links=resolved_links)
