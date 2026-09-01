@@ -672,6 +672,23 @@ def deadline():
     trigger_date_str = request.args.get('trigger_date', '')
     excluded_days_str = request.args.get('excluded_days', '0')
     selected_category = request.args.get('category', '')
+    court_holidays_str = request.args.get('court_holidays', '').strip()
+
+    # Optional known court-closure dates beyond Sunday (state/High Court
+    # specific — e.g. Pongal, Deepavali as observed by that jurisdiction).
+    # Sunday is applied automatically regardless of this field; nothing
+    # else is assumed closed unless the advocate states it.
+    court_holidays = []
+    holiday_parse_error = False
+    if court_holidays_str:
+        for tok in court_holidays_str.split(","):
+            tok = tok.strip()
+            if not tok:
+                continue
+            try:
+                court_holidays.append(datetime.strptime(tok, '%Y-%m-%d').date())
+            except ValueError:
+                holiday_parse_error = True
 
     if selected_rule and trigger_date_str:
         try:
@@ -681,7 +698,8 @@ def deadline():
                 art_no = selected_rule.split(":", 1)[1]
                 article = next((a for a in ld.LIMITATION_ARTICLES if a["article_no"] == art_no), None)
                 if article:
-                    raw_art = dl.compute_limitation_article(trigger, article, excluded_days=excluded)
+                    raw_art = dl.compute_limitation_article(trigger, article, excluded_days=excluded,
+                                                             court_holidays=court_holidays)
                     options = raw_art["options"]
                     result = {
                         'is_limitation_article': True,
@@ -698,22 +716,27 @@ def deadline():
                                 'label': opt['label'],
                                 'amount': opt['amount'],
                                 'unit': opt['unit'],
-                                'due_date': opt['due_date'].strftime('%d %B %Y')
+                                'due_date': opt['due_date'].strftime('%d %B %Y (%A)'),
+                                'section4_applied': opt['section4_applied'],
+                                'pre_section4_due_date': opt['pre_section4_due_date'].strftime('%d %B %Y (%A)'),
                             }
                             for opt in options
                         ]
                     }
             else:
-                raw = dl.compute(trigger, selected_rule, excluded_days=excluded)
+                raw = dl.compute(trigger, selected_rule, excluded_days=excluded,
+                                 court_holidays=court_holidays)
                 result = {
                     'is_limitation_article': False,
-                    'due_date': raw['due_date'].strftime('%d %B %Y'),
+                    'due_date': raw['due_date'].strftime('%d %B %Y (%A)'),
                     'trigger_date': raw['trigger_date'].strftime('%d %B %Y'),
                     'period_str': raw['period_str'],
                     'excluded_days': raw['excluded_days'],
                     'provision': raw['rule'].provision,
                     'note': raw['rule'].note or '',
                     'days': raw['days'],
+                    'section4_applied': raw['section4_applied'],
+                    'pre_section4_due_date': raw['pre_section4_due_date'].strftime('%d %B %Y (%A)'),
                 }
         except (ValueError, KeyError):
             result = None
@@ -725,7 +748,9 @@ def deadline():
                            selected_category=selected_category,
                            selected_rule=selected_rule,
                            trigger_date=trigger_date_str,
-                           excluded_days=excluded_days_str)
+                           excluded_days=excluded_days_str,
+                           court_holidays=court_holidays_str,
+                           holiday_parse_error=holiday_parse_error)
 
 
 

@@ -18,6 +18,40 @@ def add_years(d: date, years: int) -> date:
         return d.replace(month=2, day=28, year=d.year + years)
 
 
+# ---------------------------------------------------------------------------
+# Limitation Act, 1963 — Section 4: "Expiry of prescribed period when court
+# is closed." Where the prescribed period expires on a day the court is
+# closed, the suit/appeal/application may be filed the day the court
+# re-opens. Sunday is a court holiday everywhere in India and is applied
+# automatically. Gazetted/state-specific court holidays vary by
+# jurisdiction and cannot be assumed — callers may pass known closure
+# dates explicitly via `court_holidays`; nothing is guessed beyond Sunday.
+def _is_court_closed(d: date, court_holidays) -> bool:
+    if d.weekday() == 6:  # Sunday
+        return True
+    if court_holidays and d in court_holidays:
+        return True
+    return False
+
+
+def apply_section4(due_date: date, court_holidays=None) -> dict:
+    """Advance due_date to the next open day if it falls on a day the
+    court is closed, per Section 4 of the Limitation Act, 1963. Returns
+    the (possibly unchanged) final date plus whether Section 4 applied,
+    so callers can flag it rather than silently shifting a limitation
+    date."""
+    holidays = set(court_holidays) if court_holidays else set()
+    original = due_date
+    shifted = due_date
+    while _is_court_closed(shifted, holidays):
+        shifted += timedelta(days=1)
+    return {
+        "final_date": shifted,
+        "section4_applied": shifted != original,
+        "original_due_date": original,
+    }
+
+
 @dataclass
 class DeadlineRule:
     key: str
@@ -142,11 +176,14 @@ def parse_limitation_period(period_text: str):
     return results
 
 
-def compute_limitation_article(trigger_date: date, article: dict, excluded_days: int = 0) -> dict:
+def compute_limitation_article(trigger_date: date, article: dict, excluded_days: int = 0,
+                                court_holidays=None) -> dict:
     """Compute the due date(s) for any Schedule Article from
     limitation_data.LIMITATION_ARTICLES, given its 'period' field. Returns
     every option when the Article prescribes alternatives (see
-    parse_limitation_period) rather than silently picking one."""
+    parse_limitation_period) rather than silently picking one. Each option
+    is passed through Section 4 (court-closed-day extension) before being
+    returned."""
     parsed = parse_limitation_period(article["period"])
     options = []
     for label, amount, unit in parsed:
@@ -154,13 +191,16 @@ def compute_limitation_article(trigger_date: date, article: dict, excluded_days:
             base_due = add_years(trigger_date, amount)
         else:
             base_due = trigger_date + timedelta(days=amount)
-        due = base_due + timedelta(days=excluded_days)
+        pre_s4_due = base_due + timedelta(days=excluded_days)
+        s4 = apply_section4(pre_s4_due, court_holidays=court_holidays)
         options.append({
             "label": label,
             "amount": amount,
             "unit": unit,
-            "due_date": due,
+            "due_date": s4["final_date"],
             "base_due_date": base_due,
+            "pre_section4_due_date": pre_s4_due,
+            "section4_applied": s4["section4_applied"],
         })
     return {
         "article": article,
@@ -184,25 +224,29 @@ def list_categories() -> List[str]:
     return cats
 
 
-def compute(trigger_date: date, rule_key: str, excluded_days: int = 0) -> dict:
+def compute(trigger_date: date, rule_key: str, excluded_days: int = 0, court_holidays=None) -> dict:
     rule = _BY_KEY.get(rule_key)
     if not rule:
         raise KeyError(f"Unknown deadline rule: {rule_key}")
 
     if rule.days is not None:
         base_due = trigger_date + timedelta(days=rule.days)
-        due = base_due + timedelta(days=excluded_days)
+        pre_s4_due = base_due + timedelta(days=excluded_days)
         period_str = f"{rule.days} days"
     else:
         base_due = add_years(trigger_date, rule.years)
-        due = base_due + timedelta(days=excluded_days)
+        pre_s4_due = base_due + timedelta(days=excluded_days)
         period_str = f"{rule.years} year{'s' if rule.years > 1 else ''}"
+
+    s4 = apply_section4(pre_s4_due, court_holidays=court_holidays)
 
     return {
         "rule": rule,
         "trigger_date": trigger_date,
-        "due_date": due,
+        "due_date": s4["final_date"],
         "base_due_date": base_due,
+        "pre_section4_due_date": pre_s4_due,
+        "section4_applied": s4["section4_applied"],
         "period_str": period_str,
         "excluded_days": excluded_days,
         "days": rule.days if rule.days is not None else (base_due - trigger_date).days,
