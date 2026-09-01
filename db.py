@@ -152,17 +152,30 @@ class ActDatabase:
         pinned = []
         q = query.strip()
 
-        # 1. Order and Rule: e.g. "Order 39 Rule 1", "O.39 R.1", "O 39 R 1", "Order XXXIX Rule 1"
-        m_or = re.search(r'(?i)\b(?:order|o)\.?\s*([ivxldcm]+|\d+)\s*(?:rule|r)\.?\s*(\d+[a-z]?)', q)
+        # 1. Order and Rule: e.g. "Order 39 Rule 1", "O.39 R.1", "O 39 R 1",
+        # "Order XXXIX Rule 1", "Order 20-A Rule 1", "Order XXXII-A Rule 6".
+        # The suffix group is optional and accepts a bare letter with or
+        # without a hyphen, since the underlying order_no data itself is
+        # inconsistently stored (e.g. 'XVI-A' vs 'XXA' with no hyphen) —
+        # so DB lookups below try both forms rather than assuming either.
+        m_or = re.search(r'(?i)\b(?:order|o)\.?\s*([ivxldcm]+|\d+)(-?[a-z])?\s*(?:rule|r)\.?\s*(\d+[a-z]?)', q)
         if m_or:
-            raw_order, rule_no = m_or.group(1), m_or.group(2)
+            raw_order, suffix, rule_no = m_or.group(1), m_or.group(2), m_or.group(3)
             order_roman = raw_order.upper() if re.match(r'^[ivxldcm]+$', raw_order, re.I) else self._int_to_roman(int(raw_order))
-            rule_row = self.conn.execute(
-                """SELECT r.id, r.rule_no, r.title, o.order_no 
-                   FROM rules r JOIN orders o ON r.order_id=o.id 
-                   WHERE o.order_no=? AND r.rule_no=? LIMIT 1""",
-                (order_roman, rule_no)
-            ).fetchone()
+            suffix_letter = suffix.lstrip('-').upper() if suffix else ''
+            candidates = [order_roman + suffix_letter] if suffix_letter else [order_roman]
+            if suffix_letter:
+                candidates.append(f"{order_roman}-{suffix_letter}")
+            rule_row = None
+            for candidate in candidates:
+                rule_row = self.conn.execute(
+                    """SELECT r.id, r.rule_no, r.title, o.order_no 
+                       FROM rules r JOIN orders o ON r.order_id=o.id 
+                       WHERE o.order_no=? AND r.rule_no=? LIMIT 1""",
+                    (candidate, rule_no)
+                ).fetchone()
+                if rule_row:
+                    break
             if rule_row:
                 pinned.append({
                     "kind": "rule",
