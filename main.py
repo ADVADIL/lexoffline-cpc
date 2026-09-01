@@ -746,6 +746,7 @@ class ChecklistsTab(QWidget):
         ref_text = cp["ref"]
         if "Section" in ref_text:
             s_no = ref_text.replace("Section", "").strip().split()[0]
+            s_no = s_no.split("(")[0].strip()  # strip sub-clause e.g. "14(a)" -> "14"
             if cp.get("kind") == "sra_section" or "Specific Relief" in cp.get("title", "") or "SRA" in ref_text:
                 row = self.db.get_sra_section_by_no(s_no)
                 if row:
@@ -906,6 +907,7 @@ class DraftingTemplatesTab(QWidget):
         ref_text = cp["ref"]
         if "Section" in ref_text:
             s_no = ref_text.replace("Section", "").strip().split()[0]
+            s_no = s_no.split("(")[0].strip()  # strip sub-clause e.g. "14(a)" -> "14"
             if cp.get("kind") == "sra_section" or "Specific Relief" in cp.get("title", "") or "SRA" in ref_text:
                 row = self.db.get_sra_section_by_no(s_no)
                 if row:
@@ -1050,8 +1052,16 @@ class ExecutionNavigatorTab(QWidget):
     def _jump_to_provision(self, cp):
         ref_text = cp["ref"]
         if "Section" in ref_text:
+            # Strip any trailing sub-clause marker, e.g. "14(a)" -> "14",
+            # "2(11)" -> "2" — only full-section rows exist in the DB.
             s_no = ref_text.replace("Section", "").strip().split()[0]
-            if cp.get("kind") == "limitation_section":
+            s_no = s_no.split("(")[0].strip()
+            if cp.get("kind") == "sra_section" or "Specific Relief" in cp.get("title", "") or "SRA" in ref_text:
+                row = self.db.get_sra_section_by_no(s_no)
+                if row:
+                    self.on_jump("sra_section", row["id"])
+                    return
+            elif cp.get("kind") == "limitation_section":
                 row = self.db.get_limitation_section_by_no(s_no)
                 if row:
                     self.on_jump("limitation_section", row["id"])
@@ -1235,6 +1245,7 @@ class SRANavigatorTab(QWidget):
                                 return
         elif "Section" in ref_text:
             s_no = ref_text.replace("Section", "").strip().split()[0]
+            s_no = s_no.split("(")[0].strip()  # strip sub-clause e.g. "14(a)" -> "14"
             if cp.get("kind") == "sra_section" or "Specific Relief" in cp.get("title", "") or "SRA" in ref_text:
                 row = self.db.get_sra_section_by_no(s_no)
                 if row:
@@ -1450,6 +1461,16 @@ class AddCaseDialog(QDialog):
         self.next_date.setDate(date.today())
         form.addRow("Next Hearing Date:", self.next_date)
 
+        self.stage_date_known = QCheckBox("Stage trigger date known (summons served / death / decree, etc.)")
+        self.stage_date_known.setChecked(False)
+        form.addRow("", self.stage_date_known)
+
+        self.stage_date = QDateEdit(calendarPopup=True)
+        self.stage_date.setDate(date.today())
+        self.stage_date.setEnabled(False)
+        self.stage_date_known.toggled.connect(self.stage_date.setEnabled)
+        form.addRow("Date Stage Began:", self.stage_date)
+
         self.notes = QPlainTextEdit()
         self.notes.setPlaceholderText("Brief facts, claim value, interlocutory applications, etc.")
         self.notes.setMaximumHeight(80)
@@ -1470,6 +1491,10 @@ class AddCaseDialog(QDialog):
 
     def get_data(self):
         qd = self.next_date.date()
+        stage_date_str = ""
+        if self.stage_date_known.isChecked():
+            sd = self.stage_date.date()
+            stage_date_str = f"{sd.year():04d}-{sd.month():02d}-{sd.day():02d}"
         return {
             "case_no": self.case_no.text().strip(),
             "court_name": self.court_name.text().strip(),
@@ -1479,7 +1504,8 @@ class AddCaseDialog(QDialog):
             "opposite_counsel": self.opposite_counsel.text().strip(),
             "stage": self.stage.currentText(),
             "next_date": f"{qd.year():04d}-{qd.month():02d}-{qd.day():02d}",
-            "notes": self.notes.toPlainText().strip()
+            "notes": self.notes.toPlainText().strip(),
+            "stage_date": stage_date_str
         }
 
 
@@ -1651,12 +1677,29 @@ class CaseDiaryTab(QWidget):
             f"<b>Current Stage:</b> {c['stage']} &nbsp;|&nbsp; <b>Next Hearing:</b> {c['next_date'] or 'Not fixed'}"
         )
 
-        # Statutory deadline computation
-        adv = cs.suggest_statutory_deadline(c["stage"])
+        # Statutory deadline computation — uses the actual stage_date
+        # (when the current stage's clock started), not today's date.
+        stage_date_str = c["stage_date"] if "stage_date" in c.keys() else ""
+        stage_date_missing = not stage_date_str
+        trigger = None
+        if stage_date_str:
+            try:
+                y, m, d = (int(x) for x in stage_date_str.split("-"))
+                trigger = date(y, m, d)
+            except (ValueError, TypeError):
+                stage_date_missing = True
+
+        adv = cs.suggest_statutory_deadline(c["stage"], trigger)
+        missing_html = (
+            "<br><span style='color:#c05621;'>🕑 <b>No stage trigger date recorded</b> — "
+            "date below computed from today's date as a placeholder, not the stage's actual "
+            "trigger event. Re-add this case with the trigger date to get a real deadline.</span>"
+            if stage_date_missing else ""
+        )
         warn_html = f"<br><span style='color:#c53030;'>⚠️ <b>Warning:</b> {adv.warning}</span>" if adv.warning else ""
         self.advice_label.setText(
             f"<b>Governing Rule:</b> {adv.statutory_rule} &nbsp; ({adv.period_str})<br>"
-            f"{adv.advice}{warn_html}"
+            f"{adv.advice}{warn_html}{missing_html}"
         )
 
         # Load hearings
