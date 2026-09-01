@@ -44,6 +44,27 @@ def test_statutory_deadline_suggester_death_lr():
     assert "abates" in adv.advice.lower()
 
 
+def test_statutory_deadline_suggester_applies_section4():
+    # 2026-01-02 (Friday) + 30 days = 2026-02-01, a Sunday. The advisor must
+    # not hand the advocate a due date that falls on a day court is closed.
+    t_date = date(2026, 1, 2)
+    adv = suggest_statutory_deadline("Service of Summons (Awaiting Written Statement)", t_date)
+    assert adv.statutory_due_date == date(2026, 2, 2)
+    assert adv.statutory_due_date.weekday() != 6
+    assert "02 February 2026" in adv.advice
+
+
+def test_statutory_deadline_suggester_respects_extra_holiday():
+    # Sunday 2026-02-01 followed by a declared court holiday on Monday
+    # 2026-02-02 must roll all the way to Tuesday.
+    t_date = date(2026, 1, 2)
+    adv = suggest_statutory_deadline(
+        "Service of Summons (Awaiting Written Statement)", t_date,
+        court_holidays=[date(2026, 2, 2)]
+    )
+    assert adv.statutory_due_date == date(2026, 2, 3)
+
+
 def test_case_diary_crud_in_db():
     db = ActDatabase()
     

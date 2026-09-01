@@ -581,12 +581,14 @@ def diary_new():
         opposite_party = request.form.get('opposite_party', '').strip()
         opposite_counsel = request.form.get('opposite_counsel', '').strip()
         stage = request.form.get('stage', cs.CIVIL_STAGES[0]).strip()
+        stage_date = request.form.get('stage_date', '').strip()
         next_date = request.form.get('next_date', '').strip()
         notes = request.form.get('notes', '').strip()
 
         if case_no and court_name and client_name:
             cid = db.add_case(case_no, court_name, client_name, client_role,
-                              opposite_party, opposite_counsel, stage, next_date, notes)
+                              opposite_party, opposite_counsel, stage, next_date, notes,
+                              stage_date=stage_date)
             return redirect(f'/diary/case/{cid}')
 
     return render_template('diary_form.html', stages=cs.CIVIL_STAGES)
@@ -601,11 +603,24 @@ def diary_detail(case_id):
     case_dict = dict(c)
     hearings_rows = db.hearings_for_case(case_id)
     hearings = [dict(h) for h in hearings_rows]
-    advice = cs.suggest_statutory_deadline(case_dict['stage'])
+
+    stage_date_str = case_dict.get('stage_date') or ''
+    stage_date_missing = not stage_date_str
+    if stage_date_str:
+        try:
+            stage_date = datetime.strptime(stage_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            stage_date = None
+            stage_date_missing = True
+    else:
+        stage_date = None
+
+    advice = cs.suggest_statutory_deadline(case_dict['stage'], stage_date)
     return render_template('diary_detail.html',
                            case=case_dict,
                            hearings=hearings,
                            advice=advice,
+                           stage_date_missing=stage_date_missing,
                            stages=cs.CIVIL_STAGES)
 
 
@@ -620,13 +635,20 @@ def diary_add_hearing(case_id):
     next_date = request.form.get('next_date', '').strip()
     next_purpose = request.form.get('next_purpose', '').strip()
     new_stage = request.form.get('new_stage', '').strip()
+    new_stage_date = request.form.get('new_stage_date', '').strip()
 
     if hearing_date:
         db.add_hearing(case_id, hearing_date, business_done, next_date, next_purpose)
         if new_stage:
+            # Changing stage resets the statutory clock — use the date the
+            # advocate gives for the new stage's trigger event; if left
+            # blank, fall back to the hearing date itself as the best
+            # available record rather than leaving it empty.
+            effective_stage_date = new_stage_date or hearing_date
             db.update_case(case_id, c['case_no'], c['court_name'], c['client_name'],
                            c['client_role'], c['opposite_party'], c['opposite_counsel'],
-                           new_stage, next_date or c['next_date'], c['notes'])
+                           new_stage, next_date or c['next_date'], c['notes'],
+                           stage_date=effective_stage_date)
 
     return redirect(f'/diary/case/{case_id}')
 

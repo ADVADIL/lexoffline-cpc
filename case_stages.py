@@ -7,6 +7,17 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 from typing import List, Dict, Optional
 
+from deadlines import apply_section4
+
+
+def _s4(d: date, court_holidays=None) -> date:
+    """Apply Limitation Act Section 4 (court-closed extension) to a
+    computed statutory date before it is shown to the advocate. Every
+    date this module hands back has already passed through this —
+    dates are never shown as due on a day the court is actually
+    closed."""
+    return apply_section4(d, court_holidays=court_holidays)["final_date"]
+
 
 @dataclass
 class StageDeadlineAdvice:
@@ -35,17 +46,20 @@ CIVIL_STAGES: List[str] = [
 ]
 
 
-def suggest_statutory_deadline(stage: str, trigger_date: Optional[date] = None) -> StageDeadlineAdvice:
+def suggest_statutory_deadline(stage: str, trigger_date: Optional[date] = None,
+                                court_holidays=None) -> StageDeadlineAdvice:
     """
     Given a litigation stage and an optional trigger date (e.g. date of summons service,
     death, or decree), computes the exact statutory due date and returns actionable
-    statutory advice.
+    statutory advice. Every date is passed through Section 4 of the Limitation Act
+    (court-closed extension) — Sunday is checked automatically; pass known
+    jurisdiction-specific court holidays via `court_holidays` for anything beyond that.
     """
     base_date = trigger_date or date.today()
 
     if stage == "Service of Summons (Awaiting Written Statement)":
-        due_30 = base_date + timedelta(days=30)
-        due_90 = base_date + timedelta(days=90)
+        due_30 = _s4(base_date + timedelta(days=30), court_holidays)
+        due_90 = _s4(base_date + timedelta(days=90), court_holidays)
         return StageDeadlineAdvice(
             stage=stage,
             statutory_rule="Order VIII Rule 1 CPC",
@@ -56,7 +70,7 @@ def suggest_statutory_deadline(stage: str, trigger_date: Optional[date] = None) 
         )
 
     elif stage == "Caveat Lodged (Section 148A)":
-        due = base_date + timedelta(days=90)
+        due = _s4(base_date + timedelta(days=90), court_holidays)
         return StageDeadlineAdvice(
             stage=stage,
             statutory_rule="Section 148A(5) CPC",
@@ -67,8 +81,8 @@ def suggest_statutory_deadline(stage: str, trigger_date: Optional[date] = None) 
         )
 
     elif stage == "Death of Party Reported (Order XXII)":
-        due_lr = base_date + timedelta(days=90)
-        due_abate = base_date + timedelta(days=150)
+        due_lr = _s4(base_date + timedelta(days=90), court_holidays)
+        due_abate = _s4(base_date + timedelta(days=150), court_holidays)
         return StageDeadlineAdvice(
             stage=stage,
             statutory_rule="Order XXII Rules 3 & 4 CPC r/w Article 120 Limitation Act",
@@ -79,7 +93,7 @@ def suggest_statutory_deadline(stage: str, trigger_date: Optional[date] = None) 
         )
 
     elif stage == "Interlocutory Applications / Injunction (Order XXXIX)":
-        due_30 = base_date + timedelta(days=30)
+        due_30 = _s4(base_date + timedelta(days=30), court_holidays)
         return StageDeadlineAdvice(
             stage=stage,
             statutory_rule="Order XXXIX Rule 3 Proviso & Rule 3A CPC",
@@ -90,8 +104,8 @@ def suggest_statutory_deadline(stage: str, trigger_date: Optional[date] = None) 
         )
 
     elif stage == "Pronouncement of Judgment / Decree (Order XX)":
-        due_30 = base_date + timedelta(days=30)
-        due_90 = base_date + timedelta(days=90)
+        due_30 = _s4(base_date + timedelta(days=30), court_holidays)
+        due_90 = _s4(base_date + timedelta(days=90), court_holidays)
         return StageDeadlineAdvice(
             stage=stage,
             statutory_rule="Section 96 CPC r/w Articles 116(a)/(b) Limitation Act",
@@ -102,7 +116,7 @@ def suggest_statutory_deadline(stage: str, trigger_date: Optional[date] = None) 
         )
 
     elif stage == "Framing of Issues (Order XIV)":
-        due_15 = base_date + timedelta(days=15)
+        due_15 = _s4(base_date + timedelta(days=15), court_holidays)
         return StageDeadlineAdvice(
             stage=stage,
             statutory_rule="Order XVI Rule 1 CPC",

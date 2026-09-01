@@ -69,6 +69,20 @@ class ActDatabase:
         )
         self.conn.commit()
 
+        # Migration: stage_date records the date the CURRENT procedural
+        # stage's statutory clock actually started (summons service, date
+        # of death, date of decree, etc.) — distinct from next_date, which
+        # is just the next hearing date. Without this, the statutory
+        # deadline advisor has no real trigger date to compute from and
+        # silently falls back to "today", making its advice meaningless
+        # for any case not created on the same day the stage began.
+        # ALTER TABLE has no IF NOT EXISTS guard in SQLite, so guard here.
+        try:
+            self.conn.execute("ALTER TABLE case_diary ADD COLUMN stage_date TEXT NOT NULL DEFAULT ''")
+            self.conn.commit()
+        except sqlite3.OperationalError:
+            pass  # column already exists
+
     # ---------- sections ----------
     def sections_by_part(self):
         rows = self.conn.execute(
@@ -360,31 +374,47 @@ class ActDatabase:
 
     # ---------- case diary ----------
     def add_case(self, case_no, court_name, client_name, client_role="Plaintiff",
-                 opposite_party="", opposite_counsel="", stage="", next_date="", notes=""):
+                 opposite_party="", opposite_counsel="", stage="", next_date="", notes="",
+                 stage_date=""):
         cur = self.conn.execute(
             """
             INSERT INTO case_diary (case_no, court_name, client_name, client_role,
-                                    opposite_party, opposite_counsel, stage, next_date, notes)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                                    opposite_party, opposite_counsel, stage, next_date, notes,
+                                    stage_date)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (case_no, court_name, client_name, client_role,
-             opposite_party, opposite_counsel, stage, next_date, notes)
+             opposite_party, opposite_counsel, stage, next_date, notes, stage_date)
         )
         self.conn.commit()
         return cur.lastrowid
 
     def update_case(self, case_id, case_no, court_name, client_name, client_role,
-                    opposite_party, opposite_counsel, stage, next_date, notes):
-        self.conn.execute(
-            """
-            UPDATE case_diary
-            SET case_no=?, court_name=?, client_name=?, client_role=?,
-                opposite_party=?, opposite_counsel=?, stage=?, next_date=?, notes=?
-            WHERE id=?
-            """,
-            (case_no, court_name, client_name, client_role,
-             opposite_party, opposite_counsel, stage, next_date, notes, case_id)
-        )
+                    opposite_party, opposite_counsel, stage, next_date, notes,
+                    stage_date=None):
+        if stage_date is None:
+            self.conn.execute(
+                """
+                UPDATE case_diary
+                SET case_no=?, court_name=?, client_name=?, client_role=?,
+                    opposite_party=?, opposite_counsel=?, stage=?, next_date=?, notes=?
+                WHERE id=?
+                """,
+                (case_no, court_name, client_name, client_role,
+                 opposite_party, opposite_counsel, stage, next_date, notes, case_id)
+            )
+        else:
+            self.conn.execute(
+                """
+                UPDATE case_diary
+                SET case_no=?, court_name=?, client_name=?, client_role=?,
+                    opposite_party=?, opposite_counsel=?, stage=?, next_date=?, notes=?,
+                    stage_date=?
+                WHERE id=?
+                """,
+                (case_no, court_name, client_name, client_role,
+                 opposite_party, opposite_counsel, stage, next_date, notes, stage_date, case_id)
+            )
         self.conn.commit()
 
     def delete_case(self, case_id):
