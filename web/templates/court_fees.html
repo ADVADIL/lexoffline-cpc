@@ -1,0 +1,508 @@
+{% extends "base.html" %}
+
+{% block title %}Tamil Nadu Court Fees Calculator - LexOffline{% endblock %}
+
+{% block extra_head %}
+<style>
+  .cf-card {
+    background: #2d3748;
+    border: 1px solid #4a5568;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .cf-header {
+    background: linear-gradient(135deg, #1e3a8a, #312e81);
+    color: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .cf-badge {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .cf-input, .cf-select {
+    width: 100%;
+    background: #1a202c;
+    border: 1px solid #4a5568;
+    color: #fff;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .cf-input:focus, .cf-select:focus {
+    border-color: #3182ce;
+  }
+  .cf-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #a0aec0;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .cf-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .cf-summary-box {
+    background: #1a202c;
+    border: 1px solid #4a5568;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  .cf-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #2d3748;
+    font-size: 0.85rem;
+  }
+  .cf-row:last-child {
+    border-bottom: none;
+  }
+  @media print {
+    .navbar, .site-footer, .no-print { display: none !important; }
+    .print-only { display: block !important; }
+    body { background: #fff !important; color: #000 !important; }
+    .cf-summary-box { border: 1px solid #000 !important; color: #000 !important; }
+  }
+  .print-only { display: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="cf-header no-print">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <span class="cf-badge">⚖️ Tamil Nadu Act 14 of 1955</span>
+      <span class="cf-badge" style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border-color: rgba(16, 185, 129, 0.4); margin-left: 0.5rem;">Updated with Act 06 of 2017 & Act 01 of 2016</span>
+      <h1 style="margin: 0.5rem 0 0.25rem 0; font-size: 1.75rem;">Tamil Nadu Court Fees Calculator</h1>
+      <p style="margin: 0; color: #bfdbfe; font-size: 0.85rem;">Official statutory suit valuation and court fees computation for civil litigation.</p>
+    </div>
+    <button onclick="window.print()" style="background: #3182ce; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85rem;">
+      🖨️ Print Valuation Slip
+    </button>
+  </div>
+</div>
+
+<div class="no-print" style="display: grid; grid-template-columns: 1fr 400px; gap: 1.5rem; align-items: start;">
+  
+  <!-- Left Column: Inputs -->
+  <div>
+    <!-- Category Selection -->
+    <div class="cf-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+        <label class="cf-label" style="color: #63b3ed; font-size: 0.8rem;">1. Select Suit / Proceeding Classification</label>
+        <span id="catSectionBadge" class="cf-badge">Sec 22</span>
+      </div>
+      <select id="suitCategory" class="cf-select" onchange="onSuitChange()">
+        <optgroup label="Civil Suits">
+          <option value="sec22_money">Section 22: Suit for Money / Damages / Arrears</option>
+          <option value="sec25a_dec_poss">Section 25(a): Declaration & Possession</option>
+          <option value="sec25b_dec_inj">Section 25(b): Declaration & Injunction (Immovable)</option>
+          <option value="sec25c_dec_ipr">Section 25(c): Declaration - Trademark / Copyright / Patent</option>
+          <option value="sec25cc_adverse">Section 25(cc) & 30: Adverse Possession Defence</option>
+          <option value="sec25d_dec_other">Section 25(d): Declaration - Other Cases</option>
+          <option value="sec26_adoption">Section 26: Adoption Suits</option>
+          <option value="sec27a_inj_immovable">Section 27(a): Injunction (Title Disputed)</option>
+          <option value="sec27b_inj_ipr">Section 27(b): Injunction (IPR / Trade Name)</option>
+          <option value="sec27c_inj_other">Section 27(c): Injunction - Other</option>
+          <option value="sec37_1_partition_excluded">Section 37(1): Partition (Excluded from Possession)</option>
+          <option value="sec37_2_partition_joint">Section 37(2): Partition (In Joint Possession)</option>
+          <option value="sec37_3_partition_def">Section 37(3): Partition - Defendant's Share</option>
+          <option value="sec42a_spec_sale">Section 42(a): Specific Performance of Sale</option>
+          <option value="sec42c_spec_lease">Section 42(c): Specific Performance of Lease</option>
+          <option value="sec30_possession">Section 30: Possession not otherwise provided</option>
+          <option value="sec29_possession_sra">Section 29: Possession under Sec 6 Specific Relief Act</option>
+          <option value="sec40_cancellation">Section 40: Cancellation of Decree / Document</option>
+          <option value="sec33_1_mortgage_rec">Section 33(1): Mortgage Money Recovery</option>
+          <option value="sec33_8_mortgage_red">Section 33(8): Mortgage Redemption</option>
+          <option value="sec43_tenancy">Section 43: Landlord & Tenant (Ejectment / Rent)</option>
+          <option value="sec35_accounts">Section 35: Suit for Accounts</option>
+          <option value="sec36_partnership">Section 36: Dissolution of Partnership</option>
+          <option value="sec31_easement">Section 31: Suits relating to Easements</option>
+          <option value="sec32_preemption">Section 32: Pre-emption Suits</option>
+          <option value="sec41_attachment">Section 41: Set Aside Attachment</option>
+          <option value="sec44_mesne_profit">Section 44: Mesne Profits</option>
+          <option value="sec45_survey">Section 45: Survey and Boundaries Act Suit</option>
+          <option value="sec28_trust">Section 28: Trust Property Suits</option>
+          <option value="sec39_administration">Section 39: Administration Suits</option>
+          <option value="sec47_public">Section 47: Sec 91 / 92 CPC / Religious Endowments</option>
+          <option value="sec50_residuary">Section 50: Residuary Suits</option>
+        </optgroup>
+        <optgroup label="Probate & Succession">
+          <option value="probate">Probate / Letters of Administration (Sch I Art 6)</option>
+          <option value="succession_cert">Succession Certificate (Sch I Art 7)</option>
+        </optgroup>
+        <optgroup label="Criminal & Special Matters">
+          <option value="sec138_ni">Sec 138 NI Act Cheque Bounce (Sch II Art 20)</option>
+          <option value="arbitration_app">Arbitration Application / Appeal (Sch II Art 4)</option>
+        </optgroup>
+        <optgroup label="High Court & Revisions">
+          <option value="writ_226">Writ Petition under Art 226 (Sch II Art 11(r)(i))</option>
+          <option value="writ_227">Petition under Art 227 (Sch II Art 11(r)(ii))</option>
+          <option value="cpc_revision_hc">CRP to High Court (Sch II Art 11(o))</option>
+          <option value="cpc_revision_dist">Revision to District Court (Sch II Art 11(p))</option>
+          <option value="vakalatnama">Vakalatnama (Sch II Art 16)</option>
+          <option value="caveat">Caveat Petition (Sch II Art 18)</option>
+          <option value="interlocutory_app">Interlocutory Application (IA) (Sch II Art 11(h))</option>
+          <option value="memo_appearance">Memo of Appearance (Sch II Art 19)</option>
+          <option value="matrimonial_petition">Matrimonial Petition (Sch II Art 1)</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <!-- Valuation Details -->
+    <div class="cf-card">
+      <label class="cf-label" style="color: #63b3ed; font-size: 0.8rem; margin-bottom: 0.75rem;">2. Forum & Valuation Specifics</label>
+      
+      <div class="cf-grid-2" style="margin-bottom: 1rem;">
+        <div>
+          <label class="cf-label">Court of Institution</label>
+          <select id="courtType" class="cf-select" onchange="calc()">
+            <option value="subordinate">Subordinate Court (Munsif / Sub / District / City Civil)</option>
+            <option value="highcourt">Madras High Court (Original / Writ / Appellate)</option>
+          </select>
+        </div>
+        <div>
+          <label class="cf-label">Proceeding Stage</label>
+          <select id="proceedingStage" class="cf-select" onchange="calc()">
+            <option value="plaint">Original Plaint / Counter-Claim</option>
+            <option value="appeal">Appeal (Section 52 - Same fee as trial court)</option>
+            <option value="sec89_refund">Referral under Sec 89 CPC (100% Refundable)</option>
+            <option value="sec69_refund">Settled Out of Court before evidence (100% Refund)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="dynamicInputs" style="margin-bottom: 1rem;"></div>
+
+      <div id="statutoryTip" style="background: rgba(217, 119, 6, 0.15); border: 1px solid rgba(217, 119, 6, 0.3); border-radius: 6px; padding: 10px; font-size: 0.8rem; color: #fbd38d;">
+        Tip: Guideline value fixed under Sec 47-AA of Indian Stamp Act governs market value.
+      </div>
+    </div>
+
+    <!-- Statutory Addons -->
+    <div class="cf-card">
+      <label class="cf-label" style="color: #63b3ed; font-size: 0.8rem; margin-bottom: 0.75rem;">3. Filing & Welfare Stamps</label>
+      <div class="cf-grid-2">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem;">
+          <input type="checkbox" id="chk_vakalat" checked onchange="calc()">
+          <span>Vakalatnama Court Fee (₹10)</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem;">
+          <input type="checkbox" id="chk_adv_welfare" checked onchange="calc()">
+          <span>Advocates Welfare Fund (₹120)</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem;">
+          <input type="checkbox" id="chk_clerk_welfare" checked onchange="calc()">
+          <span>Clerks Welfare Stamp (₹20)</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.85rem;">
+          <input type="checkbox" id="chk_process" onchange="calc()">
+          <span>Process Fee / Batta (₹30/def)</span>
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Column: Results & Memo -->
+  <div style="position: sticky; top: 1rem;">
+    <div class="cf-card" style="border-color: #3182ce; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <span class="cf-label" style="color: #90cdf4;">TOTAL COURT FEE PAYABLE</span>
+        <span class="cf-badge" style="background: rgba(49, 130, 206, 0.2); color: #bee3f8;">e-Stamps / Stamps</span>
+      </div>
+      <div style="font-size: 2.25rem; font-weight: 800; color: #fff; margin: 0.25rem 0;">
+        ₹ <span id="outTotal">0</span>
+      </div>
+      <div style="font-size: 0.75rem; color: #a0aec0; margin-bottom: 1rem;">Rounded off as per Section 21-A (Act 6 of 2017)</div>
+
+      <div class="cf-summary-box">
+        <div class="cf-row">
+          <span style="color: #a0aec0;">Subject Valuation:</span>
+          <strong id="outSubject">₹ 0</strong>
+        </div>
+        <div class="cf-row">
+          <span style="color: #a0aec0;">Statutory Base:</span>
+          <strong id="outBase">₹ 0</strong>
+        </div>
+        <div class="cf-row">
+          <span style="color: #a0aec0;">Rate Applied:</span>
+          <span id="outRate" style="color: #63b3ed; font-weight: 600;">3% Ad Valorem</span>
+        </div>
+        <div class="cf-row" style="border-top: 1px solid #4a5568; margin-top: 4px; padding-top: 8px;">
+          <span>Principal Court Fee:</span>
+          <strong id="outPrincipal" style="color: #68d391;">₹ 0</strong>
+        </div>
+        <div class="cf-row">
+          <span>Stamping & Addons:</span>
+          <strong id="outAddons">₹ 150</strong>
+        </div>
+        <div id="refundRow" class="cf-row" style="display: none; background: rgba(16, 185, 129, 0.2); padding: 8px; border-radius: 4px; color: #6ee7b7;">
+          <span>Eligible Refund:</span>
+          <strong id="outRefund">₹ 0</strong>
+        </div>
+      </div>
+
+      <div style="margin-top: 1rem; font-size: 0.75rem; color: #cbd5e0; line-height: 1.4; background: #1a202c; padding: 10px; border-radius: 6px; border: 1px solid #4a5568;">
+        <strong>Statutory Citation:</strong>
+        <p id="outCitation" style="margin: 4px 0 0 0;"></p>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-top: 1rem;">
+        <button onclick="copyMemo()" style="flex: 1; background: #4a5568; color: #fff; border: none; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">
+          📋 Copy Valuation Memo
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Printable Slip -->
+<div class="print-only" style="padding: 2rem; font-family: serif; color: #000;">
+  <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0; font-size: 1.3rem;">VALUATION SLIP / COURT FEE MEMO</h2>
+    <p style="margin: 4px 0 0 0; font-size: 0.85rem;">Under the Tamil Nadu Court-Fees and Suits Valuation Act, 1955 (as amended by Act 6 of 2017)</p>
+  </div>
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.85rem;">
+    <tr><td style="padding: 8px; border: 1px solid #000; width: 35%;"><strong>Proceeding:</strong></td><td style="padding: 8px; border: 1px solid #000;" id="pSuit"></td></tr>
+    <tr><td style="padding: 8px; border: 1px solid #000;"><strong>Statutory Section:</strong></td><td style="padding: 8px; border: 1px solid #000;" id="pSec"></td></tr>
+    <tr><td style="padding: 8px; border: 1px solid #000;"><strong>Court:</strong></td><td style="padding: 8px; border: 1px solid #000;" id="pCourt"></td></tr>
+    <tr><td style="padding: 8px; border: 1px solid #000;"><strong>Subject Value (₹):</strong></td><td style="padding: 8px; border: 1px solid #000;" id="pSubVal"></td></tr>
+    <tr><td style="padding: 8px; border: 1px solid #000;"><strong>Statutory Reckoned (₹):</strong></td><td style="padding: 8px; border: 1px solid #000;" id="pBaseVal"></td></tr>
+    <tr><td style="padding: 8px; border: 1px solid #000;"><strong>Rate:</strong></td><td style="padding: 8px; border: 1px solid #000;" id="pRate"></td></tr>
+    <tr><td style="padding: 8px; border: 1px solid #000;"><strong>Principal Fee (₹):</strong></td><td style="padding: 8px; border: 1px solid #000; font-weight: bold;" id="pFee"></td></tr>
+    <tr><td style="padding: 8px; border: 1px solid #000;"><strong>Total Stamping (₹):</strong></td><td style="padding: 8px; border: 1px solid #000; font-weight: bold;" id="pTotal"></td></tr>
+  </table>
+  <p style="font-size: 0.8rem;"><strong>Declaration under Section 10:</strong> Verified that the valuation has been computed in accordance with Act 14 of 1955 and Act 6 of 2017.</p>
+  <div style="display: flex; justify-content: space-between; margin-top: 4rem; font-size: 0.85rem;">
+    <div>Advocate for Plaintiff / Petitioner</div>
+    <div>Plaintiff / Petitioner</div>
+  </div>
+</div>
+
+<script>
+  function onSuitChange() {
+    const cat = document.getElementById('suitCategory').value;
+    const badge = document.getElementById('catSectionBadge');
+    const tip = document.getElementById('statutoryTip');
+    const d = document.getElementById('dynamicInputs');
+
+    let html = '';
+    if (cat === 'sec22_money') {
+      badge.textContent = 'Sec 22 • 3%';
+      tip.textContent = 'Computed on the exact amount claimed at 3% ad valorem.';
+      html = `
+        <label class="cf-label">Amount Claimed (₹)</label>
+        <input type="number" id="v_claim" class="cf-input" value="500000" min="0" oninput="calc()">
+      `;
+    } else if (cat === 'sec25a_dec_poss' || cat === 'sec30_possession') {
+      badge.textContent = cat === 'sec25a_dec_poss' ? 'Sec 25(a) • 3%' : 'Sec 30 • 3%';
+      tip.textContent = 'Computed on Market Value of property or ₹5,000 (whichever higher) at 3%.';
+      html = `
+        <label class="cf-label">Market Value of Property (₹)</label>
+        <input type="number" id="v_mv" class="cf-input" value="1000000" min="0" oninput="calc()">
+      `;
+    } else if (cat === 'sec25b_dec_inj' || cat === 'sec27a_inj_immovable' || cat === 'sec29_possession_sra') {
+      badge.textContent = '1/2 Market Value • 3%';
+      tip.textContent = 'Computed on ONE-HALF (1/2) of Market Value at 3%.';
+      html = `
+        <label class="cf-label">Full Market Value of Property (₹)</label>
+        <input type="number" id="v_mv" class="cf-input" value="800000" min="0" oninput="calc()">
+      `;
+    } else if (cat === 'sec37_1_partition_excluded') {
+      badge.textContent = 'Sec 37(1) • 3%';
+      tip.textContent = 'Plaintiff excluded from possession: fee is 3% on full market value of plaintiff\'s share.';
+      html = `
+        <label class="cf-label">Market Value of Plaintiff's Share (₹)</label>
+        <input type="number" id="v_share" class="cf-input" value="1200000" min="0" oninput="calc()">
+      `;
+    } else if (cat === 'sec37_2_partition_joint') {
+      badge.textContent = 'Sec 37(2) • Fixed Fee';
+      tip.textContent = 'Plaintiff in joint possession: Fixed fee of ₹10,000 (High Court) or ₹5,000 (Subordinate Courts).';
+      html = `
+        <label class="cf-label">Jurisdictional Value of Suit (₹)</label>
+        <input type="number" id="v_juris" class="cf-input" value="2000000" min="0" oninput="calc()">
+      `;
+    } else if (cat === 'sec42a_spec_sale') {
+      badge.textContent = 'Sec 42(a) • 3%';
+      tip.textContent = 'Computed on agreed sale consideration at 3%.';
+      html = `
+        <label class="cf-label">Agreed Sale Consideration (₹)</label>
+        <input type="number" id="v_sale" class="cf-input" value="1500000" min="0" oninput="calc()">
+      `;
+    } else if (cat === 'probate') {
+      badge.textContent = 'Sch I Art 6 • Max ₹25k';
+      tip.textContent = '3% on Net Estate value (Gross - Deductions), capped at maximum ₹25,000.';
+      html = `
+        <label class="cf-label">Net Estate Value (₹)</label>
+        <input type="number" id="v_net" class="cf-input" value="2500000" min="0" oninput="calc()">
+      `;
+    } else if (cat === 'sec138_ni') {
+      badge.textContent = 'Sch II Art 20 • 0.5%';
+      tip.textContent = 'Cheque bounce complaint under Sec 138 NI Act: 0.5% ad valorem, capped at maximum ₹10,000.';
+      html = `
+        <label class="cf-label">Cheque Amount (₹)</label>
+        <input type="number" id="v_cheque" class="cf-input" value="600000" min="0" oninput="calc()">
+      `;
+    } else {
+      badge.textContent = 'Ad Valorem / Fixed';
+      tip.textContent = 'Standard statutory valuation applies.';
+      html = `
+        <label class="cf-label">Claim / Subject Matter Value (₹)</label>
+        <input type="number" id="v_gen" class="cf-input" value="300000" min="0" oninput="calc()">
+      `;
+    }
+
+    d.innerHTML = html;
+    calc();
+  }
+
+  function calc() {
+    const cat = document.getElementById('suitCategory').value;
+    const court = document.getElementById('courtType').value;
+    const stage = document.getElementById('proceedingStage').value;
+
+    let subVal = 0;
+    let baseVal = 0;
+    let principal = 0;
+    let rate = '3% Ad Valorem';
+    let cit = '';
+
+    if (cat === 'sec22_money') {
+      subVal = Number(document.getElementById('v_claim')?.value) || 0;
+      baseVal = subVal;
+      principal = Math.ceil(baseVal * 0.03);
+      rate = '3% of Claim';
+      cit = 'Under Section 22 read with Schedule I Article 1, fee is 3% on amount claimed.';
+    } else if (cat === 'sec25a_dec_poss' || cat === 'sec30_possession') {
+      subVal = Number(document.getElementById('v_mv')?.value) || 0;
+      baseVal = Math.max(subVal, 5000);
+      principal = Math.ceil(baseVal * 0.03);
+      rate = '3% of Max(MV, ₹5k)';
+      cit = 'Under Section 25(a) / 30, fee is 3% on Market Value or ₹5,000, whichever higher.';
+    } else if (cat === 'sec25b_dec_inj' || cat === 'sec27a_inj_immovable' || cat === 'sec29_possession_sra') {
+      subVal = Number(document.getElementById('v_mv')?.value) || 0;
+      baseVal = Math.max(subVal * 0.5, cat === 'sec27a_inj_immovable' ? 750 : 5000);
+      principal = Math.ceil(baseVal * 0.03);
+      rate = '3% of 1/2 MV';
+      cit = 'Fee is computed on 1/2 Market Value at 3%.';
+    } else if (cat === 'sec37_1_partition_excluded') {
+      subVal = Number(document.getElementById('v_share')?.value) || 0;
+      baseVal = subVal;
+      principal = Math.ceil(baseVal * 0.03);
+      rate = '3% on Share Value';
+      cit = 'Under Section 37(1), fee is 3% on full market value of plaintiff\'s share.';
+    } else if (cat === 'sec37_2_partition_joint') {
+      subVal = Number(document.getElementById('v_juris')?.value) || 0;
+      baseVal = subVal;
+      principal = court === 'highcourt' ? 10000 : 5000;
+      rate = court === 'highcourt' ? 'Fixed ₹10,000' : 'Fixed ₹5,000';
+      cit = 'Under Section 37(2) (2017 Amendment), fixed fee is ₹10,000 (HC) or ₹5,000 (other courts).';
+    } else if (cat === 'sec42a_spec_sale') {
+      subVal = Number(document.getElementById('v_sale')?.value) || 0;
+      baseVal = subVal;
+      principal = Math.ceil(baseVal * 0.03);
+      rate = '3% of Sale Consideration';
+      cit = 'Under Section 42(a), fee is 3% on agreed sale consideration.';
+    } else if (cat === 'probate') {
+      subVal = Number(document.getElementById('v_net')?.value) || 0;
+      baseVal = subVal;
+      principal = Math.min(Math.ceil(baseVal * 0.03), 25000);
+      rate = '3% (Max ₹25,000)';
+      cit = 'Under Schedule I Article 6 (2017 Amendment), fee is 3% on net estate, capped at ₹25,000.';
+    } else if (cat === 'sec138_ni') {
+      subVal = Number(document.getElementById('v_cheque')?.value) || 0;
+      baseVal = subVal;
+      principal = Math.min(Math.ceil(baseVal * 0.005), 10000);
+      rate = '0.5% (Max ₹10,000)';
+      cit = 'Under Schedule II Article 20, fee is 0.5% ad valorem, capped at ₹10,000.';
+    } else if (cat === 'writ_226') {
+      principal = 1000;
+      rate = 'Fixed ₹1,000';
+      cit = 'Under Schedule II Article 11(r)(i), Writ Petition under Art 226 is ₹1,000.';
+    } else if (cat === 'writ_227') {
+      principal = 500;
+      rate = 'Fixed ₹500';
+      cit = 'Under Schedule II Article 11(r)(ii), Art 227 petition is ₹500.';
+    } else if (cat === 'cpc_revision_hc' || cat === 'cpc_revision_dist') {
+      principal = 200;
+      rate = 'Fixed ₹200';
+      cit = 'Revision petition fee is ₹200.';
+    } else if (cat === 'vakalatnama') {
+      principal = 10;
+      rate = 'Fixed ₹10';
+      cit = 'Vakalatnama court fee is ₹10.';
+    } else {
+      subVal = Number(document.getElementById('v_gen')?.value) || 0;
+      baseVal = subVal;
+      principal = Math.ceil(baseVal * 0.03);
+      rate = '3% Ad Valorem';
+      cit = 'Standard statutory ad valorem rate of 3% applies.';
+    }
+
+    let addon = 0;
+    if (document.getElementById('chk_vakalat').checked) addon += 10;
+    if (document.getElementById('chk_adv_welfare').checked) addon += 120;
+    if (document.getElementById('chk_clerk_welfare').checked) addon += 20;
+    if (document.getElementById('chk_process').checked) addon += 30;
+
+    const total = principal + addon;
+
+    document.getElementById('outTotal').textContent = total.toLocaleString('en-IN');
+    document.getElementById('outSubject').textContent = '₹ ' + subVal.toLocaleString('en-IN');
+    document.getElementById('outBase').textContent = '₹ ' + baseVal.toLocaleString('en-IN');
+    document.getElementById('outRate').textContent = rate;
+    document.getElementById('outPrincipal').textContent = '₹ ' + principal.toLocaleString('en-IN');
+    document.getElementById('outAddons').textContent = '₹ ' + addon.toLocaleString('en-IN');
+    document.getElementById('outCitation').textContent = cit;
+
+    const refRow = document.getElementById('refundRow');
+    if (stage === 'sec89_refund' || stage === 'sec69_refund') {
+      refRow.style.display = 'flex';
+      document.getElementById('outRefund').textContent = '₹ ' + principal.toLocaleString('en-IN');
+    } else {
+      refRow.style.display = 'none';
+    }
+
+    // Slip
+    document.getElementById('pSuit').textContent = document.getElementById('suitCategory').selectedOptions[0].text;
+    document.getElementById('pSec').textContent = document.getElementById('catSectionBadge').textContent;
+    document.getElementById('pCourt').textContent = court === 'highcourt' ? 'High Court of Madras' : 'Subordinate Civil Court';
+    document.getElementById('pSubVal').textContent = subVal.toLocaleString('en-IN');
+    document.getElementById('pBaseVal').textContent = baseVal.toLocaleString('en-IN');
+    document.getElementById('pRate').textContent = rate;
+    document.getElementById('pFee').textContent = principal.toLocaleString('en-IN');
+    document.getElementById('pTotal').textContent = total.toLocaleString('en-IN');
+  }
+
+  function copyMemo() {
+    const text = `VALUATION MEMO / COURT FEE PARTICULARS
+Proceeding: ${document.getElementById('suitCategory').selectedOptions[0].text}
+Court: ${document.getElementById('courtType').value}
+Principal Court Fee: ₹ ${document.getElementById('outPrincipal').textContent}
+Total Stamping: ₹ ${document.getElementById('outTotal').textContent}
+Citation: ${document.getElementById('outCitation').textContent}`;
+    navigator.clipboard.writeText(text).then(() => alert('Valuation Memo copied to clipboard!'));
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    onSuitChange();
+  });
+</script>
+{% endblock %}

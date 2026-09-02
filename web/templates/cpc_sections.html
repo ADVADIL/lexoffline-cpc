@@ -3,7 +3,13 @@
 {% block title %}CPC 1908 Sections - LexOffline{% endblock %}
 
 {% block content %}
-<h1>Code of Civil Procedure, 1908 - Sections</h1>
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 1rem;">
+    <h1>Code of Civil Procedure, 1908 - Sections (1–158)</h1>
+</div>
+
+<div style="margin-bottom: 1.25rem;">
+    <input type="text" id="live-filter-input" placeholder="⚡ Filter sections instantly by number or keyword (e.g. 89, 100, restitution, arrest, caveat, injunction)..." style="width: 100%; padding: 10px 14px; border: 2px solid #cbd5e0; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
+</div>
 
 <div class="provision-list">
     {% for part_name, sections in parts.items() %}
@@ -24,4 +30,33 @@
     </details>
     {% endfor %}
 </div>
+
+<script>
+document.getElementById('live-filter-input').addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    const groups = document.querySelectorAll('.part-group');
+    groups.forEach(group => {
+        const items = group.querySelectorAll('li');
+        let hasMatch = false;
+        items.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (!q || text.includes(q)) {
+                item.style.display = '';
+                hasMatch = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        if (!q) {
+            group.style.display = '';
+            group.open = false;
+        } else if (hasMatch) {
+            group.style.display = '';
+            group.open = true;
+        } else {
+            group.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}

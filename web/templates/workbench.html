@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Case Strategy & Litigation Workbench - LexOffline{% endblock %}
+
+{% block content %}
+<div class="workbench-container" style="max-width: 1100px; margin: 0 auto;">
+    <div style="background: linear-gradient(135deg, #1a365d, #2b6cb0); color: #fff; padding: 1.5rem 2rem; border-radius: 8px; margin-bottom: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h1 style="color: #fff; margin-bottom: 0.5rem; font-size: 1.75rem;">⚖️ Advocate Litigation Brief & Case Strategy Workbench</h1>
+        <p style="color: #e2e8f0; font-size: 1rem; margin: 0;">
+            Unified command center: Select a civil litigation matter to execute instant Limitation audits, audit fatal statutory provisos, verify mandatory prayers, access practice checklists, generate court-ready composite drafts, and log directly into your Chamber Diary.
+        </p>
+    </div>
+
+    <!-- MATTER SELECTOR -->
+    <div class="panel" style="background: #fff; border: 1px solid #cbd5e0; border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;">
+        <label for="matter-select" style="display: block; font-weight: bold; color: #2d3748; margin-bottom: 0.5rem; font-size: 1rem;">
+            Select Civil Litigation Matter:
+        </label>
+        <select id="matter-select" onchange="window.location.href='/workbench/' + this.value" style="width: 100%; padding: 10px 14px; border: 2px solid #3182ce; border-radius: 6px; font-size: 1.05rem; font-weight: 600; color: #1a365d; background: #ebf8ff;">
+            {% for m in matters %}
+            <option value="{{ m.id }}" {% if selected_matter and selected_matter.id == m.id %}selected{% endif %}>
+                {{ loop.index }}. {{ m.title }} [{{ m.category }}]
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    {% if selected_matter %}
+    <!-- 3-PILLAR LITIGATION WORKBENCH -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+        
+        <!-- COLUMN 1: TEMPORAL LIMITATION & CASE PARTICULARS AUDIT -->
+        <div class="panel" style="background: #fff; border: 1px solid #cbd5e0; border-radius: 8px; padding: 1.25rem;">
+            <h3 style="color: #2b6cb0; border-bottom: 2px solid #ebf8ff; padding-bottom: 0.5rem; margin-bottom: 1rem; font-size: 1.15rem;">
+                ⏱️ 1. Limitation &amp; Temporal Audit
+            </h3>
+            
+            <p style="font-size: 0.88rem; color: #4a5568; margin-bottom: 0.75rem;">
+                <strong>Governing Article:</strong> {{ selected_matter.limitation_article }} ({{ selected_matter.limitation_period_str }})<br>
+                <strong>Trigger Event:</strong> <em>{{ selected_matter.trigger_event }}</em>
+            </p>
+
+            <form method="get" action="/workbench/{{ selected_matter.id }}" style="background: #f7fafc; padding: 1rem; border-radius: 6px; border: 1px solid #e2e8f0; margin-bottom: 1rem;">
+                <div style="margin-bottom: 0.75rem;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: bold; color: #4a5568; margin-bottom: 0.25rem;">
+                        Trigger Date (Cause of Action / Refusal / Dispossession):
+                    </label>
+                    <input type="date" name="trigger_date" value="{{ trigger_date_str }}" required style="width: 100%; padding: 7px 10px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.95rem;">
+                </div>
+
+                <div style="margin-bottom: 0.75rem;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: bold; color: #4a5568; margin-bottom: 0.25rem;">
+                        Section 12 Exclusion Days (Certified Copy Application Time):
+                    </label>
+                    <input type="number" name="excluded_days" value="{{ excluded_days }}" min="0" style="width: 100%; padding: 7px 10px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.95rem;">
+                </div>
+
+                <button type="submit" class="btn" style="background: #3182ce; color: #fff; width: 100%; padding: 8px 12px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer;">
+                    ⚡ Audit Limitation Status
+                </button>
+            </form>
+
+            {% if audit_result and audit_result.has_fixed_deadline %}
+            <div style="padding: 1rem; border-radius: 6px; margin-bottom: 1rem; 
+                {% if audit_result.is_time_barred %}background: #fff5f5; border: 2px solid #e53e3e; color: #9b2c2c;
+                {% elif audit_result.days_remaining <= 15 %}background: #fffaf0; border: 2px solid #dd6b20; color: #9c4221;
+                {% else %}background: #f0fff4; border: 2px solid #38a169; color: #22543d;{% endif %}">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <strong style="font-size: 1.1rem;">Status: {{ audit_result.status_badge }}</strong>
+                    <span style="font-size: 0.85rem; font-weight: bold;">{{ audit_result.period_str }}</span>
+                </div>
+                <p style="margin: 0; font-size: 0.9rem; line-height: 1.5;">
+                    <strong>Trigger Date:</strong> {{ audit_result.trigger_date }}<br>
+                    <strong>Effective Due Date:</strong> {{ audit_result.effective_due_date }}<br>
+                    {% if audit_result.excluded_days > 0 %}
+                    <small>(Includes {{ audit_result.excluded_days }} days Section 12 certified copy credit)</small><br>
+                    {% endif %}
+                    {% if audit_result.is_time_barred %}
+                    <span style="font-weight: bold; color: #c53030;">⚠️ Suit/Application is barred by {{ (audit_result.days_remaining|abs) }} days!</span> Check Section 5 condonation if appeal/application.
+                    {% else %}
+                    <span style="font-weight: bold; color: #276749;">✔ {{ audit_result.days_remaining }} days remaining to institute.</span>
+                    {% endif %}
+                </p>
+            </div>
+            {% endif %}
+
+            <!-- LOG TO CHAMBER DIARY -->
+            <form method="post" action="/workbench/save_to_diary" style="background: #edf2f7; padding: 1rem; border-radius: 6px; border: 1px solid #cbd5e0;">
+                <h4 style="margin-bottom: 0.5rem; color: #2b6cb0; font-size: 0.95rem;">📅 Fast-Log into Chamber Case Diary</h4>
+                <input type="hidden" name="matter_id" value="{{ selected_matter.id }}">
+                <input type="hidden" name="next_date" value="{% if audit_result and audit_result.effective_due_date %}{{ audit_result.effective_due_date }}{% else %}{{ trigger_date_str }}{% endif %}">
+                
+                <input type="text" name="case_no" placeholder="Case / Plaint No. (e.g. O.S. __ of 2026)" required style="width: 100%; padding: 6px 8px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.85rem; margin-bottom: 0.5rem; box-sizing: border-box;">
+                <input type="text" name="court_name" placeholder="Court Name (e.g. Senior Civil Judge, Bengaluru)" required style="width: 100%; padding: 6px 8px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.85rem; margin-bottom: 0.5rem; box-sizing: border-box;">
+                <input type="text" name="client_name" placeholder="Client Name" required style="width: 100%; padding: 6px 8px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.85rem; margin-bottom: 0.5rem; box-sizing: border-box;">
+                
+                <button type="submit" class="btn" style="background: #2b6cb0; color: #fff; width: 100%; padding: 8px 12px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.9rem;">
+                    ➕ Save Matter to Case Diary
+                </button>
+            </form>
+        </div>
+
+        <!-- COLUMN 2: STATUTORY PRE-REQUISITES & FATAL TRAPS AUDIT -->
+        <div class="panel" style="background: #fff; border: 1px solid #cbd5e0; border-radius: 8px; padding: 1.25rem;">
+            <h3 style="color: #c53030; border-bottom: 2px solid #fff5f5; padding-bottom: 0.5rem; margin-bottom: 1rem; font-size: 1.15rem;">
+                🚨 2. Fatal Statutory Provisos &amp; Traps
+            </h3>
+
+            <div style="margin-bottom: 1.25rem;">
+                <h4 style="font-size: 0.95rem; color: #9b2c2c; margin-bottom: 0.5rem;">⚠️ Fatal Courtroom Traps to Avoid:</h4>
+                <ul style="padding-left: 1.2rem; font-size: 0.88rem; color: #4a5568; line-height: 1.5;">
+                    {% for trap in selected_matter.fatal_statutory_traps %}
+                    <li style="margin-bottom: 0.5rem;">{{ trap }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div style="margin-bottom: 1.25rem; background: #f7fafc; padding: 0.85rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                <h4 style="font-size: 0.95rem; color: #2d3748; margin-bottom: 0.5rem;">✔ Mandatory Statutory Prayers (Cannot be Omitted):</h4>
+                <ul style="padding-left: 1.2rem; font-size: 0.88rem; color: #2c5282; line-height: 1.4;">
+                    {% for prayer in selected_matter.mandatory_prayers %}
+                    <li style="margin-bottom: 0.4rem;"><strong>{{ prayer }}</strong></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div style="background: #fffff0; border: 1px solid #ecc94b; padding: 0.85rem; border-radius: 6px; font-size: 0.85rem; color: #744210;">
+                <strong>💰 Court Fees &amp; Valuation Rule:</strong><br>
+                {{ selected_matter.court_fee_rule }}
+            </div>
+        </div>
+
+        <!-- COLUMN 3: OPERATIVE CHECKLISTS, COMPOSITE DRAFTS & EVIDENCE -->
+        <div class="panel" style="background: #fff; border: 1px solid #cbd5e0; border-radius: 8px; padding: 1.25rem;">
+            <h3 style="color: #276749; border-bottom: 2px solid #f0fff4; padding-bottom: 0.5rem; margin-bottom: 1rem; font-size: 1.15rem;">
+                ⚡ 3. Operative Tools &amp; Evidence
+            </h3>
+
+            <div style="margin-bottom: 1.25rem;">
+                <h4 style="font-size: 0.95rem; color: #2d3748; margin-bottom: 0.5rem;">📂 Mandatory Document Bundle (Order VII Rule 14):</h4>
+                <ul style="padding-left: 1.2rem; font-size: 0.88rem; color: #4a5568; line-height: 1.4;">
+                    {% for doc in selected_matter.required_documents %}
+                    <li style="margin-bottom: 0.35rem;">{{ doc }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                {% if selected_matter.composite_draft_id %}
+                <a href="/drafter/{{ selected_matter.composite_draft_id }}" class="btn" style="background: #2b6cb0; color: #fff; text-align: center; padding: 10px; border-radius: 6px; font-weight: bold; text-decoration: none;">
+                    ⚡ Open Multi-Statute Composite Drafter
+                </a>
+                {% endif %}
+
+                {% if selected_matter.checklist_id %}
+                <a href="/checklist/{{ selected_matter.checklist_id }}" class="btn" style="background: #38a169; color: #fff; text-align: center; padding: 10px; border-radius: 6px; font-weight: bold; text-decoration: none;">
+                    📋 Audit Statutory Practice Checklist
+                </a>
+                {% endif %}
+
+                {% if selected_matter.template_id %}
+                <a href="/template/{{ selected_matter.template_id }}" class="btn" style="background: #d69e2e; color: #fff; text-align: center; padding: 10px; border-radius: 6px; font-weight: bold; text-decoration: none;">
+                    📄 View Courtroom Drafting Template
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -9,26 +9,29 @@
 </head>
 <body>
     <header class="navbar">
-        <div class="nav-container">
-            <a href="/" class="nav-brand">LexOffline</a>
+        <div class="nav-container" style="max-width: 1150px;">
+            <div style="display: flex; align-items: center; gap: 1.25rem; flex: 1; min-width: 280px;">
+                <a href="/" class="nav-brand">LexOffline</a>
+                <form action="/search" method="get" class="nav-search-form" style="display: flex; flex: 1; max-width: 380px;">
+                    <input type="text" name="q" placeholder="🔍 Quick cite (e.g. O.39 R.1, S.100, Art.54)..." style="width: 100%; padding: 6px 12px; border: 1px solid #4a5568; border-radius: 4px 0 0 4px; font-size: 0.85rem; background: #2d3748; color: #fff; outline: none;">
+                    <button type="submit" style="background: #3182ce; color: #fff; border: none; padding: 6px 12px; border-radius: 0 4px 4px 0; cursor: pointer; font-size: 0.85rem; font-weight: bold;">Go</button>
+                </form>
+            </div>
             <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.nav-links').classList.toggle('active')">
                 &#9776;
             </button>
-                <nav class="nav-links">
-                <a href="/">Home</a>
-                <a href="/cpc/sections">CPC Sections</a>
-                <a href="/cpc/orders">CPC Orders</a>
-                <a href="/limitation/sections">Limitation Sections</a>
-                <a href="/limitation/articles">Limitation Schedule</a>
-                <a href="/sra/sections">Specific Relief Act</a>
-                <a href="/sra/analyzer">SRA Relief Analyzer</a>
-                <a href="/diary">Case Diary</a>
-                <a href="/checklists">Practice Checklists</a>
-                <a href="/templates">Drafting Templates</a>
-                <a href="/drafter">Composite Drafter</a>
-                <a href="/execution">Execution Navigator</a>
-                <a href="/search">Search</a>
-                <a href="/deadline">Deadline Calculator</a>
+            <nav class="nav-links">
+                <a href="/workbench" style="background: #d69e2e; color: #1a202c; font-weight: bold; padding: 4px 10px; border-radius: 4px; text-decoration: none;">⚖️ Workbench</a>
+                <a href="/court-fees" style="background: #2b6cb0; color: #fff; font-weight: bold; padding: 4px 10px; border-radius: 4px; text-decoration: none;">💰 Court Fees</a>
+                <a href="/drafter">⚡ Drafter</a>
+                <a href="/checklists">📋 Checklists</a>
+                <a href="/templates">📄 Templates</a>
+                <a href="/sra/analyzer">🧭 SRA Analyzer</a>
+                <a href="/diary">📅 Diary</a>
+                <a href="/deadline">⏱️ Deadlines</a>
+                <a href="/cpc/sections">CPC</a>
+                <a href="/limitation/sections">Limitation</a>
+                <a href="/sra/sections">SRA</a>
             </nav>
         </div>
     </header>

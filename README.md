@@ -90,6 +90,19 @@ Open `http://localhost:5000` in your browser.
     - **7. Rescission of Contract Post-Decree (Section 28 SRA)**: SRA (Sec 28(1) & (2) vendor remedy) + CPC (Sec 151 inherent powers, O.21 R.34 stay) + Preliminary decree doctrine (*Ramankutty Guptan*).
     - **8. Condonation of Delay Composite Application**: Limitation Act (Sec 5 substantive condonation) + CPC (Sec 151, O.41 R.3A, O.9 R.13, O.22 R.9) + *Katiji* doctrine of substantial justice.
   - **Chamber & Web Customization**: Features real-time parameter customization (Court name, parties, multi-line property schedule with boundaries, consideration, dates) both in the Web app and offline inside the PySide6 Desktop GUI with 1-click **Copy to Clipboard** and **Download .txt** export.
+- **💰 Tamil Nadu Court-Fees and Suits Valuation Calculator (Act 14 of 1955)**:
+  - Official, comprehensive statutory computation engine reflecting all amendments up to **Tamil Nadu Act 06 of 2017** and **Act 01 of 2016** (e-Stamping):
+    - **Schedule I Article 1**: Flat 3% ad valorem court fee on plaints, counter claims, and appeals.
+    - **Section 21-A**: Mandatory rounding off of fractions of a rupee up to the next rupee.
+    - **Section 25 & 30**: Declaratory and possession suits computed on market value / guideline value under Sec 47-AA of Indian Stamp Act, subject to statutory minimum of ₹5,000.
+    - **Section 25(cc) & 30 Proviso**: Defence of adverse possession treated as a counter claim with 3% fee on full market value.
+    - **Section 37(2)**: Partition in joint possession fixed fee of ₹10,000 (High Court) / ₹5,000 (Subordinate Courts).
+    - **Schedule I Article 6**: Probate / Letters of Administration 3% ad valorem capped at ₹25,000 maximum.
+    - **Schedule II Article 20**: Cheque bounce complaints under Section 138 NI Act at 0.5% (half per cent) ad valorem, capped at ₹10,000.
+    - **Section 69 & 69-A**: 100% full refund upon out-of-court settlement before evidence, and immediate 100% refund upon reference under Section 89 CPC without awaiting settlement.
+    - **Valuation Slip Generator**: 1-click printable Section 10 valuation slip and copyable court fee memo for direct attachment to plaints.
+- **⚖️ Case Strategy & Litigation Workbench**:
+  - Unified command center linking causes of action to limitation audits, essential statutory provisos, fatal pitfalls, composite pleadings, and 1-click Case Diary logging.
 - **Intelligent Advocate Citation Search Engine & Quick-Jump**:
   - Auto-translates Arabic order numerals (`Order 39 Rule 1`, `O.39 R.1`, `O7 R11`) into Roman numerals (`Order XXXIX Rule 1`) and pins the exact provision to the top.
   - Cleans citation punctuation and parentheses so citations like `Section 16(c)`, `16(c)`, `SRA 16`, `Article 54`, `S.100` search cleanly without FTS syntax errors.

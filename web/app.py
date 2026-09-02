@@ -395,6 +395,75 @@ def drafter_builder(draft_id):
                            pleading=pleading,
                            current_params=current_params,
                            generated_text=generated_text)
+import workbench as wb
+from datetime import date, datetime
+
+@app.route('/workbench')
+def workbench_index():
+    return redirect('/workbench/specific_performance')
+
+@app.route('/workbench/<matter_id>')
+def workbench_matter(matter_id):
+    matter = wb.get_litigation_matter(matter_id)
+    if not matter:
+        abort(404)
+    matters = wb.list_litigation_matters()
+    trigger_date_str = request.args.get('trigger_date', '')
+    try:
+        excluded_days = int(request.args.get('excluded_days', 0) or 0)
+    except (ValueError, TypeError):
+        excluded_days = 0
+
+    audit_result = None
+    if trigger_date_str:
+        try:
+            t_date = datetime.strptime(trigger_date_str, '%Y-%m-%d').date()
+            audit_result = wb.audit_matter_limitation(matter, t_date, excluded_days)
+        except ValueError:
+            pass
+    else:
+        t_date = date.today()
+        trigger_date_str = t_date.isoformat()
+        audit_result = wb.audit_matter_limitation(matter, t_date, excluded_days)
+
+    return render_template('workbench.html',
+                           matters=matters,
+                           selected_matter=matter,
+                           trigger_date_str=trigger_date_str,
+                           excluded_days=excluded_days,
+                           audit_result=audit_result)
+
+@app.route('/workbench/save_to_diary', methods=['POST'])
+def workbench_save_to_diary():
+    db = get_db()
+    case_no = request.form.get('case_no', '').strip()
+    court_name = request.form.get('court_name', '').strip()
+    client_name = request.form.get('client_name', '').strip()
+    matter_id = request.form.get('matter_id', '')
+    next_date = request.form.get('next_date', '')
+
+    matter = wb.get_litigation_matter(matter_id)
+    matter_title = matter.title if matter else "Civil Litigation"
+
+    case_id = db.add_case(
+        case_no=case_no,
+        court_name=court_name,
+        client_name=client_name,
+        client_role="Plaintiff",
+        stage="Pre-Institution / Scrutiny",
+        next_date=next_date,
+        notes=f"Created via Case Strategy Workbench for: {matter_title}"
+    )
+    return redirect(f"/diary/case/{case_id}")
+
+
+import court_fees as cf
+
+@app.route('/court-fees', methods=['GET', 'POST'])
+def court_fees_calculator():
+    category = request.args.get('category', 'sec22_money')
+    categories = cf.CATEGORIES
+    return render_template('court_fees.html', categories=categories, selected_category=category)
 
 
 # --- Search ---

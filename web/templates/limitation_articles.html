@@ -5,12 +5,16 @@
 {% block content %}
 <h1>Limitation Act, 1963 - Schedule (Articles)</h1>
 
+<div style="margin-bottom: 1.25rem;">
+    <input type="text" id="live-filter-input" placeholder="⚡ Filter all 137 articles instantly (e.g. 54, specific performance, 58, declaration, 65, adverse possession, 136, execution)..." style="width: 100%; padding: 10px 14px; border: 2px solid #cbd5e0; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
+</div>
+
 <div class="provision-list">
     {% for division, parts in divisions.items() %}
     <div class="division-group">
         <h2>{{ division }}</h2>
         {% for part_name, articles in parts.items() %}
-        <details class="part-group">
+        <details class="part-group" open>
             <summary>
                 <h3>Part {{ part_name }}</h3>
             </summary>
@@ -32,4 +36,33 @@
     </div>
     {% endfor %}
 </div>
+
+<script>
+document.getElementById('live-filter-input').addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    const groups = document.querySelectorAll('.part-group');
+    groups.forEach(group => {
+        const items = group.querySelectorAll('li');
+        let hasMatch = false;
+        items.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (!q || text.includes(q)) {
+                item.style.display = '';
+                hasMatch = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        if (!q) {
+            group.style.display = '';
+            group.open = false;
+        } else if (hasMatch) {
+            group.style.display = '';
+            group.open = true;
+        } else {
+            group.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}

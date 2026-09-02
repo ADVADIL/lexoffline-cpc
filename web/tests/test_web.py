@@ -516,12 +516,55 @@ def test_drafter_builder_custom_param():
     assert b'Advocate Kiran Verma' in resp.data
 
 
+def test_workbench_redirect():
+    resp = _client().get('/workbench')
+    assert resp.status_code == 302
+    assert '/workbench/specific_performance' in resp.headers.get('Location')
+
+
+def test_workbench_detail():
+    resp = _client().get('/workbench/specific_performance')
+    assert resp.status_code == 200
+    assert b'Case Strategy Workbench' in resp.data
+    assert b'Specific Performance' in resp.data
+    assert b'Article 54' in resp.data
+    assert b'Section 16(c)' in resp.data
+
+
+def test_workbench_audit_calc():
+    resp = _client().get('/workbench/specific_performance?trigger_date=2024-01-01&excluded_days=15')
+    assert resp.status_code == 200
+    assert b'Effective Due Date' in resp.data
+    assert b'2027-01-16' in resp.data
+
+
+def test_workbench_save_diary():
+    resp = _client().post('/workbench/save_to_diary', data={
+        'case_no': 'O.S. 777/2026',
+        'court_name': 'Senior Civil Judge, Bengaluru',
+        'client_name': 'Sri Ramanathan',
+        'matter_id': 'specific_performance',
+        'next_date': '2026-12-31'
+    })
+    assert resp.status_code == 302
+    assert '/diary/case/' in resp.headers.get('Location')
+
+
+def test_court_fees_page():
+    resp = _client().get('/court-fees')
+    assert resp.status_code == 200
+    assert b'Tamil Nadu Court Fees Calculator' in resp.data
+    assert b'Section 22' in resp.data
+    assert b'Act 06 of 2017' in resp.data
+
+
 if __name__ == '__main__':
     tests = [v for k, v in globals().items() if k.startswith('test_')]
     for t in tests:
         t()
         print(f'  OK  {t.__name__}')
     print(f'\n>>> ALL {len(tests)} WEB TESTS PASSED! <<<')
+
 
 
 
