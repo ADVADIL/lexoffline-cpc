@@ -1,0 +1,404 @@
+{% extends "base.html" %}
+
+{% block title %}Litigation Dashboard — {{ matter.title }}{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem;">
+                <a href="/tn-workspace" style="color: #718096; font-size: 0.85rem; text-decoration: none;">&larr; All Matters</a>
+                <span style="color: #cbd5e0;">/</span>
+                <span style="background: #e2e8f0; color: #2d3748; font-weight: bold; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px;">Matter #{{ matter.id }}</span>
+                <span style="background: #feebc8; color: #c05621; font-weight: bold; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px;">{{ matter.district }} District</span>
+                <span style="background: #ebf8ff; color: #2b6cb0; font-weight: bold; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px;">{{ matter.taluk }} Taluk</span>
+            </div>
+            <h1 style="margin: 0.2rem 0; color: #1a365d; font-size: 1.6rem;">{{ matter.title }}</h1>
+            <p style="color: #4a5568; margin: 0; font-size: 0.95rem;">
+                <strong>Client:</strong> {{ matter.client_name }} | 
+                <strong>Present Court:</strong> {{ matter.court }} | 
+                <strong>Stage:</strong> <span style="color: #c53030; font-weight: 600;">{{ matter.stage }}</span>
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+            <a href="#drafting" class="btn" style="background: #d69e2e; color: #1a202c; font-weight: bold; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; text-decoration: none;">📝 View Court Drafts</a>
+            <button onclick="window.print()" class="btn" style="background: #4a5568; color: #fff; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; border: none; cursor: pointer; font-weight: 600;">🖨️ Print Dashboard</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOP SUMMARY ALERT -->
+<div class="card" style="margin-bottom: 2rem; border-left: 6px solid #e53e3e; background: #fff5f5; padding: 1.25rem 1.5rem; border-radius: 8px;">
+    <div style="display: flex; align-items: center; gap: 0.5rem; color: #c53030; font-weight: bold; font-size: 1.05rem; margin-bottom: 0.35rem;">
+        🚨 CRITICAL PROCEDURAL AMBUSH DETECTED (Munsif Court Pecuniary Ouster &amp; Art. 58 Limitation)
+    </div>
+    <p style="margin: 0; color: #742a2a; font-size: 0.9rem; line-height: 1.5;">
+        <strong>1. Pecuniary Ouster:</strong> Under <em>Section 12 of TN Civil Courts Act, 1873</em> (as amended by <em>TN Act 23 of 2019</em>), District Munsif jurisdiction is capped strictly at <strong>₹10,00,000</strong>. Real market value of 2.40 acres under Section 47-AA Stamp Act is <strong>₹45,00,000</strong>, ousting Munsif jurisdiction. Plaint faces rejection under <em>Order VII Rule 11(b)</em> / <em>S.12(2) TN Court-Fees Act</em> unless transferred to Sub Court under <strong>Order VII Rule 10A CPC</strong>.<br>
+        <strong>2. Limitation Extinction:</strong> Claim for sole ownership declaration is <strong>fatally barred by 3-year limitation under Article 58</strong> (first accrued on 05.03.2021). Must immediately amend under <strong>Order VI Rule 17</strong> to claim <strong>Partition of 1/4th Share under Article 110 (12 years)</strong>.
+    </p>
+</div>
+
+<!-- SECTION 1 & 2: MATTER SUMMARY & CHRONOLOGY -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+        <h3 style="margin-top: 0; color: #1a365d; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+            1. MATTER SUMMARY
+        </h3>
+        <table style="width: 100%; font-size: 0.88rem; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #edf2f7;"><td style="padding: 6px 0; color: #718096; width: 40%;">Property Description</td><td style="padding: 6px 0; font-weight: 600;">2.40 Acres Agricultural Land in [Village], [Taluk], TN</td></tr>
+            <tr style="border-bottom: 1px solid #edf2f7;"><td style="padding: 6px 0; color: #718096;">Original Root Title</td><td style="padding: 6px 0; font-weight: 600;">Regd. Sale Deed dated 15.06.1988 (Late Father Mr. A)</td></tr>
+            <tr style="border-bottom: 1px solid #edf2f7;"><td style="padding: 6px 0; color: #718096;">Legal Devolution</td><td style="padding: 6px 0; font-weight: 600;">A died intestate on 10.03.2004 &rarr; 4 Class-I heirs (1/4th each)</td></tr>
+            <tr style="border-bottom: 1px solid #edf2f7;"><td style="padding: 6px 0; color: #718096;">Impugned Alienation</td><td style="padding: 6px 0; color: #c53030; font-weight: 600;">2011 Regd. Settlement Deed by D1 to D2 (100% Conveyance)</td></tr>
+            <tr style="border-bottom: 1px solid #edf2f7;"><td style="padding: 6px 0; color: #718096;">Subsequent Charges</td><td style="padding: 6px 0; font-weight: 600;">Regd. Mortgage Aug 2023 to D3; Proposed Sale Mar 2024 to D4</td></tr>
+            <tr><td style="padding: 6px 0; color: #718096;">Present Physical Possession</td><td style="padding: 6px 0; color: #e53e3e; font-weight: 600;">Admittedly with D2 (Structure erected in 2018)</td></tr>
+        </table>
+    </div>
+
+    <div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+        <h3 style="margin-top: 0; color: #1a365d; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+            2. CHRONOLOGY OF OPERATIVE EVENTS
+        </h3>
+        <ul style="list-style: none; padding-left: 0; font-size: 0.85rem; margin: 0;">
+            <li style="margin-bottom: 8px; display: flex; gap: 10px;">
+                <span style="background: #edf2f7; padding: 2px 6px; border-radius: 4px; font-weight: bold; min-width: 90px; height: fit-content;">15.06.1988</span>
+                <span>Father (A) acquires absolute title via Registered Sale Deed.</span>
+            </li>
+            <li style="margin-bottom: 8px; display: flex; gap: 10px;">
+                <span style="background: #edf2f7; padding: 2px 6px; border-radius: 4px; font-weight: bold; min-width: 90px; height: fit-content;">10.03.2004</span>
+                <span>Father A dies intestate; property devolves on Widow + 3 children (S.8 HSA).</span>
+            </li>
+            <li style="margin-bottom: 8px; display: flex; gap: 10px;">
+                <span style="background: #fed7d7; color: #9b2c2c; padding: 2px 6px; border-radius: 4px; font-weight: bold; min-width: 90px; height: fit-content;">Year 2011</span>
+                <span>D1 executes 100% Settlement Deed to D2 (Void ab initio for P's share).</span>
+            </li>
+            <li style="margin-bottom: 8px; display: flex; gap: 10px;">
+                <span style="background: #edf2f7; padding: 2px 6px; border-radius: 4px; font-weight: bold; min-width: 90px; height: fit-content;">Year 2018</span>
+                <span>D2 puts up structure; physical possession asserted.</span>
+            </li>
+            <li style="margin-bottom: 8px; display: flex; gap: 10px;">
+                <span style="background: #feebc8; color: #7b341e; padding: 2px 6px; border-radius: 4px; font-weight: bold; min-width: 90px; height: fit-content;">05.03.2021</span>
+                <span>D2 issues Reply Notice expressly denying P's title &rarr; <strong>Art. 58 &amp; 110 trigger</strong>.</span>
+            </li>
+            <li style="margin-bottom: 8px; display: flex; gap: 10px;">
+                <span style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-weight: bold; min-width: 90px; height: fit-content;">10.04.2024</span>
+                <span>Plaintiff files O.S. in District Munsif Court (Art. 58 expired on 04.03.2024!).</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- SECTION 3 & 4: JURISDICTION & APPLICABLE CPC PROVISIONS -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+        <h3 style="margin-top: 0; color: #1a365d; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+            3. FORUM &amp; PECUNIARY JURISDICTION CALIBRATION
+        </h3>
+        <div style="background: #ebf8ff; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.88rem;">
+            <div style="font-weight: bold; color: #2b6cb0; margin-bottom: 4px;">Competent Court under TN Act 23 of 2019:</div>
+            <div style="font-size: 1.1rem; font-weight: bold; color: #1a365d;">🏛️ Principal Subordinate Court (Sub Court), {{ matter.taluk }}</div>
+            <div style="color: #4a5568; margin-top: 4px; font-size: 0.82rem;">
+                Statutory Basis: <strong>Section 12, Tamil Nadu Civil Courts Act, 1873</strong> (Pecuniary bracket: ₹10,00,001 to ₹1,00,00,000).
+            </div>
+        </div>
+        <table style="width: 100%; font-size: 0.85rem; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #edf2f7;"><td style="padding: 5px 0;">Stated Valuation</td><td style="font-weight: bold; color: #c53030;">₹{{ "{:,.2f}".format(matter.suit_value) }} (Artificial)</td></tr>
+            <tr style="border-bottom: 1px solid #edf2f7;"><td style="padding: 5px 0;">Real Guideline Value (2.40 Ac)</td><td style="font-weight: bold; color: #2b6cb0;">₹{{ "{:,.2f}".format(matter.audit_data.real_market_value) }}</td></tr>
+            <tr style="border-bottom: 1px solid #edf2f7;"><td style="padding: 5px 0;">District Munsif Ceiling</td><td style="font-weight: bold;">₹10,00,000 (Ousted)</td></tr>
+            <tr><td style="padding: 5px 0;">Operative Action Required</td><td style="color: #2b6cb0; font-weight: bold;">Order VII Rule 10A Transfer to Sub Court</td></tr>
+        </table>
+    </div>
+
+    <div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+        <h3 style="margin-top: 0; color: #1a365d; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+            4. COMPLETE APPLICABLE CPC PROVISIONS
+        </h3>
+        <ul style="font-size: 0.85rem; padding-left: 1.2rem; color: #2d3748; margin: 0; line-height: 1.6;">
+            <li><strong>Section 16(a), (d) CPC:</strong> Place of suing for immovable property within local limits.</li>
+            <li><strong>Section 21(2) CPC:</strong> Pecuniary jurisdiction objection must be determined before issues.</li>
+            <li><strong>Order I Rule 9 Proviso:</strong> Mandatory dismissal for non-joinder of necessary co-heirs.</li>
+            <li><strong>Order I Rule 10(2) CPC:</strong> Impleadment of mother, sibling, mortgagee (D3), and buyer (D4).</li>
+            <li><strong>Order VI Rule 17 CPC:</strong> Pre-trial amendment to introduce alternative Partition prayer.</li>
+            <li><strong>Order VII Rule 10 &amp; 10A CPC:</strong> Return of plaint to Sub Court with fixed appearance date.</li>
+            <li><strong>Order VII Rule 11(b), (d) CPC:</strong> Rejection grounds for undervaluation and limitation bar.</li>
+            <li><strong>Order XX Rule 18 CPC:</strong> Preliminary decree directing partition of 1/4th share by metes and bounds.</li>
+            <li><strong>Order XXXIX Rules 1 &amp; 2 CPC:</strong> Status quo / interim injunction restraining waste and sale.</li>
+        </ul>
+    </div>
+</div>
+
+<!-- SECTION 5 & 6: TN LOCAL LAW & LIMITATION CALCULATOR -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+        <h3 style="margin-top: 0; color: #1a365d; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+            5. TAMIL NADU LOCAL LAW &amp; RULES OVERRIDES
+        </h3>
+        <div style="font-size: 0.85rem; color: #2d3748; line-height: 1.6;">
+            <p style="margin-bottom: 0.5rem;">
+                <strong>• TN Civil Courts Act, 1873 (S.12):</strong> Subordinate Court has exclusive jurisdiction for matters between ₹10L and ₹1Cr.
+            </p>
+            <p style="margin-bottom: 0.5rem;">
+                <strong>• MHC Civil Rules of Practice, 1905 (Rule 29):</strong> Valuation slip must mandatorily state the official Registration Department Guideline Value under Section 47-AA Stamp Act.
+            </p>
+            <p style="margin-bottom: 0.5rem;">
+                <strong>• TN Court-Fees Act, 1955 (S.12(2)):</strong> Court is mandated to hear and decide the defendant's valuation objection as a preliminary issue before recording evidence.
+            </p>
+            <p style="margin-bottom: 0;">
+                <strong>• TN Patta Pass Book Act, 1983:</strong> Revenue patta entries do not confer title; 2019 revenue order has no res judicata effect on Civil Court title.
+            </p>
+        </div>
+    </div>
+
+    <div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+        <h3 style="margin-top: 0; color: #1a365d; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+            6. STATUTORY LIMITATION AUDIT (RELIEF-BY-RELIEF)
+        </h3>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.82rem;">
+            {% for lim in matter.audit_data.limitation_results %}
+            <div style="padding: 0.6rem; border-radius: 6px; border: 1px solid {% if 'BARRED' in lim.status %}#feb2b2; background: #fff5f5;{% else %}#c6f6d5; background: #f0fff4;{% endif %}">
+                <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                    <span>{{ lim.relief }}</span>
+                    <span style="color: {% if 'BARRED' in lim.status %}#c53030{% else %}#22543d{% endif %};">{{ lim.status }}</span>
+                </div>
+                <div style="color: #4a5568; margin-top: 2px;">
+                    <strong>{{ lim.article }}</strong> ({{ lim.period }}) | Trigger: {{ lim.trigger }} &rarr; Expired: <strong>{{ lim.expiry }}</strong>
+                </div>
+                <div style="color: #718096; font-size: 0.78rem; margin-top: 2px;">Authority: {{ lim.authority }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 7 & 8: COURT-FEE & PARTIES AUDIT -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+        <h3 style="margin-top: 0; color: #1a365d; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+            7. COURT-FEE &amp; SUITS VALUATION ENGINE (TN ACT XIV OF 1955)
+        </h3>
+        <div style="background: #f7fafc; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.85rem;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span>Total Guideline Market Value (2.40 Ac):</span>
+                <strong>₹45,00,000.00</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span>Plaintiff's Undivided 1/4th Share Value:</span>
+                <strong style="color: #2b6cb0;">₹11,25,000.00</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 4px;">
+                <span><strong>Court Fee under Section 37(1) (3%):</strong></span>
+                <strong style="color: #276749; font-size: 1.05rem;">₹33,750.00</strong>
+            </div>
+        </div>
+        <p style="font-size: 0.82rem; color: #4a5568; margin: 0;">
+            <em>Note on Section 40 Cancellation:</em> Under <strong>Suhrid Singh v. Randhir Singh (2010 12 SCC 112)</strong>, since plaintiff is a non-executant co-owner, court fee under Section 40 is <strong>NOT required</strong>. Section 37(1) fee covers partition and consequential delivery of possession.
+        </p>
+    </div>
+
+    <div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0;">
+        <h3 style="margin-top: 0; color: #1a365d; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+            8. PARTIES &amp; JOINDER AUDIT (ORDER I CPC)
+        </h3>
+        <div style="font-size: 0.85rem;">
+            <div style="margin-bottom: 0.6rem;">
+                <span style="background: #fed7d7; color: #9b2c2c; font-weight: bold; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">FATAL DEFECT</span>
+                <strong style="margin-left: 6px;">Non-Joinder of Necessary Co-owners:</strong>
+                <p style="margin: 2px 0 0 0; color: #4a5568;">
+                    Father died leaving Widow + 3 children. Mother and Sibling 2 are <strong>necessary parties</strong> under Order I Rule 9 Proviso. Suit for partition cannot proceed in their absence.
+                </p>
+            </div>
+            <div>
+                <span style="background: #feebc8; color: #7b341e; font-weight: bold; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">PROPOSED DEFENDANTS</span>
+                <strong style="margin-left: 6px;">Commercial Assignees (D3 &amp; D4):</strong>
+                <p style="margin: 2px 0 0 0; color: #4a5568;">
+                    • <strong>Defendant No. 3 (Finance Co):</strong> Mortgagee in possession of title deeds; bound by Section 44 TPA.<br>
+                    • <strong>Defendant No. 4 (Intending Purchaser):</strong> Necessary party under Order I Rule 10(2) to prevent alienations pendente lite.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 9 & 10: EVIDENCE MATRIX & TRANSITIONAL RULES -->
+<div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+        <h3 style="margin: 0; color: #1a365d;">10. LITIGATION EVIDENCE MATRIX &amp; TRANSITIONAL STATUS</h3>
+        <span style="background: #e2e8f0; color: #2d3748; font-weight: bold; font-size: 0.8rem; padding: 3px 8px; border-radius: 4px;">
+            Governing Regime: Indian Evidence Act, 1872 (Suit Filed: 10.04.2024 &lt; 01.07.2024 BSA)
+        </span>
+    </div>
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; font-size: 0.85rem; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #f7fafc; border-bottom: 2px solid #e2e8f0; text-align: left;">
+                    <th style="padding: 8px;">Fact / Proposition</th>
+                    <th style="padding: 8px;">Classification</th>
+                    <th style="padding: 8px;">Primary Evidence Required</th>
+                    <th style="padding: 8px;">Governing Section (IEA 1872)</th>
+                    <th style="padding: 8px;">Burden of Proof</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ev in matter.audit_data.evidence_matrix %}
+                <tr style="border-bottom: 1px solid #edf2f7;">
+                    <td style="padding: 8px; font-weight: 600; color: #2d3748;">{{ ev.fact }}</td>
+                    <td style="padding: 8px;"><span style="background: #edf2f7; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">{{ ev.issue }}</span></td>
+                    <td style="padding: 8px; color: #2b6cb0;">{{ ev.doc_required }}</td>
+                    <td style="padding: 8px; font-weight: 500;">{{ ev.provision }}</td>
+                    <td style="padding: 8px; color: #4a5568;">{{ ev.burden }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- SECTION 11 & 12: OPPOSITION AUDIT & COUNTER-STRATEGY -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #feb2b2; border-top: 4px solid #e53e3e;">
+        <h3 style="margin-top: 0; color: #9b2c2c;">11. OPPOSING COUNSEL AUDIT (THE 4 FATAL OBJECTIONS)</h3>
+        <div style="font-size: 0.85rem; color: #2d3748; display: flex; flex-direction: column; gap: 0.75rem;">
+            <div>
+                <strong style="color: #c53030;">1. Pecuniary Ouster (TN Act 23 of 2019):</strong>
+                <p style="margin: 2px 0 0 0; color: #4a5568;">2.40 acres guideline value exceeds ₹10L. District Munsif has no jurisdiction. Plaint must be rejected under O.VII R.11(b).</p>
+            </div>
+            <div>
+                <strong style="color: #c53030;">2. Limitation Bar (Art. 58):</strong>
+                <p style="margin: 2px 0 0 0; color: #4a5568;">Right to sue for declaration first accrued on 05.03.2021 reply notice. 3 years expired on 04.03.2024. Suit filed 10.04.2024 is time-barred.</p>
+            </div>
+            <div>
+                <strong style="color: #c53030;">3. Non-Joinder of Co-heirs (O.I R.9 Proviso):</strong>
+                <p style="margin: 2px 0 0 0; color: #4a5568;">Widow and 3rd sibling omitted. Claiming 100% sole title is fatal in the absence of all Class-I co-heirs.</p>
+            </div>
+            <div>
+                <strong style="color: #c53030;">4. Section 34 SRA Proviso Bar:</strong>
+                <p style="margin: 2px 0 0 0; color: #4a5568;">Plaintiff is admittedly out of possession; cannot maintain declaration without proper valuation and possession prayer.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #9ae6b4; border-top: 4px solid #38a169;">
+        <h3 style="margin-top: 0; color: #22543d;">12. COUNTER-STRATEGY &amp; DEFENSIVE SHIELD</h3>
+        <div style="font-size: 0.85rem; color: #2d3748; display: flex; flex-direction: column; gap: 0.75rem;">
+            <div>
+                <strong style="color: #276749;">1. Pre-empt Ouster via Order VII Rule 10A CPC:</strong>
+                <p style="margin: 2px 0 0 0; color: #4a5568;">Proactively concede revised valuation under S.7(2) TN Court-Fees Act and apply for transfer to the Principal Sub Court.</p>
+            </div>
+            <div>
+                <strong style="color: #276749;">2. Restructure to Partition (Article 110 - 12 Years):</strong>
+                <p style="margin: 2px 0 0 0; color: #4a5568;">Amend plaint under Order VI Rule 17 to claim partition of 1/4th share. Article 110 grants 12 years from exclusion (valid until 2033!).</p>
+            </div>
+            <div>
+                <strong style="color: #276749;">3. Cure Non-Joinder via Order I Rule 10(2):</strong>
+                <p style="margin: 2px 0 0 0; color: #4a5568;">Implead Mother and Sibling 2 as co-defendants before issues are framed, removing the Order I Rule 9 impediment completely.</p>
+            </div>
+            <div>
+                <strong style="color: #276749;">4. Suhrid Singh Non-Executant Protection:</strong>
+                <p style="margin: 2px 0 0 0; color: #4a5568;">D1 could only transfer 1/4th share under Section 44 TPA. Plaintiff does not need to cancel D1's deed; declaration and partition suffice.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECTION 13: REMEDY COMPARISON MATRIX -->
+<div class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+    <h3 style="margin-top: 0; color: #1a365d; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem;">
+        13. PROCEDURAL ROUTE COMPARISON
+    </h3>
+    <table style="width: 100%; font-size: 0.85rem; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #f7fafc; border-bottom: 2px solid #e2e8f0; text-align: left;">
+                <th style="padding: 8px;">Procedural Route</th>
+                <th style="padding: 8px;">Maintainability</th>
+                <th style="padding: 8px;">Limitation Risk</th>
+                <th style="padding: 8px;">Pecuniary Risk</th>
+                <th style="padding: 8px;">Parties Risk</th>
+                <th style="padding: 8px;">Verdict</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rt in matter.audit_data.routes_comparison %}
+            <tr style="border-bottom: 1px solid #edf2f7;">
+                <td style="padding: 8px; font-weight: bold; color: #2d3748;">{{ rt.route_name }}</td>
+                <td style="padding: 8px; font-weight: 600; color: {% if rt.maintainability == 'HIGH' %}#276749{% else %}#c53030{% endif %};">{{ rt.maintainability }}</td>
+                <td style="padding: 8px;">{{ rt.limitation_risk }}</td>
+                <td style="padding: 8px;">{{ rt.pecuniary_risk }}</td>
+                <td style="padding: 8px;">{{ rt.parties_defect }}</td>
+                <td style="padding: 8px;"><strong style="color: {% if 'BEST' in rt.verdict %}#276749{% else %}#c53030{% endif %};">{{ rt.verdict }}</strong></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- SECTION 15: COURT-READY DRAFTING SUITE -->
+<div id="drafting" class="card" style="background: #fff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #edf2f7; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+        <div>
+            <span style="background: #d69e2e; color: #1a202c; font-weight: bold; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">Tamil Nadu Practice Formats</span>
+            <h3 style="margin: 0.2rem 0; color: #1a365d;">15. COURT-READY DRAFTING SUITE</h3>
+        </div>
+        <span style="font-size: 0.85rem; color: #718096;">Formatted under Madras High Court Civil Rules of Practice, 1905</span>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;">
+        {% for d in matter.drafts %}
+        <button onclick="showDraft('draft_{{ d.id }}')" class="tab-btn" id="btn_draft_{{ d.id }}" style="background: {% if loop.first %}#2b6cb0; color: #fff;{% else %}#edf2f7; color: #4a5568;{% endif %} border: none; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">
+            {{ d.title }}
+        </button>
+        {% endfor %}
+    </div>
+
+    {% for d in matter.drafts %}
+    <div id="draft_{{ d.id }}" class="draft-pane" style="{% if not loop.first %}display: none;{% endif %}">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <strong style="color: #2b6cb0; font-size: 0.95rem;">{{ d.title }}</strong>
+            <button onclick="copyDraft('text_draft_{{ d.id }}')" style="background: #edf2f7; color: #2d3748; border: 1px solid #cbd5e0; padding: 5px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: 600;">📋 Copy Draft</button>
+        </div>
+        <textarea id="text_draft_{{ d.id }}" readonly rows="16" style="width: 100%; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; padding: 12px; border: 1px solid #cbd5e0; border-radius: 6px; background: #f7fafc; color: #1a202c; line-height: 1.45;">{{ d.content }}</textarea>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- SECTION 16: STRATEGIC AUDIT & CONFIDENCE METRICS -->
+<div class="card" style="background: #1a365d; color: #fff; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.15);">
+    <h2 style="margin-top: 0; color: #f6e05e; font-size: 1.4rem; border-bottom: 1px solid #2b6cb0; padding-bottom: 0.5rem;">
+        16. LITIGATION-GRADE STRATEGIC CONCLUSION
+    </h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; font-size: 0.9rem; margin-top: 1rem;">
+        <div>
+            <p><strong>• BEST VIEW:</strong> Restructure suit immediately to <em>Partition &amp; Separate Possession of 1/4th Share</em> under Section 8 Hindu Succession Act &amp; Section 44 TPA. Move under Order VII Rule 10A CPC to transfer plaint from District Munsif to Principal Sub Court, [Taluk] on revised guideline valuation.</p>
+            <p><strong>• ALTERNATIVE VIEW:</strong> Contest the pecuniary valuation before the District Munsif relying on 30 times kist assessment under Section 7(2)(a) TN Court-Fees Act (Risky; likely rejected under current S.47-AA Stamp Act practice).</p>
+            <p><strong>• PRINCIPAL FAILURE POINT:</strong> Persisting with 100% sole ownership before the District Munsif. Results in fatal dismissal on Article 58 limitation (3 yrs) and Order I Rule 9 non-joinder.</p>
+        </div>
+        <div>
+            <p><strong>• EXACT PROCEDURAL REMEDY:</strong> File I.A. for Amendment (O.VI R.17) + I.A. for Impleadment (O.I R.10) + I.A. for Return of Plaint (O.VII R.10A) + I.A. for Injunction (O.XXXIX R.1/2).</p>
+            <p><strong>• LIMITATION POSITION:</strong> Article 110 / Article 65 grants 12 years from 05.03.2021 denial. <strong>Valid until 04.03.2033</strong>.</p>
+            <p><strong>• COMPETENT FORUM:</strong> Principal Subordinate Court, [Taluk].</p>
+            <p><strong>• CONFIDENCE LEVEL:</strong> <span style="background: #38a169; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold;">HIGH</span> (Restructured Partition Route) | <span style="background: #e53e3e; color: #fff; padding: 3px 8px; border-radius: 4px; font-weight: bold;">FATALLY FLAWED</span> (Current Munsif Route).</p>
+        </div>
+    </div>
+</div>
+
+<script>
+function showDraft(paneId) {
+    document.querySelectorAll('.draft-pane').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(el => {
+        el.style.background = '#edf2f7';
+        el.style.color = '#4a5568';
+    });
+    document.getElementById(paneId).style.display = 'block';
+    const btn = document.getElementById('btn_' + paneId);
+    if (btn) {
+        btn.style.background = '#2b6cb0';
+        btn.style.color = '#fff';
+    }
+}
+
+function copyDraft(textId) {
+    const copyText = document.getElementById(textId);
+    copyText.select();
+    navigator.clipboard.writeText(copyText.value);
+    alert('Draft copied to clipboard!');
+}
+</script>
+{% endblock %}

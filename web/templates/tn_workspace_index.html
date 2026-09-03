@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Tamil Nadu Civil Litigation Engine — Active Case Workspace{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+        <span style="background: #c53030; color: #fff; font-size: 0.75rem; font-weight: bold; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Tamil Nadu Special Jurisdiction</span>
+        <h1 style="margin: 0.4rem 0 0.2rem 0; color: #1a365d;">⚖️ Tamil Nadu Civil Litigation Workspace</h1>
+        <p style="color: #4a5568; margin: 0; font-size: 0.95rem;">Litigation-grade procedural audit engine under CPC 1908, TN Act 23 of 2019, TN Court-Fees Act 1955 &amp; Madras HC Civil Rules of Practice 1905.</p>
+    </div>
+    <a href="/tn-workspace/new" class="btn" style="background: #2b6cb0; color: #fff; font-weight: bold; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 0.95rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">+ Intake New Matter</a>
+</div>
+
+<div class="card" style="margin-bottom: 2rem; border-left: 5px solid #2b6cb0; background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+    <h3 style="margin-top: 0; color: #2b6cb0; display: flex; align-items: center; gap: 0.5rem;">
+        🛡️ Hard Verification &amp; Local Law Control Gate Active
+    </h3>
+    <p style="margin-bottom: 0.75rem; color: #4a5568; font-size: 0.9rem;">
+        Every matter undergoes strict procedural checks against:
+    </p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; font-size: 0.85rem;">
+        <div style="background: #ebf8ff; padding: 0.75rem; border-radius: 6px; border: 1px solid #bee3f8;">
+            <strong>🏛️ Forum Hierarchy</strong><br>
+            Tamil Nadu Civil Courts Act, 1873 (as amended by TN Act 23 of 2019): DM (&le; ₹10L), Sub Court (₹10L–₹1Cr), District Court (&gt; ₹1Cr).
+        </div>
+        <div style="background: #f0fff4; padding: 0.75rem; border-radius: 6px; border: 1px solid #c6f6d5;">
+            <strong>💰 Court Fees &amp; Valuation</strong><br>
+            TN Act XIV of 1955: S.25(a) Market value on Guideline S.47-AA Stamp Act; S.37 Partition; 3% flat ad valorem under Sched I Art 1.
+        </div>
+        <div style="background: #fffaf0; padding: 0.75rem; border-radius: 6px; border: 1px solid #feebc8;">
+            <strong>⏱️ Statutory Limitation</strong><br>
+            Limitation Act 1963: Art 58 (3 yrs) vs Art 110 (12 yrs exclusion) vs Art 65 (12 yrs adverse possession ouster).
+        </div>
+        <div style="background: #faf5ff; padding: 0.75rem; border-radius: 6px; border: 1px solid #e9d8fd;">
+            <strong>⚖️ Evidence Transition</strong><br>
+            S.170(1) BSA 2023 read with S.6 General Clauses Act: Pre-01.07.2024 suits strictly governed by Indian Evidence Act, 1872.
+        </div>
+    </div>
+</div>
+
+<h2 style="color: #2d3748; margin-bottom: 1rem; font-size: 1.3rem;">Active Litigation Matters</h2>
+
+{% if matters %}
+<div style="display: flex; flex-direction: column; gap: 1rem;">
+    {% for m in matters %}
+    <div class="card" style="background: #fff; padding: 1.25rem 1.5rem; border-radius: 8px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.04);">
+        <div style="flex: 1; min-width: 300px;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+                <span style="background: #e2e8f0; color: #2d3748; font-weight: bold; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px;">Case #{{ m.id }}</span>
+                <span style="background: #feebc8; color: #c05621; font-weight: 600; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px;">{{ m.court }}</span>
+                <span style="background: #edf2f7; color: #4a5568; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px;">{{ m.district }} District</span>
+            </div>
+            <h3 style="margin: 0.25rem 0; font-size: 1.15rem; color: #1a365d;">
+                <a href="/tn-workspace/matter/{{ m.id }}" style="color: #2b6cb0; text-decoration: none;">{{ m.title }}</a>
+            </h3>
+            <div style="font-size: 0.85rem; color: #718096; display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 0.35rem;">
+                <span><strong>Client:</strong> {{ m.client_name }}</span>
+                <span><strong>Stage:</strong> {{ m.stage }}</span>
+                <span><strong>Stated Valuation:</strong> ₹{{ "{:,.2f}".format(m.suit_value) }}</span>
+                <span><strong>Logged:</strong> {{ m.created_at[:10] }}</span>
+            </div>
+        </div>
+        <div>
+            <a href="/tn-workspace/matter/{{ m.id }}" class="btn" style="background: #2b6cb0; color: #fff; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; text-decoration: none;">Launch Dashboard &rarr;</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div style="text-align: center; padding: 3rem; background: #fff; border-radius: 8px; border: 1px dashed #cbd5e0;">
+    <p style="color: #718096; font-size: 1.1rem; margin-bottom: 1rem;">No litigation matters logged yet.</p>
+    <a href="/tn-workspace/new" class="btn" style="background: #2b6cb0; color: #fff; font-weight: bold; padding: 10px 20px; border-radius: 6px; text-decoration: none;">Intake First Matter</a>
+</div>
+{% endif %}
+{% endblock %}

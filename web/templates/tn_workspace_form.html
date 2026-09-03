@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Intake Matter — Tamil Nadu Civil Litigation Engine{% endblock %}
+
+{% block content %}
+<div style="max-width: 850px; margin: 0 auto;">
+    <div style="margin-bottom: 1.5rem;">
+        <a href="/tn-workspace" style="color: #4a5568; font-size: 0.85rem; text-decoration: none;">&larr; Back to Tamil Nadu Matters</a>
+        <h1 style="margin: 0.5rem 0 0.2rem 0; color: #1a365d;">📥 Matter Intake &amp; Procedural Audit</h1>
+        <p style="color: #718096; margin: 0; font-size: 0.95rem;">Enter case facts or paste raw client narrative / draft pleadings to execute complete Tamil Nadu CPC audit.</p>
+    </div>
+
+    <div class="card" style="background: #fff; padding: 2rem; border-radius: 8px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <form action="/tn-workspace/new" method="post">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label style="display: block; font-weight: 600; color: #2d3748; margin-bottom: 0.35rem; font-size: 0.9rem;">Matter Title / Cause Title *</label>
+                    <input type="text" name="title" required placeholder="e.g. Mr. X v. D1 & D2 (Agricultural Land 2.40 Acres)" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 0.9rem;" value="{{ prefill.title if prefill else '' }}">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 600; color: #2d3748; margin-bottom: 0.35rem; font-size: 0.9rem;">Client Name &amp; Capacity *</label>
+                    <input type="text" name="client_name" required placeholder="e.g. Mr. X (Co-owner / Legal Heir)" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 0.9rem;" value="{{ prefill.client_name if prefill else '' }}">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label style="display: block; font-weight: 600; color: #2d3748; margin-bottom: 0.35rem; font-size: 0.9rem;">District (Tamil Nadu) *</label>
+                    <input type="text" name="district" required placeholder="e.g. Coimbatore / Madurai / Chennai" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 0.9rem;" value="{{ prefill.district if prefill else 'Coimbatore' }}">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 600; color: #2d3748; margin-bottom: 0.35rem; font-size: 0.9rem;">Taluk *</label>
+                    <input type="text" name="taluk" required placeholder="e.g. Pollachi / Alandur" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 0.9rem;" value="{{ prefill.taluk if prefill else 'Pollachi' }}">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 600; color: #2d3748; margin-bottom: 0.35rem; font-size: 0.9rem;">Current Court</label>
+                    <input type="text" name="current_court" placeholder="e.g. District Munsif Court" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 0.9rem;" value="{{ prefill.current_court if prefill else 'District Munsif Court' }}">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div>
+                    <label style="display: block; font-weight: 600; color: #2d3748; margin-bottom: 0.35rem; font-size: 0.9rem;">Present Procedural Stage *</label>
+                    <select name="stage" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 0.9rem;">
+                        <option value="Pre-Institution / Notice Stage">Pre-Institution / Notice Stage</option>
+                        <option value="Plaint Presentation / Registry Check">Plaint Presentation / Registry Check</option>
+                        <option value="Summons &amp; Appearance (O.V / O.IX)">Summons &amp; Appearance (O.V / O.IX)</option>
+                        <option value="Post-Written Statement / Pre-Framing of Issues" selected>Post-Written Statement / Pre-Framing of Issues</option>
+                        <option value="Issues Framed / Interlocutory (O.XIV / O.XXXIX)">Issues Framed / Interlocutory (O.XIV / O.XXXIX)</option>
+                        <option value="Trial &amp; Evidence (O.XVI / O.XVIII)">Trial &amp; Evidence (O.XVI / O.XVIII)</option>
+                        <option value="Arguments &amp; Decree (O.XX)">Arguments &amp; Decree (O.XX)</option>
+                        <option value="Execution Proceedings (O.XXI)">Execution Proceedings (O.XXI)</option>
+                        <option value="Appellate / Revisional Stage (S.96 / S.100 / S.115)">Appellate / Revisional Stage (S.96 / S.100 / S.115)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 600; color: #2d3748; margin-bottom: 0.35rem; font-size: 0.9rem;">Stated Plaint Valuation (₹)</label>
+                    <input type="number" step="0.01" name="suit_value" placeholder="e.g. 950000" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 0.9rem;" value="{{ prefill.suit_value if prefill else '950000' }}">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 600; color: #2d3748; margin-bottom: 0.35rem; font-size: 0.9rem;">Real Guideline / Market Value (₹) *</label>
+                    <input type="number" step="0.01" name="real_market_value" required placeholder="e.g. 4500000" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 0.9rem;" value="{{ prefill.real_market_value if prefill else '4500000' }}">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-weight: 600; color: #2d3748; margin-bottom: 0.35rem; font-size: 0.9rem;">Client Narrative / Factual Background / Contested Pleadings *</label>
+                <textarea name="narrative" rows="10" required placeholder="Paste full factual narrative, dates of purchase, legal heirs, notices, replies, registration details, revenue proceedings, and reliefs sought..." style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 0.9rem; font-family: inherit; line-height: 1.5;">{{ prefill.narrative if prefill else '' }}</textarea>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #edf2f7; padding-top: 1.5rem;">
+                <button type="button" onclick="loadSampleTestMatter()" style="background: #edf2f7; color: #4a5568; border: 1px solid #cbd5e0; padding: 8px 16px; border-radius: 6px; font-size: 0.85rem; cursor: pointer; font-weight: 600;">📋 Load TN Test Case (2.40 Acres)</button>
+                <button type="submit" class="btn" style="background: #2b6cb0; color: #fff; font-weight: bold; padding: 10px 24px; border-radius: 6px; font-size: 1rem; border: none; cursor: pointer;">⚡ Execute Complete CPC &amp; Local Law Audit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function loadSampleTestMatter() {
+    document.querySelector('input[name="title"]').value = "Mr. X v. D1 & D2 (Agricultural Land 2.40 Acres)";
+    document.querySelector('input[name="client_name"]').value = "Mr. X (Co-owner / Legal Heir)";
+    document.querySelector('input[name="district"]').value = "Coimbatore";
+    document.querySelector('input[name="taluk"]').value = "Pollachi";
+    document.querySelector('input[name="current_court"]').value = "District Munsif Court";
+    document.querySelector('input[name="suit_value"]').value = "950000";
+    document.querySelector('input[name="real_market_value"]').value = "4500000";
+    document.querySelector('textarea[name="narrative"]').value = `The plaintiff, Mr. X, claims ownership and possession over agricultural land measuring 2.40 acres situated in [Village], [Taluk], [District], Tamil Nadu. His father, Late Mr. A, purchased the property under a registered sale deed dated 15.06.1988. The sale deed stands in the father's name. Mr. A died intestate on 10.03.2004 leaving behind his wife and three children, including the present plaintiff.
+
+After his father's death, all legal heirs orally agreed that the plaintiff would cultivate the property on behalf of the family. The plaintiff claims that from 2004 onwards he alone has been cultivating the land and paying kist and agricultural expenses.
+
+In 2011, Defendant No.1 (one of the legal heirs) executed a registered settlement deed in favour of Defendant No.2 concerning the entire 2.40 acres, even though D1 allegedly had no exclusive title. D2 subsequently obtained patta and claims to have been in possession thereafter.
+
+The plaintiff did not immediately challenge the settlement deed, believing D1 transferred only his share. In 2018, D2 put up a small structure on a portion of the land.
+
+In January 2021, the plaintiff obtained a certified copy of the 2011 settlement deed and discovered D1 conveyed 100%. The plaintiff issued legal notice on 15.02.2021 demanding cancellation of settlement deed and restoration of possession. D2 replied on 05.03.2021 denying plaintiff's title and asserting exclusive possession since 2011.
+
+In August 2023, D2 executed a registered mortgage in favour of D3 (private finance company). In March 2024, D2 began negotiating a sale to D4.
+
+On 10.04.2024, plaintiff filed suit before the District Munsif Court seeking declaration of sole ownership, declaration that 2011 settlement deed is invalid, injunction against alienation, and consequential possession, valuing suit at ₹9,50,000.
+
+D2 filed written statement contending suit is barred by limitation, plaintiff not in possession, suit undervalued, court fee insufficient, and barred by 2019 revenue patta proceeding.`;
+}
+</script>
+{% endblock %}

@@ -790,6 +790,55 @@ def deadline():
                            holiday_parse_error=holiday_parse_error)
 
 
+# --- Tamil Nadu Civil Litigation Engine & Workspace ---
+import tn_litigation_engine as tn
+
+@app.route('/tn-workspace')
+def tn_workspace_index():
+    matters = tn.get_all_matters()
+    return render_template('tn_workspace_index.html', matters=matters)
+
+
+@app.route('/tn-workspace/matter/<int:matter_id>')
+def tn_workspace_matter(matter_id):
+    matter = tn.get_matter_by_id(matter_id)
+    if not matter:
+        abort(404)
+    return render_template('tn_workspace_dashboard.html', matter=matter)
+
+
+@app.route('/tn-workspace/new', methods=['GET', 'POST'])
+def tn_workspace_new():
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        client_name = request.form.get('client_name', '').strip()
+        district = request.form.get('district', 'Coimbatore').strip()
+        taluk = request.form.get('taluk', 'Taluk Center').strip()
+        current_court = request.form.get('current_court', 'District Munsif Court').strip()
+        stage = request.form.get('stage', 'Pre-trial / Post-Written Statement').strip()
+        suit_value = float(request.form.get('suit_value', 950000.0) or 950000.0)
+        real_market_value = float(request.form.get('real_market_value', 4500000.0) or 4500000.0)
+        narrative = request.form.get('narrative', '').strip()
+
+        matter_input = {
+            'title': title,
+            'client_name': client_name,
+            'district': district,
+            'taluk': taluk,
+            'current_court': current_court,
+            'stage': stage,
+            'suit_value': suit_value,
+            'real_market_value': real_market_value,
+            'narrative': narrative
+        }
+
+        audit_data = tn.parse_and_audit_tn_matter(matter_input)
+        new_id = tn.save_matter_to_db(title, client_name, district, taluk, current_court, stage, suit_value, narrative, audit_data)
+        return redirect(f'/tn-workspace/matter/{new_id}')
+
+    return render_template('tn_workspace_form.html', prefill=None)
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
