@@ -86,6 +86,13 @@ def test_stamping_addons():
     assert res["total_payable"] == 3210
 
 
+def test_writ_226_2021_amendment():
+    res = cf.calculate_court_fee("writ_226", include_vakalat=False, include_adv_welfare=False, include_clerk_welfare=False)
+    # Reduced from 1,000 to 750 by TN Act 20 of 2021
+    assert res["principal_court_fee"] == 750
+    assert "Act 20 of 2021" in res["citation"]
+
+
 if __name__ == "__main__":
     tests = [v for k, v in globals().items() if k.startswith("test_")]
     for t in tests:

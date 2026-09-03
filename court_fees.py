@@ -243,9 +243,9 @@ CATEGORIES = {
     },
     "writ_226": {
         "title": "Writ Petition under Article 226 (Sch II Art 11(r)(i))",
-        "section": "Schedule II Article 11(r)(i)",
+        "section": "Schedule II Article 11(r)(i) (2021 Amendment)",
         "type": "fixed",
-        "tip": "Fixed fee: Rs. 1,000."
+        "tip": "Fixed fee: Rs. 750 (reduced from Rs. 1,000 by TN Act 20 of 2021)."
     },
     "writ_227": {
         "title": "Petition under Article 227 (Sch II Art 11(r)(ii))",
@@ -621,9 +621,9 @@ def calculate_court_fee(
         citation = "Under Schedule II Article 4 and 11(m) (2017 Amendment), fee is 3% of jurisdictional value subject to a maximum of Rs. 1,00,000."
 
     elif category == "writ_226":
-        principal_fee = 1000
-        rate_desc = "Fixed Rs. 1,000"
-        citation = "Under Schedule II Article 11(r)(i) (2017 Amendment), Writ Petition under Art 226 is Rs. 1,000."
+        principal_fee = 750
+        rate_desc = "Fixed Rs. 750"
+        citation = "Under Schedule II Article 11(r)(i) (as amended by TN Act 20 of 2021), Writ Petition under Art 226 is Rs. 750 (reduced from Rs. 1,000)."
 
     elif category == "writ_227":
         principal_fee = 500
